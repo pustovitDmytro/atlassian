@@ -1,3 +1,11 @@
+# [1.1.0](https://github.com/pustovitDmytro/atlassian/compare/v1.0.0...v1.1.0) (2021-02-13)
+
+
+### New
+
+* save config in file ([451052b](https://github.com/pustovitDmytro/atlassian/commit/451052b7cfea2db4b46c57453667e83a7752713a))
+* show help by default ([72a96fe](https://github.com/pustovitDmytro/atlassian/commit/72a96fea296534cade574e49dc8212ba6f15efb8))
+
 # 1.0.0 (2021-02-13)
 
 
