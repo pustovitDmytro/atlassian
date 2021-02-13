@@ -1,11 +1,11 @@
-# npm-boilerplate
-**npm-boilerplate** boilerplate for creating npm packages.
+# atlassian
+**atlassian** atlassian command line interface.
 
 [![Version][badge-vers]][npm]
 [![Dependencies][badge-deps]][npm]
 [![Vulnerabilities][badge-vuln]](https://snyk.io/)
 [![Build Status][badge-tests]][travis]
-[![Coverage Status][badge-coverage]](https://coveralls.io/github/pustovitDmytro/npm-boilerplate?branch=master)
+[![Coverage Status][badge-coverage]](https://coveralls.io/github/pustovitDmytro/atlassian?branch=master)
 [![License][badge-lic]][github]
 
 ## Table of Contents
@@ -25,7 +25,7 @@ To use library you need to have [node](https://nodejs.org) and [npm](https://www
 To install the library run following command
 
 ```bash
-  npm i --save npm-boilerplate
+  npm i --save atlassian
 ```
 
 ## Usage
@@ -56,13 +56,13 @@ The Tag is one of the following:
 The message summary should be a one-sentence description of the change. The issue number should be mentioned at the end.
 
 
-[npm]: https://www.npmjs.com/package/npm-boilerplate
-[github]: https://github.com/pustovitDmytro/npm-boilerplate
-[travis]: https://travis-ci.org/pustovitDmytro/npm-boilerplate
-[coveralls]: https://coveralls.io/github/pustovitDmytro/npm-boilerplate?branch=master
-[badge-deps]: https://img.shields.io/david/pustovitDmytro/npm-boilerplate.svg
-[badge-tests]: https://img.shields.io/travis/pustovitDmytro/npm-boilerplate.svg
-[badge-vuln]: https://img.shields.io/snyk/vulnerabilities/npm/npm-boilerplate.svg?style=popout
-[badge-vers]: https://img.shields.io/npm/v/npm-boilerplate.svg
-[badge-lic]: https://img.shields.io/github/license/pustovitDmytro/npm-boilerplate.svg
-[badge-coverage]: https://coveralls.io/repos/github/pustovitDmytro/npm-boilerplate/badge.svg?branch=master
+[npm]: https://www.npmjs.com/package/atlassian
+[github]: https://github.com/pustovitDmytro/atlassian
+[travis]: https://travis-ci.org/pustovitDmytro/atlassian
+[coveralls]: https://coveralls.io/github/pustovitDmytro/atlassian?branch=master
+[badge-deps]: https://img.shields.io/david/pustovitDmytro/atlassian.svg
+[badge-tests]: https://img.shields.io/travis/pustovitDmytro/atlassian.svg
+[badge-vuln]: https://img.shields.io/snyk/vulnerabilities/npm/atlassian.svg?style=popout
+[badge-vers]: https://img.shields.io/npm/v/atlassian.svg
+[badge-lic]: https://img.shields.io/github/license/pustovitDmytro/atlassian.svg
+[badge-coverage]: https://coveralls.io/repos/github/pustovitDmytro/atlassian/badge.svg?branch=master
