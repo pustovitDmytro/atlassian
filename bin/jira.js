@@ -76,6 +76,7 @@ async function init() {
 }
 
 async function run(cmd) {
+    // eslint-disable-next-line no-unused-expressions
     yargs(cmd)
         .usage('Usage: $0 <command> [options]')
         .command({
@@ -87,6 +88,7 @@ async function run(cmd) {
         .help('h')
         .alias('h', 'help')
         .help()
+        .showHelpOnFail(true).demandCommand(1, '').recommendCommands().strict()
         .epilog(`${packageInfo.name} v.${packageInfo.version}`).argv;
 }
 
