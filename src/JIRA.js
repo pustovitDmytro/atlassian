@@ -75,7 +75,7 @@ export default class JIRA {
         }
 
         return issue.transitions.some(t => {
-            const isTimeMatch = dayjs(t.date).isBetween(start, end); // TODO
+            const isTimeMatch = dayjs(t.date).isBetween(dayjs(start), dayjs(end));
             const isFieldMatch = [ t.from, t.to ].some(status => this.inDevelopmentStatuses.includes(status));
 
             return isTimeMatch && isFieldMatch;
@@ -145,13 +145,30 @@ export default class JIRA {
     async importForTimeLog([ start, end ], file = './tmp/issues.json') {
         const tasks = await this.getTaskList(start, end, { comments: true, worklog: true });
 
-        tasks.sort((a, b) => dayjs(a.updated) - dayjs(b.updated)); // TODO
+        tasks.sort((a, b) => dayjs(a.updated) - dayjs(b.updated));
         const relFilePath = path.resolve(file);
 
         const payload = tasks.map(t => {
             const extra =  {};
             const isMine = t.assignee === this.userId;
 
+            if (t.transitions.length) {
+                extra.transitions = {};
+                const devToTest = t.transitions
+                    .filter(tr => this.inDevelopmentStatuses.includes(tr.from) && !this.inDevelopmentStatuses.includes(tr.to))
+                    .map(tr => dayjs(tr.date))
+                    .sort((a, b) => a - b)
+                    .map(d => d.format('MMM DD'));
+
+                const testToDev = t.transitions
+                    .filter(tr => this.inDevelopmentStatuses.includes(tr.to) && !this.inDevelopmentStatuses.includes(tr.from))
+                    .map(tr => dayjs(tr.date))
+                    .sort((a, b) => a - b)
+                    .map(d => d.format('MMM DD'));
+
+                if (devToTest.length) extra.transitions['DEV->TEST'] = devToTest.join(', ');
+                if (testToDev.length) extra.transitions['TEST->DEV'] = testToDev.join(', ');
+            }
             if (!isMine) extra.assignee = t.assigneeName;
             if (t.worklog.length) {
                 const othersSpentTime = t.worklog.filter(w => w.author !== this.userId).reduce((a, b) => a + b.time, 0);
@@ -196,8 +213,8 @@ export default class JIRA {
 
     async logTask(task) {
         const payload = {
-            'timeSpentSeconds' : task.time * 60 * 60
-            // 'started'          : moment(task.day, 'D MMM YYYY').format('YYYY-MM-DD[T]HH:m:s.sssZZ') TODO: dayjs
+            'timeSpentSeconds' : task.time * 60 * 60,
+            'started'          : dayjs(task.day, 'D MMM YYYY').format('YYYY-MM-DD[T]HH:m:s.sssZZ')
         };
 
         const res = await axios.post(`${this.host}/rest/api/3/issue/${task.issue}/worklog`, payload, { auth: this.auth }).catch(onError);
