@@ -1,11 +1,16 @@
-#!./node_modules/.bin/babel-node
+#!/usr/bin/env node
 
-import os from 'os';
-import path from 'path';
-import yargs from 'yargs/yargs';
-import inquirer from 'inquirer';
-import fs from 'fs-extra';
-import packageInfo from '../package.json';
+process.env.BABEL_DISABLE_CACHE = 1;
+
+require('@babel/register');
+const os = require('os');
+const path = require('path');
+const yargs = require('yargs/yargs');
+const inquirer = require('inquirer');
+const fs = require('fs-extra');
+const packageInfo = require('../package.json');
+const JIRA = require('../src/JIRA').default;
+const chalk = require('chalk');
 
 const isMain = !module.parent;
 const homedir = os.homedir();
@@ -75,6 +80,25 @@ async function init() {
     }
 }
 
+async function list(args) {
+    const config = await fs.readJSON(configPath);
+    const profile = Object.values(config)[0];
+    const jira = new JIRA(profile);
+    const stages = [];
+
+    if (args.dev) stages.push('dev');
+    const tasks = await jira.list({
+        isMine : args.mine,
+        search : args.search,
+        sprint : args.sprint,
+        stages
+    });
+
+    tasks.forEach(t => {
+        console.log(chalk.bold(t.key), t.summary);
+    });
+}
+
 async function run(cmd) {
     // eslint-disable-next-line no-unused-expressions
     yargs(cmd)
@@ -83,6 +107,17 @@ async function run(cmd) {
             command : 'init',
             desc    : 'Add attlasian profile',
             handler : init
+        })
+        .command({
+            command : 'list [--dev] [--mine] [--search=<search>] [--sprint=<sprint>]',
+            aliases : [ 'ls' ],
+            builder : y => y
+                .alias('-d', '--dev')
+                .alias('-m', '--mine')
+                .alias('-s', '--search')
+                .array('--sprint'),
+            desc    : 'List Tasks',
+            handler : list
         })
         .command('profiles', 'List stored attlasian profiles')
         .help('h')

@@ -36,8 +36,8 @@ export default class JIRA {
             project      : issue.fields.project.name,
             created      : issue.fields.created,
             updated      : issue.fields.updated,
-            assignee     : issue.fields.assignee.accountId,
-            assigneeName : issue.fields.assignee.displayName,
+            assignee     : issue.fields.assignee?.accountId,
+            assigneeName : issue.fields.assignee?.displayName,
             summary      : issue.fields.summary,
             description  : issue.fields.description,
             time         : issue.fields.aggregatetimespent,
@@ -69,6 +69,32 @@ export default class JIRA {
         };
     }
 
+    async list({ isMine, stages, from, to, search, sprint = [ 'open' ] }) {
+        const jql = [];
+
+        if (isMine) jql.push('assignee was currentuser()');
+        if (from) jql.push(`updatedDate >= ${from.format('YYYY-MM-DD')}`);
+        if (to) jql.push(`updatedDate <= ${to.format('YYYY-MM-DD')}`);
+        if (stages.length) {
+            if (stages.includes('dev')) {
+                jql.push(`status IN (${this.inDevelopmentStatuses.map(s => `"${s}"`).join(', ')})`);
+            }
+        }
+        if (!sprint.includes('all')) {
+            if (sprint.includes('open')) jql.push('Sprint in openSprints()');
+        }
+        if (search) jql.push(`summary ~ "${search}"`);
+
+        const query = {};
+
+        if (jql.length) {
+            query.jql = jql.join(' AND ');
+        }
+        const issues =  await this.getIssues(query);
+
+        return issues.map(this._dumpTask);
+    }
+
     isInDevelopmentForRange(issue, [ start, end ]) {
         if (this.inDevelopmentStatuses.includes(issue.status)) {
             return true;
@@ -82,9 +108,10 @@ export default class JIRA {
         });
     }
 
-    async getIssues(params) {
+    async getIssues(params, includes = []) {
+        // ?expand=changelog
         const list =  await axios
-            .get(`${this.host}/rest/api/3/search?expand=changelog`, {
+            .get(`${this.host}/rest/api/3/search`, {
                 auth : this.auth,
                 params
             })
