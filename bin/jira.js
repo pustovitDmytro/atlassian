@@ -24,7 +24,9 @@ const validate = (required, regexp, msg = 'invalid value') => value => {
     return true;
 };
 
-const questions = [
+const SCOPES = [ 'jira', 'confluence', 'test' ];
+
+const questions = currentConfig => [
     {
         type     : 'input',
         name     : 'host',
@@ -41,12 +43,7 @@ const questions = [
         type    : 'password',
         name    : 'token',
         mask    : '*',
-        message : 'Past your token:\nNotice: dont send this value to anyone'
-    },
-    {
-        type    : 'input',
-        name    : 'userId',
-        message : 'Provide your userID \n(needed for filtering)'
+        message : 'Past your token: '
     },
     {
         type    : 'input',
@@ -54,25 +51,62 @@ const questions = [
         default : 'default',
         message : 'Name your profile'
     },
+    ...SCOPES.map(scope => ({
+        type    : 'confirm',
+        name    : `default.${scope}`,
+        message : () => `Profile ${getDefaultProfile(currentConfig, scope)} used as default for ${scope} calls, change?`,
+        when    : () => getDefaultProfile(currentConfig, scope)
+    })),
     {
         type    : 'confirm',
         name    : 'confirm',
-        message : answers => `${JSON.stringify(answers, null, 4)}\nIs everything correct?`
+        message : answers => `${JSON.stringify(buildConfig(answers), null, 4)}\nIs everything correct?`
     }
 ];
 
+function getDefaultProfile(config, level) {
+    return Object.keys(config).find(key => config[key].default[level]);
+}
+
+function buildConfig(answers) {
+    const defaults = {
+        ...SCOPES.reduce((prev, cur) => ({ ...prev, [cur]: true }), {}),
+        ...answers.default
+    };
+
+    return {
+        profile : answers.profile,
+        host    : answers.host,
+        email   : answers.email,
+        default : defaults
+    };
+}
+
 async function init() {
-    const { profile, confirm, ...answers } = await inquirer.prompt(questions);
+    const currentConfig = await fs.readJSON(configPath).catch(async () => {
+        await fs.ensureDir(path.dirname(configPath));
+        console.log(`No current config found in ${configPath}`);
+
+        return {};
+    });
+
+    const { profile, confirm, token, ...answers } = await inquirer.prompt(questions(currentConfig));
 
     if (confirm) {
-        const currentConfig = await fs.readJSON(configPath).catch(async () => {
-            await fs.ensureDir(path.dirname(configPath));
-            console.log(`No current config found in ${configPath}`);
+        const profileConfig = buildConfig(answers);
 
-            return {};
+        Object.keys(profileConfig.defaults).forEach(key => {
+            const isDefault = profileConfig.defaults[key];
+
+            if (isDefault) {
+                const currentDefault = getDefaultProfile(currentConfig, key);
+
+                if (currentDefault) {
+                    currentConfig[currentDefault].default[key] = false;
+                }
+            }
         });
-
-        currentConfig[profile] = { ...answers, _version: packageInfo.version };
+        currentConfig[profile] = { ...profileConfig, token, _version: packageInfo.version };
         await fs.writeJSON(configPath, currentConfig);
         console.log(`Profile ${profile} saved`);
     } else {
@@ -99,6 +133,25 @@ async function list(args) {
     });
 }
 
+async function test(args) {
+    const config = await fs.readJSON(configPath);
+    const profile = Object.values(config)[0];
+    const jira = new JIRA(profile);
+
+    await jira.test(args.issueId);
+    // if (args.dev) stages.push('dev');
+    // const tasks = await jira.list({
+    //     isMine : args.mine,
+    //     search : args.search,
+    //     sprint : args.sprint,
+    //     stages
+    // });
+
+    // tasks.forEach(t => {
+    //     console.log(chalk.bold(t.key), t.summary);
+    // });
+}
+
 async function run(cmd) {
     // eslint-disable-next-line no-unused-expressions
     yargs(cmd)
@@ -118,6 +171,11 @@ async function run(cmd) {
                 .array('--sprint'),
             desc    : 'List Tasks',
             handler : list
+        })
+        .command({
+            command : 'test [<issueId>]',
+            desc    : 'Send task to testing',
+            handler : test
         })
         .command('profiles', 'List stored attlasian profiles')
         .help('h')

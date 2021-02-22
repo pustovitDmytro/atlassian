@@ -8,7 +8,7 @@ import ms from 'ms';
 import axios from 'axios';
 
 function onError(error) {
-    console.error(error.response.data);
+    console.error(error.response ? error.response.data : error);
     throw error;
 }
 
@@ -95,6 +95,22 @@ export default class JIRA {
         return issues.map(this._dumpTask);
     }
 
+    async test(issueID) {
+        console.log('issueID: ', issueID, this.auth);
+        const { data: statuses } =  await axios
+            .get(`${this.host}/rest/api/latest/status/`, {
+                auth : this.auth
+            }).catch(onError);
+
+        console.log('statuses:\n', statuses.map(s => `${s.id}: ${s.name}`));
+        const { data: { transitions } } =  await axios
+            .get(`${this.host}/rest/api/3/issue/${issueID}/transitions`, {
+                auth : this.auth
+            }).catch(onError);
+
+        console.log('transitions: ', transitions.map(t => `${t.name} | ${t.to.name}`));
+    }
+
     isInDevelopmentForRange(issue, [ start, end ]) {
         if (this.inDevelopmentStatuses.includes(issue.status)) {
             return true;
@@ -114,11 +130,7 @@ export default class JIRA {
             .get(`${this.host}/rest/api/3/search`, {
                 auth : this.auth,
                 params
-            })
-            .catch(error => {
-                console.error(error.response ? error.response.data : error);
-                throw error;
-            });
+            }).catch(onError);
         const { issues, startAt, total } = list.data;
         const nextStart = startAt + issues.length;
 
