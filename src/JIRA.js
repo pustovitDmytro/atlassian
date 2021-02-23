@@ -20,7 +20,11 @@ export default class JIRA {
             username : config.email,
             password : config.token
         };
-        this.inDevelopmentStatuses = [ 'Selected for development', 'To Do', 'In development' ];
+        this.statuses = {
+            dev  : [ '10006', '10000', '1' ],
+            test : [ '10002', '10003' ]
+        };
+
         this.gitlab = config.gitlab;
     }
 
@@ -77,7 +81,7 @@ export default class JIRA {
         if (to) jql.push(`updatedDate <= ${to.format('YYYY-MM-DD')}`);
         if (stages.length) {
             if (stages.includes('dev')) {
-                jql.push(`status IN (${this.inDevelopmentStatuses.map(s => `"${s}"`).join(', ')})`);
+                jql.push(`status IN (${this.statuses.dev.map(s => `"${s}"`).join(', ')})`);
             }
         }
         if (!sprint.includes('all')) {
@@ -95,20 +99,48 @@ export default class JIRA {
         return issues.map(this._dumpTask);
     }
 
-    async test(issueID) {
-        console.log('issueID: ', issueID, this.auth);
-        const { data: statuses } =  await axios
-            .get(`${this.host}/rest/api/latest/status/`, {
-                auth : this.auth
-            }).catch(onError);
-
-        console.log('statuses:\n', statuses.map(s => `${s.id}: ${s.name}`));
+    async move(issueID, status) {
         const { data: { transitions } } =  await axios
             .get(`${this.host}/rest/api/3/issue/${issueID}/transitions`, {
                 auth : this.auth
-            }).catch(onError);
+            })
+            .catch(onError);
 
-        console.log('transitions: ', transitions.map(t => `${t.name} | ${t.to.name}`));
+        const statuses = [ ...this.statuses.dev, ...this.statuses.test ].reverse();
+        const desirableIndex = statuses.findIndex(s => s === status);
+
+        console.log(transitions.map(t => `${t.name} => ${t.to.name }(${t.to.id})`));
+        for (const i in statuses) {
+            if (i < desirableIndex) continue;
+            const stat = statuses[i];
+            const transition = transitions.find(t => t.to.id === stat);
+
+            if (transition) {
+                await axios
+                    .post(`${this.host}/rest/api/3/issue/${issueID}/transitions`, { transition: transition.id }, {
+                        auth : this.auth
+                    }).catch(onError);
+
+                console.log(`moved from ${transition.name} to ${transition.to.name} (${transition.to.id})`);
+                const isFinalMove = transition.to.id === status;
+
+                if (isFinalMove) return;
+
+                return this.move(issueID, status);
+            }
+        }
+        console.warn(`No transitions to status ${status} found`);
+    }
+
+    async test(issueID) {
+        // const { data: statuses } =  await axios
+        //     .get(`${this.host}/rest/api/latest/status/`, {
+        //         auth : this.auth
+        //     }).catch(onError);
+
+        // console.log(statuses);
+        // console.log('statuses:\n', statuses.map(s => `${s.id}: ${s.name}`));
+        await this.move(issueID, this.statuses.test[0]);
     }
 
     isInDevelopmentForRange(issue, [ start, end ]) {
