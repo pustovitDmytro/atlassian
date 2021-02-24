@@ -10,8 +10,8 @@ const yargs = require('yargs/yargs');
 const fs = require('fs-extra');
 const uuid = require('uuid');
 const chalk = require('chalk');
-const packageInfo = require('../package.json');
-const Confluence = require('../src/Confluence').default;
+const packageInfo = require('../../package.json');
+const Confluence = require('../Confluence').default;
 
 const isMain = !module.parent;
 const homedir = os.homedir();

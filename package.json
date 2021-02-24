@@ -16,7 +16,8 @@
     "semantic-release": "semantic-release"
   },
   "bin": {
-    "jira": "bin/jira.js"
+    "jira": "lib/bin/jira.js",
+    "confluence": "lib/bin/confluence.js"
   },
   "repository": {
     "type": "git",
@@ -47,6 +48,7 @@
     "@semantic-release/release-notes-generator": "^7.1.4",
     "babel-eslint": "^10.0.1",
     "babel-plugin-module-resolver": "^3.2.0",
+    "babel-plugin-shebang": "^1.0.0",
     "chai": "^4.2.0",
     "chance": "^1.0.18",
     "conventional-changelog-eslint": "^3.0.1",
@@ -62,8 +64,10 @@
     "fs-extra": "^8.1.0",
     "husky": "^5.0.9",
     "mocha": "^6.2.3",
+    "mock-stdin": "^1.0.0",
     "nyc": "^14.1.1",
     "semantic-release": "^17.3.9",
+    "sinon": "^9.2.4",
     "uuid": "^3.3.2"
   },
   "dependencies": {

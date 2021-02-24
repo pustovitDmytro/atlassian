@@ -51,7 +51,7 @@ export default class Confluence {
             throw err;
         });
 
-        console.log(res.taskId, res.text);
+        // console.log(res.taskId, res.text);
         const longRes = await axios.get(`${this.host}/wiki/rest/api/longtask/${res.taskId}`, {
             auth : this.auth
         }).catch(onError);
@@ -59,8 +59,7 @@ export default class Confluence {
         let task = longRes.data;
 
         while (!task.finished) {
-            console.log(`${task.percentageComplete } % completed...    `, `${task.elapsedTime} spend`);
-            await pause(1000);
+            await pause(500);
             const longIterRes = await axios.get(`${this.host}/wiki/rest/api/longtask/${res.taskId}`, {
                 auth : this.auth
             }).catch(onError);
@@ -68,7 +67,6 @@ export default class Confluence {
             task = longIterRes.data;
         }
 
-        console.log(task);
         const downloadUrl = task.messages[0].translation
             .match(/<a class="space-export-download-path" href="([^">]*)">/i)[1];
         const filePath = path.resolve(filename);
