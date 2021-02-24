@@ -5,7 +5,6 @@ import axios from 'axios';
 const { htmlToText } = require('html-to-text');
 
 function onError(error) {
-    console.log('error: ', error);
     console.error(error.response ? error.response.data : error);
     throw error;
 }

@@ -8,7 +8,7 @@ import ms from 'ms';
 import axios from 'axios';
 
 function onError(error) {
-    console.error(error.response ? error.response.data : error);
+    // console.error(error.response ? error.response.data : error);
     throw error;
 }
 
@@ -24,7 +24,6 @@ export default class JIRA {
             dev  : [ '10006', '10000', '1' ],
             test : [ '10002', '10003' ]
         };
-
         this.gitlab = config.gitlab;
     }
 
@@ -71,6 +70,21 @@ export default class JIRA {
                     });
                 })
         };
+    }
+
+    _dumpUser(user) {
+        return {
+            email : user.emailAddress,
+            id    : user.accountId,
+            name  : user.displayName
+        };
+    }
+
+    async getMyself() {
+        const { data: myself } =  await axios
+            .get(`${this.host}/rest/api/3/myself`, { auth: this.auth }).catch(onError);
+
+        return this._dumpUser(myself);
     }
 
     async list({ isMine, stages, from, to, search, sprint = [ 'open' ] }) {
@@ -132,6 +146,15 @@ export default class JIRA {
         console.warn(`No transitions to status ${status} found`);
     }
 
+    async loadStatuses() {
+        const { data: statuses } =  await axios
+            .get(`${this.host}/rest/api/latest/status/`, {
+                auth : this.auth
+            }).catch(onError);
+
+        return this._STATUSES = statuses;
+    }
+
     async test(issueID) {
         // const { data: statuses } =  await axios
         //     .get(`${this.host}/rest/api/latest/status/`, {
@@ -157,7 +180,10 @@ export default class JIRA {
     }
 
     async getIssues(params, includes = []) {
-        // ?expand=changelog
+        if (includes.length) {
+            // ?expand=changelog
+            params.expand = includes;
+        }
         const list =  await axios
             .get(`${this.host}/rest/api/3/search`, {
                 auth : this.auth,

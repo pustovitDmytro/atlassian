@@ -8,9 +8,10 @@ const path = require('path');
 const yargs = require('yargs/yargs');
 const inquirer = require('inquirer');
 const fs = require('fs-extra');
+const { isString } = require('myrmidon');
+const chalk = require('chalk');
 const packageInfo = require('../package.json');
 const JIRA = require('../src/JIRA').default;
-const chalk = require('chalk');
 
 const isMain = !module.parent;
 const homedir = os.homedir();
@@ -24,9 +25,30 @@ const validate = (required, regexp, msg = 'invalid value') => value => {
     return true;
 };
 
-const SCOPES = [ 'jira', 'confluence', 'test' ];
+function errorFormatter(error) {
+    if (error.isAxiosError) {
+        const json = error.toJSON();
 
-const questions = currentConfig => [
+        if (json.data) throw JSON.stringify(json.data);
+
+        throw json.message;
+    }
+}
+
+async function validateCredentials(token, answers) {
+    this.jira = new JIRA({
+        host  : answers.host,
+        email : answers.email,
+        token
+    });
+    this.myself = await this.jira.getMyself().catch(errorFormatter);
+
+    return true;
+}
+
+const SCOPES = [ 'jira', 'confluence' ];
+
+const CREDENTIALS_QUESTIONS = (context = {}) => [
     {
         type     : 'input',
         name     : 'host',
@@ -40,23 +62,92 @@ const questions = currentConfig => [
         message  : 'Past your email:'
     },
     {
-        type    : 'password',
-        name    : 'token',
-        mask    : '*',
-        message : 'Past your token: '
+        type     : 'password',
+        name     : 'token',
+        mask     : '*',
+        message  : 'Past your token: ',
+        validate : validateCredentials.bind(context)
     },
+    {
+        type    : 'confirm',
+        name    : 'confirm',
+        message : () => `User found:\n${JSON.stringify(context.myself, null, 4)}\nis this you?`
+    }
+];
+
+const isMakeDefault = (currentConfig, scope) => ({
+    type    : 'confirm',
+    name    : 'isDefault',
+    message : () => {
+        const profile = getDefaultProfile(currentConfig, scope);
+
+        return profile
+            ? `Profile ${profile} used as default for ${scope} calls, change?`
+            : 'Make this profile default for jira calls?';
+    }
+});
+
+
+const JIRA_QUESTIONS = (currentConfig, credentials, context = {}) => [
+    isMakeDefault(currentConfig, 'jira'),
+    ...[ 'dev', 'test' ].map((name, index) => {
+        const isFirst = index === 0;
+
+        return {
+            type    : 'input',
+            name    : `statuses.${name}`,
+            message : async () => {
+                const messages = [];
+
+                if (isFirst) {
+                    context.jira = new JIRA(credentials);
+                    const statuses = await context.jira.loadStatuses();
+
+                    messages.push(
+                        '\nCurrent Jira statuses in project:',
+                        ...statuses.map(s => `${s.id} ${s.name}`)
+                    );
+                }
+                messages.push(`\nEnter list of statuses for ${name}`);
+
+                return messages.join('\n');
+            },
+            transformer : inp => isString(inp) ? inp.split(/[\s,]+/) : inp,
+            filter      : inp => isString(inp) ? inp.split(/[\s,]+/) : inp,
+            validate    : async inp => {
+                const statuses = await context.jira.loadStatuses();
+                const statusIds = statuses.map(s => s.id);
+                const invalid = inp.find(i => !statusIds.includes(i));
+
+                if (invalid) return `${invalid} is not valid status. should be one of [${statusIds.join(',')}]`;
+
+                return true;
+            }
+        };
+    }),
+    {
+        type    : 'confirm',
+        name    : 'confirm',
+        message : answ => `jira config: \n${JSON.stringify(answ, null, 4)}\nis everything correct?`
+    }
+];
+
+const CONFLUENCE_QUESTIONS = (currentConfig, credentials, context = {}) => [
+    isMakeDefault(currentConfig, 'confluence'),
+    {
+        type    : 'confirm',
+        name    : 'confirm',
+        message : answ => `confluence config: \n${JSON.stringify(answ, null, 4)}\nis everything correct?`
+    }
+];
+
+const PROFILE_QUESTIONS = (currentConfig, context) => [
     {
         type    : 'input',
         name    : 'profile',
         default : 'default',
         message : 'Name your profile'
     },
-    ...SCOPES.map(scope => ({
-        type    : 'confirm',
-        name    : `default.${scope}`,
-        message : () => `Profile ${getDefaultProfile(currentConfig, scope)} used as default for ${scope} calls, change?`,
-        when    : () => getDefaultProfile(currentConfig, scope)
-    })),
     {
         type    : 'confirm',
         name    : 'confirm',
@@ -64,8 +155,8 @@ const questions = currentConfig => [
     }
 ];
 
-function getDefaultProfile(config, level) {
-    return Object.keys(config).find(key => config[key].default[level]);
+function getDefaultProfile(config, scope) {
+    return Object.keys(config).find(key => config[key][scope] && config[key][scope].isDefault);
 }
 
 function buildConfig(answers) {
@@ -82,36 +173,55 @@ function buildConfig(answers) {
     };
 }
 
-async function init() {
-    const currentConfig = await fs.readJSON(configPath).catch(async () => {
+async function loadConfig() {
+    return fs.readJSON(configPath).catch(async () => {
         await fs.ensureDir(path.dirname(configPath));
         console.log(`No current config found in ${configPath}`);
 
         return {};
     });
+}
 
-    const { profile, confirm, token, ...answers } = await inquirer.prompt(questions(currentConfig));
+async function untilConfirm(q) {
+    const { confirm, ...res } = await inquirer.prompt(q);
 
-    if (confirm) {
-        const profileConfig = buildConfig(answers);
+    if (confirm) return res;
 
-        Object.keys(profileConfig.defaults).forEach(key => {
-            const isDefault = profileConfig.defaults[key];
+    return untilConfirm(q);
+}
 
-            if (isDefault) {
-                const currentDefault = getDefaultProfile(currentConfig, key);
+async function init() {
+    const currentConfig = await loadConfig();
+    const context = {};
+    const credentials = await untilConfirm(CREDENTIALS_QUESTIONS(context));
+    const jira = await untilConfirm(JIRA_QUESTIONS(currentConfig, credentials));
 
-                if (currentDefault) {
-                    currentConfig[currentDefault].default[key] = false;
-                }
-            }
-        });
-        currentConfig[profile] = { ...profileConfig, token, _version: packageInfo.version };
-        await fs.writeJSON(configPath, currentConfig);
-        console.log(`Profile ${profile} saved`);
-    } else {
-        console.log(`Cancelled profile ${profile} creation`);
-    }
+    console.log('jira: ', jira);
+
+    console.log('credentials: ', credentials);
+
+    // const { profile, confirm, token, ...answers } = await inquirer.prompt(questions(currentConfig));
+
+    // if (confirm) {
+    //     const profileConfig = buildConfig(answers);
+
+    //     Object.keys(profileConfig.defaults).forEach(key => {
+    //         const isDefault = profileConfig.defaults[key];
+
+    //         if (isDefault) {
+    //             const currentDefault = getDefaultProfile(currentConfig, key);
+
+    //             if (currentDefault) {
+    //                 currentConfig[currentDefault].default[key] = false;
+    //             }
+    //         }
+    //     });
+    //     currentConfig[profile] = { ...profileConfig, token, _version: packageInfo.version };
+    //     await fs.writeJSON(configPath, currentConfig);
+    //     console.log(`Profile ${profile} saved`);
+    // } else {
+    //     console.log(`Cancelled profile ${profile} creation`);
+    // }
 }
 
 async function list(args) {
