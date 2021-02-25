@@ -52,3 +52,10 @@ export function dumpUser(user) {
         name  : user.displayName
     };
 }
+
+export function dumpStatus(s) {
+    return {
+        id   : s.id,
+        name : s.name
+    };
+}

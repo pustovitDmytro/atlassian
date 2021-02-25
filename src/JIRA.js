@@ -87,9 +87,7 @@ export default class JIRA extends Api {
 
     async loadStatuses() {
         if (this._STATUSES) return this._STATUSES;
-        const { data: statuses } =  await axios
-            .get(`${this.host}/rest/api/latest/status/`, { auth: this.auth })
-            .catch(onError);
+        const statuses = await this.getStatuses();
 
         return this._STATUSES = statuses;
     }
@@ -99,13 +97,13 @@ export default class JIRA extends Api {
     }
 
     isInDevelopmentForRange(issue, [ start, end ]) {
-        if (this.inDevelopmentStatuses.includes(issue.status)) {
+        if (this.statuses.dev.includes(issue.status)) {
             return true;
         }
 
         return issue.transitions.some(t => {
             const isTimeMatch = dayjs(t.date).isBetween(dayjs(start), dayjs(end));
-            const isFieldMatch = [ t.from, t.to ].some(status => this.inDevelopmentStatuses.includes(status));
+            const isFieldMatch = [ t.from, t.to ].some(status => this.statuses.dev.includes(status));
 
             return isTimeMatch && isFieldMatch;
         });
@@ -184,13 +182,13 @@ export default class JIRA extends Api {
             if (t.transitions.length) {
                 extra.transitions = {};
                 const devToTest = t.transitions
-                    .filter(tr => this.inDevelopmentStatuses.includes(tr.from) && !this.inDevelopmentStatuses.includes(tr.to))
+                    .filter(tr => this.statuses.dev.includes(tr.from) && !this.statuses.dev.includes(tr.to))
                     .map(tr => dayjs(tr.date))
                     .sort((a, b) => a - b)
                     .map(d => d.format('MMM DD'));
 
                 const testToDev = t.transitions
-                    .filter(tr => this.inDevelopmentStatuses.includes(tr.to) && !this.inDevelopmentStatuses.includes(tr.from))
+                    .filter(tr => this.statuses.dev.includes(tr.to) && !this.statuses.dev.includes(tr.from))
                     .map(tr => dayjs(tr.date))
                     .sort((a, b) => a - b)
                     .map(d => d.format('MMM DD'));

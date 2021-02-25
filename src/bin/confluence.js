@@ -1,22 +1,17 @@
-#!/usr/bin/env node
+#!./node_modules/.bin/babel-node
 
-process.env.BABEL_DISABLE_CACHE = 1;
-
-require('@babel/register');
-const os = require('os');
-const path = require('path');
-const yargs = require('yargs/yargs');
-// const inquirer = require('inquirer');
-const fs = require('fs-extra');
-const uuid = require('uuid');
-const chalk = require('chalk');
-const packageInfo = require('../../package.json');
-const Confluence = require('../Confluence').default;
+import path from 'path';
+import os from 'os';
+import yargs from 'yargs/yargs';
+import chalk from 'chalk';
+import fs from 'fs-extra';
+import uuid from 'uuid';
+import Confluence from '../Confluence';
+import packageInfo from '../../package.json';
+import { configPath } from './utils';
+import init from './init';
 
 const isMain = !module.parent;
-const homedir = os.homedir();
-const defaultConfigPath = path.join(homedir, '.atlassian');
-const configPath = process.env.ATLASSIAN_CONFIG_PATH || defaultConfigPath;
 
 async function listPages(args) {
     const config = await fs.readJSON(configPath);
@@ -37,29 +32,37 @@ async function exportPage(args) {
     await confluence.exportPage(args.page, fileName);
 }
 
-async function run(cmd) {
+export default async function run(cmd) {
+    await new Promise((res) => {
     // eslint-disable-next-line no-unused-expressions
-    yargs(cmd)
-        .usage('Usage: $0 <command> [options]')
-        .command({
-            command : 'pages <space> [--profile=<profile>]',
-            builder : y => y
-                .alias('-p', '--profile'),
-            desc    : 'List Pages',
-            handler : listPages
-        })
-        .command({
-            command : 'export <page> [--path=<path>]',
-            builder : y => y
-                .alias('-p', '--profile'),
-            desc    : 'Export Page as pdf',
-            handler : exportPage
-        })
-        .help('h')
-        .alias('h', 'help')
-        .help()
-        .showHelpOnFail(true).demandCommand(1, '').recommendCommands().strict()
-        .epilog(`${packageInfo.name} v.${packageInfo.version}`).argv;
+        yargs(cmd)
+            .usage('Usage: $0 <command> [options]')
+            .command({
+                command : 'init',
+                desc    : 'Add attlasian profile',
+                handler : init
+            })
+            .command({
+                command : 'pages <space> [--profile=<profile>]',
+                builder : y => y
+                    .alias('-p', '--profile'),
+                desc    : 'List Pages',
+                handler : listPages
+            })
+            .command({
+                command : 'export <page> [--path=<path>]',
+                builder : y => y
+                    .alias('-p', '--profile'),
+                desc    : 'Export Page as pdf',
+                handler : exportPage
+            })
+            .help('h')
+            .alias('h', 'help')
+            .help()
+            .showHelpOnFail(true).demandCommand(1, '').recommendCommands().strict()
+            .epilog(`${packageInfo.name} v.${packageInfo.version}`)
+            .onFinishCommand(res).argv;
+    });
 }
 
 if (isMain) {
