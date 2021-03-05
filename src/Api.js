@@ -1,11 +1,43 @@
+/* eslint-disable camelcase */
 
 import { URL } from 'url';
 import axios from 'axios';
 import ms from 'ms';
+import { createLogger, format, transports } from 'winston';
+import uuid from 'uuid';
+import { version } from '../package.json';
+
+const appNameFormat = format(info => {
+    info.atlassian_version = version; // eslint-disable-line no-param-reassign
+
+    return info;
+});
+
+const { npm_config_loglevel, ATLASSIAN_DEBUG, ATLASSIAN_LOG_LEVEL } = process.env;
+const level = ATLASSIAN_LOG_LEVEL || ATLASSIAN_DEBUG && 'debug' || npm_config_loglevel || 'notice';
+
+const defaultLogger  = createLogger({
+    level,
+    levels : {
+        error   : 0,
+        warn    : 1,
+        info    : 2,
+        notice  : 3,
+        verbose : 4,
+        debug   : 5
+    },
+    format : format.combine(
+        appNameFormat(),
+        format.timestamp(),
+        format.json()
+    ),
+    transports : [
+        new transports.Console({})
+    ]
+});
 
 function resolveUrl(base, relativeUrl) {
     const baseUrl = base ? new URL(base) : undefined;
-
     const absoluteUrl = new URL(relativeUrl, baseUrl);
 
     if (absoluteUrl.href === relativeUrl) {
@@ -22,9 +54,17 @@ function resolveUrl(base, relativeUrl) {
 }
 
 export class API_ERROR extends Error {
+    #payload
+
     constructor(error) {
         super(error.message);
-        this._payload = error;
+        Error.captureStackTrace(this, this.constructor);
+
+        this.#payload = error;
+    }
+
+    get name() {
+        return this.constructor.name;
     }
 }
 
@@ -33,6 +73,11 @@ export default class API {
         this.url = new URL(url);
         this.auth = auth;
         this.timeout = ms(timeout);
+        this.initLogger();
+    }
+
+    initLogger(logger = defaultLogger) {
+        this.logger = logger;
     }
 
     onError(error) {
@@ -57,12 +102,13 @@ export default class API {
 
     async request(method, url, reqOptions = {}, settings = {}) {
         const { headers, data, params, ...options } = reqOptions;
+        const { traceId = uuid.v4() } = settings;
 
-        if (this.isMock) {
-            if (this.log) this.log({ method, url, ...reqOptions, api: this.constructor.name });
-
-            return;
-        }
+        this.logger.log(
+            this.isMock ? 'info' : 'debug',
+            { method, url, ...reqOptions, api: this.constructor.name, traceId }
+        );
+        if (this.isMock) return;
 
         try {
             const response = await axios({
@@ -80,6 +126,7 @@ export default class API {
 
             return handleResponse(response);
         } catch (error) {
+            this.logger.log('verbose', { traceId, error: error.toString(), stack: error.stack });
             const onError = settings.onError || this.onError;
 
             onError(error);
