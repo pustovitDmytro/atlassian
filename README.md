@@ -1,5 +1,5 @@
 # atlassian
-**atlassian** atlassian command line interface.
+**atlassian** jira and confluence command line interface.
 
 [![Version][badge-vers]][npm]
 [![Dependencies][badge-deps]][npm]
@@ -25,14 +25,46 @@ To use library you need to have [node](https://nodejs.org) and [npm](https://www
 To install the library run following command
 
 ```bash
-  npm i --save atlassian
+  npm i -g atlassian
 ```
 
 ## Usage
 
-```javascript
+### List Tasks
+
+Generally, ```jira list``` command can help to list all tasks
 
 ```
+jira.js list [--dev] [--mine] [--search=<search>] [--sprint=<sprint>] [--verbose]
+
+List Tasks
+
+Options:
+  -h, --help                Show help                                                      [boolean]
+      --version             Show version number                                            [boolean]
+  -d, --dev, --development  filter only tasks in development                               [boolean]
+  -m, --mine, --my          filter only mine issues                                        [boolean]
+  -s, --search, --grep      search issues by summary                                        [string]
+      --sprint              specify sprints for filter
+                                                   [array] [choices: "all", "open"] [default: "open"]
+  -v, --verbose             verbose logs                                                   [boolean]
+```
+
+Some common examples:
+
+1) get all mine tasks in development for open sprint:
+   ```bash
+      jira ls -dm
+   ```
+   where ```ls``` is alias for ```list``` command and ```-dm``` means *mine* tasks in *dev* status
+
+2) search issues which contains *memory leak* words:
+   ```bash
+      jira ls -s 'memory leak'
+   ```
+   where ```-s``` is shortcut for ```--search``` or ```--grep```
+
+
 
 ## Contribute
 

@@ -93,14 +93,35 @@ export default async function run(cmd) {
                 handler : cliCommand(init)
             })
             .command({
-                command : 'list [--dev] [--mine] [--search=<search>] [--sprint=<sprint>]',
+                command : 'list [--dev] [--mine] [--search=<search>] [--sprint=<sprint>] [--verbose]',
                 aliases : [ 'ls' ],
                 builder : y => y
-                    .alias('-d', '--dev')
-                    .alias('-m', '--mine')
-                    .alias('-s', '--search')
-                    .alias('--grep', '--search')
-                    .array('--sprint'),
+                    .option('dev', {
+                        alias    : [ 'd', 'development' ],
+                        describe : 'filter only tasks in development',
+                        type     : 'boolean'
+                    })
+                    .option('mine', {
+                        alias    : [ 'm', 'my' ],
+                        describe : 'filter only mine issues',
+                        type     : 'boolean'
+                    })
+                    .option('search', {
+                        alias    : [ 's', 'grep' ],
+                        describe : 'search issues by summary',
+                        type     : 'string'
+                    })
+                    .option('sprint', {
+                        describe : 'specify sprints for filter',
+                        choices  : [ 'all', 'open' ],
+                        default  : [ 'open' ],
+                        type     : 'array'
+                    })
+                    .option('verbose', {
+                        describe : 'verbose logs',
+                        alias    : [ 'v' ],
+                        type     : 'boolean'
+                    }),
                 desc    : 'List Tasks',
                 handler : cliCommand(list)
             })
@@ -112,6 +133,7 @@ export default async function run(cmd) {
             .command('profiles', 'List stored attlasian profiles')
             .help('h')
             .alias('h', 'help')
+            .wrap(Math.min(100, process.stdout.columns))
             .version(packageInfo.version)
             .demandCommand(1, '').recommendCommands().strict()
             .epilog(`${packageInfo.name} v.${packageInfo.version}`)
@@ -122,6 +144,5 @@ export default async function run(cmd) {
     });
 }
 
-if (isMain) {
-    run(process.argv.slice(2));
-}
+if (isMain) run(process.argv.slice(2));
+
