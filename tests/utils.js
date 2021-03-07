@@ -2,6 +2,9 @@ import { pause } from 'myrmidon';
 import mockStdin from  'mock-stdin';
 import { stdout } from 'test-console';
 import { assert } from 'chai';
+import { getNamespace } from 'cls-hooked';
+import jsonQuery from 'json-query';
+import { apiTraces } from './logger';
 
 export class CLITester {
     constructor(dialog, factory) {
@@ -10,19 +13,44 @@ export class CLITester {
         this.factory = factory;
     }
 
-    async test(index = 0) {
-        if (index === this.dialog.length) return this.stdin.restore();
+    async test(index = 0, time = 100) {
         const inspect = stdout.inspect();
-        const item = this.dialog[index];
 
-        await pause(100);
-
+        await pause(time);
         inspect.restore();
-        this.stdin.send([ item.input, null ]);
         const out = inspect.output.join('\n');
 
-        this.factory.logger.log('info', { item, out });
+        if (index === this.dialog.length) {
+            this.stdin.restore();
+
+            return out;
+        }
+
+        const item = this.dialog[index];
+
+        this.stdin.send([ item.input, null ]);
+
+        this.factory.logger.log('info', { item, out, service: 'CLITester' });
         assert.match(out, new RegExp(item.output), JSON.stringify(item));
         await this.test(index + 1);
+
+        return out;
     }
+}
+
+export async function getApiCalls(query, { trace = true } = {}) {
+    const ns = getNamespace('__TEST__');
+    const queryItems = [];
+
+    if (query)queryItems.push(query);
+
+    if (trace) {
+        const traceId = ns.get('current').id;
+
+        queryItems.push(`traceId=${traceId}`);
+    }
+    const q = `[*${queryItems.join('&')}]`;
+    const res = jsonQuery(q, { data: apiTraces });
+
+    return res.value;
 }

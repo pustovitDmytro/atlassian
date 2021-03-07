@@ -5,7 +5,7 @@ import chalk from 'chalk';
 import { isPromise } from 'myrmidon';
 import JIRA from '../JIRA';
 import packageInfo from '../../package.json';
-import {  loadProfile } from './utils';
+import { loadProfile } from './utils';
 import init from './init';
 
 const isMain = !module.parent;
@@ -80,11 +80,10 @@ export default async function run(cmd) {
             ygs.showHelp('error');
             if (failMessage) {
                 console.error('');
-                console.error(chalk.red(message));
+                console.error(chalk.red(failMessage), error?.stack);
             }
             process.exit(2);
         }
-
         const Argv = yargs(cmd)
             .usage('Usage: $0 <command> [options]')
             .command({

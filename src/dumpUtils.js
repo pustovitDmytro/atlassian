@@ -8,8 +8,9 @@ export function dumpTask(issue = {}) {
         : [];
 
     return {
+        id           : issue.key,
         key          : issue.key,
-        project      : issue.fields.project.name,
+        project      : issue.fields.project?.name,
         created      : issue.fields.created,
         updated      : issue.fields.updated,
         assignee     : issue.fields.assignee?.accountId,
@@ -17,8 +18,8 @@ export function dumpTask(issue = {}) {
         summary      : issue.fields.summary,
         description  : issue.fields.description,
         time         : issue.fields.aggregatetimespent,
-        priority     : issue.fields.priority.name,
-        status       : issue.fields.status.name,
+        priority     : issue.fields.priority?.name,
+        status       : issue.fields.status?.name,
 
         worklog : worklogs.map(w => ({
             time   : w.timeSpentSeconds * 1000,

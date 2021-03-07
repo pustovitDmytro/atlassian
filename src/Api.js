@@ -100,33 +100,40 @@ export default class API {
         };
     }
 
+    async _axios(axiosOptions) {
+        return axios(axiosOptions);
+    }
+
+    getTraceId({ traceId }) {
+        return traceId || uuid.v4();
+    }
+
     async request(method, url, reqOptions = {}, settings = {}) {
         const { headers, data, params, ...options } = reqOptions;
-        const { traceId = uuid.v4() } = settings;
+        const traceId = this.getTraceId(settings);
 
-        this.logger.log(
-            this.isMock ? 'info' : 'debug',
-            { method, url, ...reqOptions, api: this.constructor.name, traceId }
-        );
-        if (this.isMock) return;
+        this.logger.log('debug', { method, url, ...reqOptions, api: this.constructor.name, traceId, type: 'requestSent' });
+        const axiosOptions = {
+            timeout : this.timeout,
+            method,
+            url     : this._getUrl(url).href,
+            headers : headers || this._getHeaders(),
+            data    : data || {},
+            params  : params || {},
+            auth    : this.auth,
+            ...options
+        };
 
         try {
-            const response = await axios({
-                timeout : this.timeout,
-                method,
-                url     : this._getUrl(url).href,
-                headers : headers || this._getHeaders(),
-                data    : data || {},
-                params  : params || {},
-                auth    : this.auth,
-                ...options
-            });
+            const response = await this._axios(axiosOptions);
+
+            this.logger.log('verbose', { traceId, type: 'responseReceived', data: response.data });
 
             const handleResponse = settings.onResponse || this.onResponse;
 
             return handleResponse(response);
         } catch (error) {
-            this.logger.log('verbose', { traceId, error: error.toString(), stack: error.stack });
+            this.logger.log('verbose', { traceId, error: error.toString(), stack: error.stack, type: 'errorOccured' });
             const onError = settings.onError || this.onError;
 
             onError(error);
@@ -138,5 +145,9 @@ export default class API {
             params,
             ...options
         });
+    }
+
+    async mock() {
+        return { data: 1 };
     }
 }

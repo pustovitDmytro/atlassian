@@ -1,8 +1,5 @@
-/* eslint-disable no-param-reassign */
-// import { inspect } from 'util';
 import path from 'path';
 import dayjs from 'dayjs';
-import { uniqueIdFilter } from 'myrmidon';
 import fs from 'fs-extra';
 import ms from 'ms';
 import axios from 'axios';
@@ -10,23 +7,20 @@ import Api from './JiraApi';
 import { dumpTask } from './dumpUtils';
 
 function onError(error) {
-    // console.error(error.response ? error.response.data : error);
     throw error;
 }
 
 export default class JIRA extends Api {
-    constructor(config) {
+    constructor(config, logger) {
         super(config.host, {
             username : config.email,
             password : config.token
         });
         this.userId = config.userId;
         this.host = config.host;
-        this.statuses = {
-            dev  : [ '10006', '10000', '1' ],
-            test : [ '10002', '10003' ]
-        };
-        this.gitlab = config.gitlab;
+        this.statuses = config.jira?.statuses;
+        this.gitlab = config.jira?.gitlab;
+        this.initLogger(logger);
     }
 
     async list({ isMine, stages, from, to, search, sprint = [ 'open' ] }) {
@@ -36,8 +30,11 @@ export default class JIRA extends Api {
         if (from) jql.push(`updatedDate >= ${from.format('YYYY-MM-DD')}`);
         if (to) jql.push(`updatedDate <= ${to.format('YYYY-MM-DD')}`);
         if (stages.length) {
-            if (stages.includes('dev')) jql.push(`status IN (${this.statuses.dev.map(s => `"${s}"`).join(', ')})`);
-            if (stages.includes('test')) jql.push(`status IN (${this.statuses.test.map(s => `"${s}"`).join(', ')})`);
+            const [ devStatusesList, testStatusesList ] = [ this.statuses.dev, this.statuses.test ]
+                .map(statusList => statusList.map(s => `"${s}"`).join(', '));
+
+            if (stages.includes('dev')) jql.push(`status IN (${devStatusesList})`);
+            if (stages.includes('test')) jql.push(`status IN (${testStatusesList})`);
         }
         if (!sprint.includes('all')) {
             if (sprint.includes('open')) jql.push('Sprint in openSprints()');
@@ -50,7 +47,7 @@ export default class JIRA extends Api {
 
         const issues = await this.getIssues(query);
 
-        return issues.map(dumpTask);
+        return issues;
     }
 
     async move(issueID, status) {
@@ -109,31 +106,6 @@ export default class JIRA extends Api {
         });
     }
 
-    async getIssues(params, includes = []) {
-        if (includes.length) {
-            // ?expand=changelog
-            params.expand = includes;
-        }
-        const list =  await axios
-            .get(`${this.host}/rest/api/3/search`, {
-                auth : this.auth,
-                params
-            }).catch(onError);
-        const { issues, startAt, total } = list.data;
-        const nextStart = startAt + issues.length;
-
-        if (total > nextStart) {
-            const next = await this.getIssues({
-                ...params,
-                startAt : nextStart
-            });
-
-            return [ ...issues, ...next ].filter(uniqueIdFilter);
-        }
-
-        return issues;
-    }
-
     async getTaskList(start, end, { comments = false, worklog = false } = {}) {
         console.log('start: ', start.format('YYYY/MM/DD'), `end: ${end.format('YYYY/MM/DD')}`);
 
@@ -149,11 +121,13 @@ export default class JIRA extends Api {
             if (worklog) {
                 const info =  await axios.get(`${this.host}/rest/api/3/issue/${issue.id}/worklog`, { auth: this.auth });
 
+                // eslint-disable-next-line no-param-reassign
                 issue._worklogs = info.data.worklogs || [];
             }
             if (comments) {
                 const info =  await axios.get(`${this.host}/rest/api/3/issue/${issue.id}/comment`, { auth: this.auth });
 
+                // eslint-disable-next-line no-param-reassign
                 issue._comments = info.data.comments || [];
             }
         }));
