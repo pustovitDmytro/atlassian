@@ -1,3 +1,33 @@
+# [1.2.0](https://github.com/pustovitDmytro/atlassian/compare/v1.1.0...v1.2.0) (2021-03-07)
+
+
+### Chore
+
+* adds tests for jira ls ([4083d48](https://github.com/pustovitDmytro/atlassian/commit/4083d48538af2076748c39c7d6fee1d34ae07371))
+* upgrade commitlint ([c926655](https://github.com/pustovitDmytro/atlassian/commit/c92665519ac3566fe7c7132b042cf9837e3fcf02))
+
+### Docs
+
+* adds jira ls docs ([472fe50](https://github.com/pustovitDmytro/atlassian/commit/472fe502895cdc9771895a608664d047d6a395de))
+
+### Fix
+
+* change moment to dayjs ([f3378df](https://github.com/pustovitDmytro/atlassian/commit/f3378df3037c9cbca78c760a82f6d34f6d02e9f9))
+
+### New
+
+* add api logger ([f6226f0](https://github.com/pustovitDmytro/atlassian/commit/f6226f0f790bdb5c208e8aa62072fa80e09dff8b))
+* adds Confluence api ([12b5b95](https://github.com/pustovitDmytro/atlassian/commit/12b5b95eac03f16deeaff90c7a248a4bc219b049))
+* adds initial cli test ([ae14477](https://github.com/pustovitDmytro/atlassian/commit/ae1447766836c3f2a6516b184e0e109b6b9abc30))
+* adds ls tasks ([76ae7c5](https://github.com/pustovitDmytro/atlassian/commit/76ae7c5785f27145ed18280207634eda3d0d524e))
+* allow send task to testing ([c0d6f36](https://github.com/pustovitDmytro/atlassian/commit/c0d6f36728e12d75ca91eb6319fbec95f919d4d8))
+* cli error handling ([1645ca3](https://github.com/pustovitDmytro/atlassian/commit/1645ca350cd0ceddacc999871b05433a7523448f))
+* init atlasian profile ([cb3941e](https://github.com/pustovitDmytro/atlassian/commit/cb3941e94a6249f1e8cdb38665182fd2d433b0c4))
+
+### Wip
+
+* complex jira config ([1bd6789](https://github.com/pustovitDmytro/atlassian/commit/1bd6789c59bb3309aba9645cb8406392f0cc4963))
+
 # [1.1.0](https://github.com/pustovitDmytro/atlassian/compare/v1.0.0...v1.1.0) (2021-02-13)
 
 
