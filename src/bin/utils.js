@@ -59,6 +59,13 @@ export async function loadProfile(scope, name) {
     return profile;
 }
 
+export function installLogger(logger, { logLevel, verbose, debug }) {
+    const level = logLevel || verbose && 'verbose' || debug && 'debug';
+
+    // eslint-disable-next-line no-param-reassign
+    if (level) logger.level = level;
+}
+
 
 export async function untilConfirm(q) {
     const { confirm, ...res } = await inquirer.prompt(q);

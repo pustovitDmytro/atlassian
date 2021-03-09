@@ -1,40 +1,8 @@
-/* eslint-disable camelcase */
-
 import { URL } from 'url';
 import axios from 'axios';
 import ms from 'ms';
-import { createLogger, format, transports } from 'winston';
 import uuid from 'uuid';
-import { version } from '../package.json';
-
-const appNameFormat = format(info => {
-    info.atlassian_version = version; // eslint-disable-line no-param-reassign
-
-    return info;
-});
-
-const { npm_config_loglevel, ATLASSIAN_DEBUG, ATLASSIAN_LOG_LEVEL } = process.env;
-const level = ATLASSIAN_LOG_LEVEL || ATLASSIAN_DEBUG && 'debug' || npm_config_loglevel || 'notice';
-
-const defaultLogger  = createLogger({
-    level,
-    levels : {
-        error   : 0,
-        warn    : 1,
-        info    : 2,
-        notice  : 3,
-        verbose : 4,
-        debug   : 5
-    },
-    format : format.combine(
-        appNameFormat(),
-        format.timestamp(),
-        format.json()
-    ),
-    transports : [
-        new transports.Console({})
-    ]
-});
+import defaultLogger from './logger';
 
 function resolveUrl(base, relativeUrl) {
     const baseUrl = base ? new URL(base) : undefined;

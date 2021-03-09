@@ -28,7 +28,7 @@ To install the library run following command
   npm i -g atlassian
 ```
 
-## Usage
+## Jira cli
 
 ### List Tasks
 
@@ -36,18 +36,20 @@ Generally, ```jira list``` command can help to list all tasks
 
 ```
 jira.js list [--dev] [--mine] [--search=<search>] [--sprint=<sprint>] [--verbose]
+[--profile=<profile>]
 
 List Tasks
 
 Options:
-  -h, --help                Show help                                                      [boolean]
-      --version             Show version number                                            [boolean]
-  -d, --dev, --development  filter only tasks in development                               [boolean]
-  -m, --mine, --my          filter only mine issues                                        [boolean]
-  -s, --search, --grep      search issues by summary                                        [string]
+  -h, --help                Show help                                                 [boolean]
+      --version             Show version number                                       [boolean]
+  -v, --verbose             verbose logs                                              [boolean]
+  -p, --profile             specify profile name                                       [string]
+  -d, --dev, --development  filter only tasks in development                          [boolean]
+  -m, --mine, --my          filter only mine issues                                   [boolean]
+  -s, --search, --grep      search issues by summary                                   [string]
       --sprint              specify sprints for filter
-                                                   [array] [choices: "all", "open"] [default: "open"]
-  -v, --verbose             verbose logs                                                   [boolean]
+                                           [array] [choices: "all", "open"] [default: ["open"]]
 ```
 
 Some common examples:
@@ -64,7 +66,20 @@ Some common examples:
    ```
    where ```-s``` is shortcut for ```--search``` or ```--grep```
 
+### Send issue(s) to testing
 
+```
+jira.js test [--verbose] [--profile=<profile>] <issueId...>
+
+Send task to testing
+
+Options:
+  -h, --help     Show help                                                            [boolean]
+      --version  Show version number                                                  [boolean]
+  -v, --verbose  verbose logs                                                         [boolean]
+  -p, --profile  specify profile name                                                  [string]
+      --issueId  id(s) of task                                                          [array]
+```
 
 ## Contribute
 
