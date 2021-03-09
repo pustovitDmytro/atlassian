@@ -1,6 +1,7 @@
 import path from 'path';
-import { createLogger, transports } from 'winston';
+import { createLogger, transports, format } from 'winston';
 import arrayTransport from 'winston-array-transport';
+import { levels, JSONFormats } from '../src/logger';
 import { tmpFolder } from './constants';
 
 export const factoryLogger = createLogger({
@@ -15,6 +16,8 @@ export const apiTraces = [];
 
 export const apiLogger = createLogger({
     level      : 'debug',
+    levels,
+    format     : format.combine(...JSONFormats),
     transports : [
         new transports.Console(),
         new transports.File({

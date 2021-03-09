@@ -115,6 +115,13 @@ export default class API {
         });
     }
 
+    post(url, data, options = {}) {
+        return this.request('POST', url, {
+            data,
+            ...options
+        });
+    }
+
     async mock() {
         return { data: 1 };
     }

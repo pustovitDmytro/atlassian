@@ -51,27 +51,19 @@ export default class JIRA extends Api {
     }
 
     async move(issueID, status) {
-        const { data: { transitions } } =  await axios
-            .get(`${this.host}/rest/api/3/issue/${issueID}/transitions`, {
-                auth : this.auth
-            })
-            .catch(onError);
-
+        const issue = await this.getIssue(issueID, 'transitions');
         const statuses = [ ...this.statuses.dev, ...this.statuses.test ].reverse();
         const desirableIndex = statuses.findIndex(s => s === status);
 
         for (const i in statuses) {
             if (i < desirableIndex) continue;
             const stat = statuses[i];
-            const transition = transitions.find(t => t.to.id === stat);
+            const transition = issue.transitions.find(t => t.to.id === stat);
 
             if (transition) {
-                await axios
-                    .post(`${this.host}/rest/api/3/issue/${issueID}/transitions`, { transition: transition.id }, {
-                        auth : this.auth
-                    }).catch(onError);
+                await this.transit(issueID, transition.id);
 
-                console.log(`moved from ${transition.name} to ${transition.to.name} (${transition.to.id})`);
+                this.logger.log('info', `moved %s from %s to %s (${transition.to.id})`, issue.id, issue.status, transition.to.name);
                 const isFinalMove = transition.to.id === status;
 
                 if (isFinalMove) return;
@@ -79,7 +71,7 @@ export default class JIRA extends Api {
                 return this.move(issueID, status);
             }
         }
-        console.warn(`No transitions to status ${status} found`);
+        this.logger.log('warn', 'No transitions to status %s found', status);
     }
 
     async loadStatuses() {

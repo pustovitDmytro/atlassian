@@ -1,18 +1,19 @@
 #!./node_modules/.bin/babel-node
 
 import yargs from 'yargs/yargs';
-import chalk from 'chalk';
 import { isPromise } from 'myrmidon';
 import JIRA from '../JIRA';
 import packageInfo from '../../package.json';
-import { loadProfile } from './utils';
+import { loadProfile, installLogger } from './utils';
 import init from './init';
+import logger from './logger';
 
 const isMain = !module.parent;
 
 function onError(e) {
     if (isMain) {
-        console.error(chalk.red(`${e.name}:`), e.message);
+        logger.error(`${e.name}: ${e.message}`);
+        logger.verbose(e.stack);
         process.exit(1);
     }
     throw e;
@@ -44,8 +45,9 @@ function cliCommand(method) {
 
 async function list(args) {
     try {
+        installLogger(logger, args);
         const profile = await loadProfile('jira', args.profile);
-        const jira = new JIRA(profile);
+        const jira = new JIRA(profile, logger);
         const stages = [];
 
         if (args.dev) stages.push('dev');
@@ -57,7 +59,7 @@ async function list(args) {
         });
 
         tasks.forEach(t => {
-            console.log(chalk.bold(t.key), t.summary);
+            logger.info(`%s ${t.summary}`, t.key);
         });
     } catch (error) {
         onError(error);
@@ -65,10 +67,13 @@ async function list(args) {
 }
 
 async function test(args) {
+    installLogger(logger, args);
     const profile = await loadProfile('jira', args.profile);
-    const jira = new JIRA(profile);
+    const jira = new JIRA(profile, logger);
 
-    await jira.test(args.issueId);
+    for (const issueId of args.issueId) {
+        await jira.test(issueId);
+    }
 }
 
 export default async function run(cmd) {
@@ -79,11 +84,25 @@ export default async function run(cmd) {
             if (!isMain) rej(failMessage);
             ygs.showHelp('error');
             if (failMessage) {
-                console.error('');
-                console.error(chalk.red(failMessage), error?.stack);
+                console.log();
+                logger.error(failMessage.toString());
+                logger.verbose(error?.stack);
             }
             process.exit(2);
         }
+        const commonCommandArgs = '[--verbose] [--profile=<profile>]';
+        const commonOpts = y => y
+            .option('verbose', {
+                describe : 'verbose logs',
+                alias    : [ 'v' ],
+                type     : 'boolean'
+            })
+            .option('profile', {
+                alias    : [ 'p' ],
+                describe : 'specify profile name',
+                type     : 'string'
+            });
+
         const Argv = yargs(cmd)
             .usage('Usage: $0 <command> [options]')
             .command({
@@ -92,9 +111,9 @@ export default async function run(cmd) {
                 handler : cliCommand(init)
             })
             .command({
-                command : 'list [--dev] [--mine] [--search=<search>] [--sprint=<sprint>] [--verbose]',
+                command : `list [--dev] [--mine] [--search=<search>] [--sprint=<sprint>] ${commonCommandArgs}`,
                 aliases : [ 'ls' ],
-                builder : y => y
+                builder : y => commonOpts(y)
                     .option('dev', {
                         alias    : [ 'd', 'development' ],
                         describe : 'filter only tasks in development',
@@ -115,24 +134,24 @@ export default async function run(cmd) {
                         choices  : [ 'all', 'open' ],
                         default  : [ 'open' ],
                         type     : 'array'
-                    })
-                    .option('verbose', {
-                        describe : 'verbose logs',
-                        alias    : [ 'v' ],
-                        type     : 'boolean'
                     }),
                 desc    : 'List Tasks',
                 handler : cliCommand(list)
             })
             .command({
-                command : 'test [<issueId>]',
+                command : `test ${commonCommandArgs} <issueId...>`,
                 desc    : 'Send task to testing',
+                builder : y => commonOpts(y)
+                    .option('issueId', {
+                        describe : 'id(s) of task',
+                        type     : 'array'
+                    }),
                 handler : cliCommand(test)
             })
             .command('profiles', 'List stored attlasian profiles')
             .help('h')
             .alias('h', 'help')
-            .wrap(Math.min(100, process.stdout.columns))
+            .wrap(Math.min(95, process.stdout.columns))
             .version(packageInfo.version)
             .demandCommand(1, '').recommendCommands().strict()
             .epilog(`${packageInfo.name} v.${packageInfo.version}`)

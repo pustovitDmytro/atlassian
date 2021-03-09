@@ -1,3 +1,4 @@
+import { URL } from 'url';
 import sinon from 'sinon';
 import JIRA_API from '../../src/JiraApi';
 
@@ -9,6 +10,9 @@ const ISSUES = [ {
         },
         assignee : {
             accountId : 'Q7xGhfn2w'
+        },
+        status : {
+            name : 'In progress'
         },
         summary : 'brief tie pool present sharp'
     }
@@ -36,17 +40,19 @@ const ISSUES = [ {
     }
 } ];
 
+const STATUSES = [
+    { id: '1', name: 'Reopen' },
+    { id: '2', name: 'In progress' },
+    { id: '3', name: 'In testing' }
+];
+
 function axiosResponse(data) {
     return { data };
 }
 
 class JIRA_MOCK_API extends JIRA_API {
     async getStatuses() {
-        return [
-            { id: '1', name: 'Reopen' },
-            { id: '2', name: 'In progress' },
-            { id: '3', name: 'In testing' }
-        ];
+        return STATUSES;
     }
 
     async _axios(opts) {
@@ -58,6 +64,24 @@ class JIRA_MOCK_API extends JIRA_API {
             }
 
             return axiosResponse({ issues: ISSUES.slice(0, 2), startAt: 0, total: ISSUES.length });
+        }
+
+        if (opts.url.match('/rest/api/3/issue/.*/transitions')) {
+            return axiosResponse({ transitions : [
+                {
+                    id   : 1,
+                    name : 'to do',
+                    to   : STATUSES[2]
+                }
+            ] });
+        }
+
+        if (opts.url.match('/rest/api/3/issue')) {
+            const { pathname } = new URL(opts.url);
+            const id = pathname.split('/').reverse().[0];
+            const issue = ISSUES.find(i => i.key === id);
+
+            return axiosResponse(issue);
         }
 
         return axiosResponse(1);

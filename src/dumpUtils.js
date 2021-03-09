@@ -3,6 +3,7 @@ import { flatten } from 'myrmidon';
 export function dumpTask(issue = {}) {
     const worklogs = issue._worklogs || [];
     const comments = issue._comments || [];
+    const transitions = issue._transitions || [];
     const history = issue.changelog
         ? flatten(issue.changelog.histories.map(h => h.items.map(i => ({ item: i, history: h }))))
         : [];
@@ -31,7 +32,7 @@ export function dumpTask(issue = {}) {
             text   : c.body,
             date   : c.updated
         })),
-        transitions : history
+        history : history
             .filter(({ item }) => {
                 return item.field === 'status';
             })
@@ -42,7 +43,8 @@ export function dumpTask(issue = {}) {
                     from   : h.item.fromString,
                     to     : h.item.toString
                 });
-            })
+            }),
+        transitions
     };
 }
 
@@ -58,5 +60,16 @@ export function dumpStatus(s) {
     return {
         id   : s.id,
         name : s.name
+    };
+}
+
+export function dumpTransition(t) {
+    return {
+        id   : t.id,
+        name : t.name,
+        to   : {
+            id   : t.to.id,
+            name : t.to.name
+        }
     };
 }
