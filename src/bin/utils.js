@@ -10,18 +10,6 @@ const defaultConfigPath = path.join(homedir, '.atlassian');
 
 export const configPath = process.env.ATLASSIAN_CONFIG_PATH || defaultConfigPath;
 
-export function errorFormatter(error) {
-    if (error.isAxiosError) {
-        const json = error.toJSON();
-
-        if (json.data) throw JSON.stringify(json.data);
-
-        throw json.message;
-    }
-    throw error;
-}
-
-
 export function getDefaultProfile(config, scope) {
     return Object.keys(config).find(key => config[key][scope]?.isDefault);
 }

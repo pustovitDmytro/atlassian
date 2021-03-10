@@ -3,7 +3,7 @@ import { isString } from 'myrmidon';
 import fs from 'fs-extra';
 import JIRA from '../JIRA';
 import packageInfo from '../../package.json';
-import { errorFormatter, configPath, getDefaultProfile, loadConfig,  untilConfirm } from './utils';
+import { configPath, getDefaultProfile, loadConfig,  untilConfirm } from './utils';
 
 const validate = (required, regexp, msg = 'invalid value') => value => {
     if (!value) return 'value is required';
@@ -19,7 +19,7 @@ async function validateCredentials(token, answers) {
         token
     });
 
-    this.myself = await this.jira.getMyself().catch(errorFormatter);
+    this.myself = await this.jira.getMyself();
 
     return true;
 }

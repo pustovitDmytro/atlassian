@@ -37,10 +37,12 @@ export class API_ERROR extends Error {
 
     toString() {
         const message = super.toString();
-        const inner  = this.#payload.response?.data?.errorMessages;
+        const inner  = this.#payload.response?.data;
 
-        if (inner) {
-            return [ message, ...inner ].join(os.EOL);
+        if (inner.message) return [ message, inner.message ].join(os.EOL);
+
+        if (inner?.errorMessages?.length) {
+            return [ message, ...inner.errorMessages ].join(os.EOL);
         }
 
         return message;
@@ -112,7 +114,7 @@ export default class API {
 
             return handleResponse(response);
         } catch (error) {
-            this.logger.log('verbose', { traceId, error: error.toString(), data: error.response.data, stack: error.stack, type: 'errorOccured' });
+            this.logger.log('verbose', { traceId, error: error.toString(), data: error.response?.data, stack: error.stack, type: 'errorOccured' });
             const onError = settings.onError || this.onError;
 
             onError(error);
