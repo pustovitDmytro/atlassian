@@ -1,4 +1,5 @@
 import { URL } from 'url';
+import os from 'os';
 import axios from 'axios';
 import ms from 'ms';
 import uuid from 'uuid';
@@ -27,12 +28,22 @@ export class API_ERROR extends Error {
     constructor(error) {
         super(error.message);
         Error.captureStackTrace(this, this.constructor);
-
         this.#payload = error;
     }
 
     get name() {
         return this.constructor.name;
+    }
+
+    toString() {
+        const message = super.toString();
+        const inner  = this.#payload.response?.data?.errorMessages;
+
+        if (inner) {
+            return [ message, ...inner ].join(os.EOL);
+        }
+
+        return message;
     }
 }
 
@@ -49,7 +60,7 @@ export default class API {
     }
 
     onError(error) {
-        if (error.isAxiosError) throw new API_ERROR(error.toJSON());
+        if (error.isAxiosError) throw new API_ERROR(error);
         throw error;
     }
 
@@ -101,7 +112,7 @@ export default class API {
 
             return handleResponse(response);
         } catch (error) {
-            this.logger.log('verbose', { traceId, error: error.toString(), stack: error.stack, type: 'errorOccured' });
+            this.logger.log('verbose', { traceId, error: error.toString(), data: error.response.data, stack: error.stack, type: 'errorOccured' });
             const onError = settings.onError || this.onError;
 
             onError(error);

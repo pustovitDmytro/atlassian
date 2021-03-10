@@ -1,5 +1,6 @@
 import { URL } from 'url';
 import sinon from 'sinon';
+import createAxiosError from 'axios/lib/core/createError';
 import JIRA_API from '../../src/JiraApi';
 
 const ISSUES = [ {
@@ -50,6 +51,10 @@ function axiosResponse(data) {
     return { data };
 }
 
+function axiosError(opts, { message, code }, data) {
+    return createAxiosError(message, opts, code, {}, { data });
+}
+
 class JIRA_MOCK_API extends JIRA_API {
     async getStatuses() {
         return STATUSES;
@@ -80,6 +85,15 @@ class JIRA_MOCK_API extends JIRA_API {
             const { pathname } = new URL(opts.url);
             const id = pathname.split('/').reverse().[0];
             const issue = ISSUES.find(i => i.key === id);
+
+            if (!issue) {
+                throw axiosError(opts, {
+                    message : 'Request failed with status code 404'
+                }, {
+                    errorMessages : [ 'Issue does not exist or you do not have permission to see it.' ],
+                    errors        : {}
+                });
+            }
 
             return axiosResponse(issue);
         }

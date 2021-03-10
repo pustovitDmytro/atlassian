@@ -11,11 +11,10 @@ import logger from './logger';
 const isMain = !module.parent;
 
 function onError(e) {
-    if (isMain) {
-        logger.error(`${e.name}: ${e.message}`);
-        logger.verbose(e.stack);
-        process.exit(1);
-    }
+    logger.error(e.toString());
+    logger.verbose(e.stack);
+    if (isMain) process.exit(1);
+
     throw e;
 }
 
@@ -81,13 +80,13 @@ export default async function run(cmd) {
         function onYargsFail(message, error, ygs) {
             const failMessage = message || error;
 
-            if (!isMain) rej(failMessage);
             ygs.showHelp('error');
             if (failMessage) {
                 console.log();
                 logger.error(failMessage.toString());
                 logger.verbose(error?.stack);
             }
+            if (!isMain) return rej(failMessage);
             process.exit(2);
         }
         const commonCommandArgs = '[--verbose] [--profile=<profile>]';
