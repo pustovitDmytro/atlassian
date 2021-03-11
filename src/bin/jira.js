@@ -2,11 +2,17 @@
 
 import yargs from 'yargs/yargs';
 import { isPromise } from 'myrmidon';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import utc from 'dayjs/plugin/utc';
 import JIRA from '../JIRA';
 import packageInfo from '../../package.json';
 import { loadProfile, installLogger } from './utils';
 import init from './init';
 import logger from './logger';
+
+dayjs.extend(utc);
+dayjs.extend(customParseFormat);
 
 const isMain = !module.parent;
 
@@ -73,6 +79,26 @@ async function test(args) {
     for (const issueId of args.issueId) {
         await jira.test(issueId);
     }
+}
+
+
+async function exportLog(args) {
+    installLogger(logger, args);
+    const profile = await loadProfile('jira', args.profile);
+
+    console.log(args);
+    const jira = new JIRA(profile, logger);
+}
+
+const FORMATS = [ 'DD MM', 'DD MMM', 'DD-MMM', 'DD-MM', 'DD-MM-YY', 'DD MM YY', 'DD-MM-YYYY', 'DD MM YYYY' ];
+
+function asDate(date) {
+    for (const format of FORMATS) {
+        const dated = dayjs.utc(date, format, true);
+
+        if (dated.isValid()) return dated;
+    }
+    throw new Error(`Invalid date ${date}`);
 }
 
 export default async function run(cmd) {
@@ -146,6 +172,14 @@ export default async function run(cmd) {
                         type     : 'array'
                     }),
                 handler : cliCommand(test)
+            })
+            .command({
+                command : `export log ${commonCommandArgs} <start> <end> [file]`,
+                desc    : 'Send task to testing',
+                builder : y => commonOpts(y)
+                    .coerce('start', asDate)
+                    .coerce('end', asDate),
+                handler : cliCommand(exportLog)
             })
             .command('profiles', 'List stored attlasian profiles')
             .help('h')

@@ -1,8 +1,10 @@
 import path from 'path';
+import os from 'os';
 import dayjs from 'dayjs';
 import fs from 'fs-extra';
 import ms from 'ms';
 import axios from 'axios';
+import uuid from 'uuid';
 import Api from './JiraApi';
 import { dumpTask } from './dumpUtils';
 
@@ -23,12 +25,13 @@ export default class JIRA extends Api {
         this.initLogger(logger);
     }
 
-    async list({ isMine, stages, from, to, search, sprint = [ 'open' ] }) {
+    async list({ isMine, wasMine, stages, from, to, search, sprint = [ 'open' ] }) {
         const jql = [];
 
-        if (isMine) jql.push('assignee was currentuser()');
+        if (isMine) jql.push('assignee is currentuser()');
+        if (wasMine) jql.push('assignee was currentuser()');
         if (from) jql.push(`updatedDate >= ${from.format('YYYY-MM-DD')}`);
-        if (to) jql.push(`updatedDate <= ${to.format('YYYY-MM-DD')}`);
+        if (to) jql.push(`created <= ${to.format('YYYY-MM-DD')}`);
         if (stages.length) {
             const [ devStatusesList, testStatusesList ] = [ this.statuses.dev, this.statuses.test ]
                 .map(statusList => statusList.map(s => `"${s}"`).join(', '));
@@ -135,8 +138,19 @@ export default class JIRA extends Api {
         return filtered;
     }
 
-    async importForTimeLog([ start, end ], file = './tmp/issues.json') {
-        const tasks = await this.getTaskList(start, end, { comments: true, worklog: true });
+    async import([ start, end ], file = path.join(os.tmpdir, `${uuid.v4()}.json`)) {
+        const allModifiedTasks = await this.list({
+            from : start,
+            to   : end
+        }, [ 'comments', 'worklog' ]);
+        const tasks = allModifiedTasks.filter(issue => this.isInDevelopmentForRange(issue, [ start, end ]));
+
+        this.logger.notice({
+            start              : start.format('YYYY/MM/DD'),
+            end                : end.format('YYYY/MM/DD'),
+            allTasksCount      : allModifiedTasks.length,
+            filteredTasksCount : tasks.length
+        });
 
         tasks.sort((a, b) => dayjs(a.updated) - dayjs(b.updated));
         const relFilePath = path.resolve(file);
@@ -145,15 +159,15 @@ export default class JIRA extends Api {
             const extra =  {};
             const isMine = t.assignee === this.userId;
 
-            if (t.transitions.length) {
+            if (t.history.length) {
                 extra.transitions = {};
-                const devToTest = t.transitions
+                const devToTest = t.history
                     .filter(tr => this.statuses.dev.includes(tr.from) && !this.statuses.dev.includes(tr.to))
                     .map(tr => dayjs(tr.date))
                     .sort((a, b) => a - b)
                     .map(d => d.format('MMM DD'));
 
-                const testToDev = t.transitions
+                const testToDev = t.history
                     .filter(tr => this.statuses.dev.includes(tr.to) && !this.statuses.dev.includes(tr.from))
                     .map(tr => dayjs(tr.date))
                     .sort((a, b) => a - b)
@@ -190,6 +204,9 @@ export default class JIRA extends Api {
 
         await fs.ensureFile(relFilePath);
         await fs.writeJSON(relFilePath, payload);
+        this.logger.info('%d issues was imported to %s', tasks.length, relFilePath);
+
+        return relFilePath;
     }
 
     async clear(issue) {
