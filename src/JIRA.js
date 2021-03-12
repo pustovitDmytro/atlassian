@@ -1,12 +1,11 @@
 import path from 'path';
 import os from 'os';
-import dayjs from 'dayjs';
 import fs from 'fs-extra';
 import ms from 'ms';
 import axios from 'axios';
 import uuid from 'uuid';
+import dayjs from './date';
 import Api from './JiraApi';
-import { dumpTask } from './dumpUtils';
 
 function onError(error) {
     throw error;
@@ -25,7 +24,7 @@ export default class JIRA extends Api {
         this.initLogger(logger);
     }
 
-    async list({ isMine, wasMine, stages, from, to, search, sprint = [ 'open' ] }) {
+    async list({ isMine, wasMine, stages = [], from, to, search, sprint = [ 'open' ] }, includes) {
         const jql = [];
 
         if (isMine) jql.push('assignee is currentuser()');
@@ -48,7 +47,7 @@ export default class JIRA extends Api {
 
         if (jql.length) query.jql = jql.join(' AND ');
 
-        const issues = await this.getIssues(query);
+        const issues = await this.getIssues(query, includes);
 
         return issues;
     }
@@ -93,7 +92,7 @@ export default class JIRA extends Api {
             return true;
         }
 
-        return issue.transitions.some(t => {
+        return issue.history.some(t => {
             const isTimeMatch = dayjs(t.date).isBetween(dayjs(start), dayjs(end));
             const isFieldMatch = [ t.from, t.to ].some(status => this.statuses.dev.includes(status));
 
@@ -101,55 +100,33 @@ export default class JIRA extends Api {
         });
     }
 
-    async getTaskList(start, end, { comments = false, worklog = false } = {}) {
-        console.log('start: ', start.format('YYYY/MM/DD'), `end: ${end.format('YYYY/MM/DD')}`);
+    transitionDates(history, type, format = 'MMM DD') {
+        const filter = {
+            fromDev : tr => this.statuses.dev.includes(tr.from) && !this.statuses.dev.includes(tr.to),
+            toDev   : tr => this.statuses.dev.includes(tr.to) && !this.statuses.dev.includes(tr.from)
+        }[type];
 
-        // was mine but not anymore
-        // assignee was currentuser() AND assignee not in (${username})
-        const issues =  await this.getIssues({
-            jql : `assignee was currentuser() AND updatedDate >= ${start.format('YYYY-MM-DD')} AND created < ${end.format('YYYY-MM-DD')}`
-        });
-
-        console.log('Total issues: ', issues.length);
-
-        await Promise.all(issues.map(async issue => {
-            if (worklog) {
-                const info =  await axios.get(`${this.host}/rest/api/3/issue/${issue.id}/worklog`, { auth: this.auth });
-
-                // eslint-disable-next-line no-param-reassign
-                issue._worklogs = info.data.worklogs || [];
-            }
-            if (comments) {
-                const info =  await axios.get(`${this.host}/rest/api/3/issue/${issue.id}/comment`, { auth: this.auth });
-
-                // eslint-disable-next-line no-param-reassign
-                issue._comments = info.data.comments || [];
-            }
-        }));
-
-        const filtered = issues
-            .map(issue => {
-                return dumpTask(issue);
-            })
-            .filter(issue => this.isInDevelopmentForRange(issue, [ start, end ]));
-
-        console.log('Filtered issues: ', filtered.length);
-
-        return filtered;
+        return history
+            .filter(filter)
+            .map(tr => dayjs(tr.date))
+            .sort((a, b) => a - b)
+            .map(d => d.format(format));
     }
 
-    async import([ start, end ], file = path.join(os.tmpdir, `${uuid.v4()}.json`)) {
+    async exportLog([ start, end ], file = path.join(os.tmpdir(), `${uuid.v4()}.json`)) {
         const allModifiedTasks = await this.list({
-            from : start,
-            to   : end
-        }, [ 'comments', 'worklog' ]);
+            from    : start,
+            to      : end,
+            wasMine : true
+        }, [ 'comments', 'worklogs', 'changelog' ]);
         const tasks = allModifiedTasks.filter(issue => this.isInDevelopmentForRange(issue, [ start, end ]));
 
-        this.logger.notice({
+        this.logger.verbose({
             start              : start.format('YYYY/MM/DD'),
             end                : end.format('YYYY/MM/DD'),
             allTasksCount      : allModifiedTasks.length,
-            filteredTasksCount : tasks.length
+            filteredTasksCount : tasks.length,
+            file
         });
 
         tasks.sort((a, b) => dayjs(a.updated) - dayjs(b.updated));
@@ -161,20 +138,11 @@ export default class JIRA extends Api {
 
             if (t.history.length) {
                 extra.transitions = {};
-                const devToTest = t.history
-                    .filter(tr => this.statuses.dev.includes(tr.from) && !this.statuses.dev.includes(tr.to))
-                    .map(tr => dayjs(tr.date))
-                    .sort((a, b) => a - b)
-                    .map(d => d.format('MMM DD'));
+                const fromDev = this.transitionDates(t.history, 'fromDev');
+                const toDev = this.transitionDates(t.history, 'toDev');
 
-                const testToDev = t.history
-                    .filter(tr => this.statuses.dev.includes(tr.to) && !this.statuses.dev.includes(tr.from))
-                    .map(tr => dayjs(tr.date))
-                    .sort((a, b) => a - b)
-                    .map(d => d.format('MMM DD'));
-
-                if (devToTest.length) extra.transitions['DEV->TEST'] = devToTest.join(', ');
-                if (testToDev.length) extra.transitions['TEST->DEV'] = testToDev.join(', ');
+                if (fromDev.length) extra.transitions.OUT = fromDev.join(', ');
+                if (toDev.length) extra.transitions.IN = toDev.join(', ');
             }
             if (!isMine) extra.assignee = t.assigneeName;
             if (t.worklog.length) {
@@ -204,24 +172,28 @@ export default class JIRA extends Api {
 
         await fs.ensureFile(relFilePath);
         await fs.writeJSON(relFilePath, payload);
-        this.logger.info('%d issues was imported to %s', tasks.length, relFilePath);
+        this.logger.info('%s issues was imported to %s', tasks.length, relFilePath);
 
         return relFilePath;
     }
 
-    async clear(issue) {
-        const info =  await axios.get(`${this.host}/rest/api/3/issue/${issue}/worklog`, { auth: this.auth });
+    async clearWorklog(issueID, { mine = true, period = [] } = {}) {
+        const [ start, end ] = period;
+        const worklogs =  await this.getWorklog(issueID);
+        const worklogsToClear = worklogs.filter(w => {
+            const isMine = !mine || w.author === this.userId;
+            const isAfterStart = !start || start.isSameOrAfter(dayjs(w.start), 'day');
+            const isBeforeEnd = !end || end.isSameOrBefore(dayjs(w.end), 'day');
 
-        console.log(info.data);
-        await Promise.all(info.data.worklogs
-            .map(w => axios.delete(`${this.host}/rest/api/3/issue/${issue}/worklog/${w.id}`, { auth: this.auth })
-                .catch(error => {
-                    console.error(error.response.data);
-                }))
-        );
+            return isMine && isAfterStart && isBeforeEnd;
+        });
+
+        await Promise.all(worklogsToClear.map(w => this.deleteWorklog(issueID, w.id)));
+
+        return worklogsToClear;
     }
 
-    async logTask(task) {
+    async logTime(issueID, day, time) {
         const payload = {
             'timeSpentSeconds' : task.time * 60 * 60,
             'started'          : dayjs(task.day, 'D MMM YYYY').format('YYYY-MM-DD[T]HH:m:s.sssZZ')

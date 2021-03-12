@@ -5,6 +5,7 @@ import { isPromise } from 'myrmidon';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import utc from 'dayjs/plugin/utc';
+import ms from 'ms';
 import JIRA from '../JIRA';
 import packageInfo from '../../package.json';
 import { loadProfile, installLogger } from './utils';
@@ -81,13 +82,25 @@ async function test(args) {
     }
 }
 
-
 async function exportLog(args) {
     installLogger(logger, args);
     const profile = await loadProfile('jira', args.profile);
-
-    console.log(args);
     const jira = new JIRA(profile, logger);
+
+    await jira.exportLog([ args.start, args.end ], args.file);
+}
+
+async function clearWorklog(args) {
+    installLogger(logger, args);
+    const profile = await loadProfile('jira', args.profile);
+    const jira = new JIRA(profile, logger);
+
+    const cleared = await jira.clearWorklog(args.issueId);
+
+    if (!cleared.length) logger.warn('No worklogs found');
+    cleared.forEach(i => {
+        logger.info('Removed %s for %s', ms(i.time), dayjs(i.start).format('DD MMM YYYY'));
+    });
 }
 
 const FORMATS = [ 'DD MM', 'DD MMM', 'DD-MMM', 'DD-MM', 'DD-MM-YY', 'DD MM YY', 'DD-MM-YYYY', 'DD MM YYYY' ];
@@ -177,9 +190,37 @@ export default async function run(cmd) {
                 command : `export log ${commonCommandArgs} <start> <end> [file]`,
                 desc    : 'Send task to testing',
                 builder : y => commonOpts(y)
+                    .option('start', {
+                        describe : `issues with updatedDate >= start will be included\npossible formats: ${FORMATS.join(', ')}`,
+                        type     : 'date'
+                    })
+                    .option('end', {
+                        describe : `issues with created <= end will be included\npossible formats: ${FORMATS.join(', ')}`,
+                        type     : 'date'
+                    })
+                    .option('file', {
+                        describe : 'path to resulting file',
+                        type     : 'string'
+                    })
                     .coerce('start', asDate)
                     .coerce('end', asDate),
                 handler : cliCommand(exportLog)
+            })
+            .command({
+                command : `worklog clear <issueId> ${commonCommandArgs} [--start=<start>] [--end=<end>]`,
+                desc    : 'Send task to testing',
+                builder : y => commonOpts(y)
+                    .option('start', {
+                        describe : 'clear only worklogs after (>=) start date',
+                        type     : 'date'
+                    })
+                    .option('end', {
+                        describe : 'clear only worklogs before (<=) end date',
+                        type     : 'date'
+                    })
+                    .coerce('start', asDate)
+                    .coerce('end', asDate),
+                handler : cliCommand(clearWorklog)
             })
             .command('profiles', 'List stored attlasian profiles')
             .help('h')

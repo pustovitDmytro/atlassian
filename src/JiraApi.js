@@ -1,7 +1,8 @@
+/* eslint-disable no-param-reassign */
 
 import { uniqueIdFilter } from 'myrmidon';
 import Api from './AtlassianApi';
-import { dumpStatus, dumpTask, dumpTransition } from './dumpUtils';
+import { dumpStatus, dumpTask, dumpTransition, dumpComment, dumpWorklog } from './dumpUtils';
 
 export default class JiraApi extends Api {
     async getStatuses() {
@@ -14,7 +15,7 @@ export default class JiraApi extends Api {
         const extraParams = {};
 
         if (includes.length) {
-            extraParams.expand = includes; // ?expand=changelog
+            if (includes.includes('changelog')) extraParams.expand = 'changelog';
         }
 
         const { issues, startAt, total } = await this.get('/rest/api/3/search', { ...params, ...extraParams });
@@ -27,6 +28,36 @@ export default class JiraApi extends Api {
             }, includes);
 
             return [ ...issues.map(dumpTask), ...next ].filter(uniqueIdFilter);
+        }
+
+        if (includes.length) {
+            await Promise.all(issues.map(async issue => {
+                const promises = [];
+
+                if (includes.includes('transitions')) {
+                    promises.push({
+                        key    : '_transitions',
+                        action : this.getTransitions(issue.id)
+                    });
+                }
+                if (includes.includes('comments')) {
+                    promises.push({
+                        key    : '_comments',
+                        action : this.getComments(issue.id)
+                    });
+                }
+                if (includes.includes('worklogs')) {
+                    promises.push({
+                        key    : '_worklog',
+                        action : this.getWorklog(issue.id)
+                    });
+                }
+                await Promise.all(promises.map(async p => {
+                    const res = await p.action;
+
+                    issue[p.key] = res;
+                }));
+            }));
         }
 
         return issues.map(dumpTask);
@@ -42,6 +73,18 @@ export default class JiraApi extends Api {
                 promises.push({
                     key    : '_transitions',
                     action : this.getTransitions(id)
+                });
+            }
+            if (includes.includes('comments')) {
+                promises.push({
+                    key    : '_comments',
+                    action : this.getComments(id)
+                });
+            }
+            if (includes.includes('worklogs')) {
+                promises.push({
+                    key    : '_worklog',
+                    action : this.getWorklog(id)
                 });
             }
         }
@@ -64,5 +107,21 @@ export default class JiraApi extends Api {
 
     async transit(issueId, transitionId) {
         await this.post(`/rest/api/3/issue/${issueId}/transitions`, { transition: transitionId });
+    }
+
+    async getComments(issueId) {
+        const res =  await this.get(`/rest/api/3/issue/${issueId}/comment`);
+
+        return res.comments.map(dumpComment);
+    }
+
+    async getWorklog(issueId) {
+        const res =  await this.get(`/rest/api/3/issue/${issueId}/worklog`);
+
+        return res.worklogs.map(dumpWorklog);
+    }
+
+    async deleteWorklog(issueId, worklogId) {
+        await this.delete(`/rest/api/3/issue/${issueId}/worklog/${worklogId}`);
     }
 }

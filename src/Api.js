@@ -135,6 +135,12 @@ export default class API {
         });
     }
 
+    delete(url, options = {}) {
+        return this.request('DELETE', url, {
+            ...options
+        });
+    }
+
     async mock() {
         return { data: 1 };
     }

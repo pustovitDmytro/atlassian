@@ -1,9 +1,6 @@
 import { flatten } from 'myrmidon';
 
 export function dumpTask(issue = {}) {
-    const worklogs = issue._worklogs || [];
-    const comments = issue._comments || [];
-    const transitions = issue._transitions || [];
     const history = issue.changelog
         ? flatten(issue.changelog.histories.map(h => h.items.map(i => ({ item: i, history: h }))))
         : [];
@@ -20,31 +17,36 @@ export function dumpTask(issue = {}) {
         description  : issue.fields.description,
         time         : issue.fields.aggregatetimespent,
         priority     : issue.fields.priority?.name,
-        status       : issue.fields.status?.name,
+        status       : issue.fields.status?.id,
+        statusName   : issue.fields.status?.name,
 
-        worklog : worklogs.map(w => ({
-            time   : w.timeSpentSeconds * 1000,
-            author : w.author.accountId,
-            start  : w.started
-        })),
-        comments : comments.map(c => ({
-            author : c.author.accountId,
-            text   : c.body,
-            date   : c.updated
-        })),
-        history : history
+        worklog  : issue._worklog || [],
+        comments : issue._comments || [],
+        history  : history
             .filter(({ item }) => {
                 return item.field === 'status';
             })
-            .map(h => {
-                return ({
-                    author : h.history.author.accountId,
-                    date   : h.history.created,
-                    from   : h.item.fromString,
-                    to     : h.item.toString
-                });
-            }),
-        transitions
+            .map(dumpHistory),
+        transitions : issue._transitions || []
+    };
+}
+
+function dumpHistory(h) {
+    return {
+        author : h.history.author.accountId,
+        date   : h.history.created,
+        // from   : h.item.fromString,
+        // to     : h.item.toString
+        from   : h.item.from,
+        to     : h.item.to
+    };
+}
+
+export function dumpWorklog(w) {
+    return {
+        time   : w.timeSpentSeconds * 1000,
+        author : w.author.accountId,
+        start  : w.started
     };
 }
 
@@ -71,5 +73,13 @@ export function dumpTransition(t) {
             id   : t.to.id,
             name : t.to.name
         }
+    };
+}
+
+export function dumpComment(c) {
+    return {
+        author : c.author.accountId,
+        text   : c.body,
+        date   : c.updated
     };
 }
