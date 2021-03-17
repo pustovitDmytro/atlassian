@@ -65,7 +65,7 @@ export default class JIRA extends Api {
             if (transition) {
                 await this.transit(issueID, transition.id);
 
-                this.logger.log('info', `moved %s from %s to %s (${transition.to.id})`, issue.id, issue.status, transition.to.name);
+                this.logger.log('info', `moved %s from %s to %s (${transition.to.id})`, issue.id, issue.statusName, transition.to.name);
                 const isFinalMove = transition.to.id === status;
 
                 if (isFinalMove) return;

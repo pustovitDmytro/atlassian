@@ -5,7 +5,7 @@ import { CLITester, getApiCalls } from '../utils';
 
 const factory = new Test();
 
-suite('cli jira test');
+suite.only('cli jira test');
 
 before(async function () {
     await factory.setTmpFolder();

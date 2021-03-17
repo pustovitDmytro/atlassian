@@ -4,7 +4,7 @@ import './mock/JiraApi';
 import './mock/AtlassianApi';
 import { createNamespace } from 'cls-hooked';
 import uuid from 'uuid';
-import { tmpFolder, configPath } from './constants';
+import { tmpFolder, configPath, logsPath } from './constants';
 import { factoryLogger } from './logger';
 
 const context = createNamespace('__TEST__');
@@ -32,6 +32,26 @@ beforeEach(function setClsFromContext() {
     };
 });
 
+async function clean(dirPath, opts) {
+    const files = await fs.readdir(tmpFolder);
+
+    await Promise.all(files.map(async f => {
+        const fullPath = path.resolve(dirPath, f);
+        const stat = await fs.stat(fullPath);
+
+        if (stat.isDirectory()) return clean(fullPath, opts);
+        const match = Object.keys(opts).find(key => fullPath.match(key));
+
+        if (match) {
+            const mode = opts[match];
+
+            if (mode === 'truncate') await fs.truncate(fullPath);
+        }
+
+        await fs.remove(fullPath);
+    }));
+}
+
 export default class Test {
     constructor() {
         const relative = path.relative(tmpFolder, configPath);
@@ -41,10 +61,13 @@ export default class Test {
         this.logger = factoryLogger;
     }
     async setTmpFolder() {
+        await this.cleanTmpFolder();
         await fs.ensureDir(tmpFolder);
     }
     async cleanTmpFolder() {
-        await fs.remove(tmpFolder);
+        await clean(tmpFolder, {
+            [logsPath] : 'truncate'
+        });
     }
     async saveProfile(name, profile) {
         const config = await this.loadConfig();
