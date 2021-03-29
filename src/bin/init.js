@@ -54,6 +54,7 @@ const CREDENTIALS_QUESTIONS = (context = {}) => [
 const isMakeDefault = (currentConfig, scope) => ({
     type    : 'confirm',
     name    : 'isDefault',
+    when    : answers => !!answers.isUse,
     message : () => {
         const profile = getDefaultProfile(currentConfig, scope);
 
@@ -63,7 +64,14 @@ const isMakeDefault = (currentConfig, scope) => ({
     }
 });
 
+const isUse = (currentConfig, scope) => ({
+    type    : 'confirm',
+    name    : 'isUse',
+    message : `Use this credentials for ${scope} calls?`
+});
+
 const JIRA_QUESTIONS = (currentConfig, credentials, context = {}) => [
+    isUse(currentConfig, 'jira'),
     isMakeDefault(currentConfig, 'jira'),
     ...[ 'dev', 'test' ].map((name, index) => {
         const isFirst = index === 0;
@@ -96,13 +104,16 @@ const JIRA_QUESTIONS = (currentConfig, credentials, context = {}) => [
                 if (invalid) return `${invalid} is not valid status. should be one of [${statusIds.join(',')}]`;
 
                 return true;
-            }
+            },
+            when : answers => !!answers.isUse
         };
     }),
     {
         type    : 'confirm',
         name    : 'confirm',
-        message : answ => `jira config: \n${JSON.stringify(answ, null, 4)}\nis everything correct?`
+        message : answ => answ.isUse
+            ? `jira config: \n${JSON.stringify(answ, null, 4)}\nis everything correct?`
+            : 'Are you sure?'
     }
 ];
 
