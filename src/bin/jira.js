@@ -103,7 +103,17 @@ async function clearWorklog(args) {
     });
 }
 
+async function logIssues(args) {
+    installLogger(logger, args);
+    const profile = await loadProfile('jira', args.profile);
+    const jira = new JIRA(profile, logger);
+
+    await jira.logIssues(args);
+}
+
 const FORMATS = [ 'DD MM', 'DD MMM', 'DD-MMM', 'DD-MM', 'DD-MM-YY', 'DD MM YY', 'DD-MM-YYYY', 'DD MM YYYY' ];
+
+const dateSuffix = `\npossible formats: ${FORMATS.join(', ')}`;
 
 function asDate(date) {
     for (const format of FORMATS) {
@@ -191,11 +201,11 @@ export default async function run(cmd) {
                 desc    : 'Send task to testing',
                 builder : y => commonOpts(y)
                     .option('start', {
-                        describe : `issues with updatedDate >= start will be included\npossible formats: ${FORMATS.join(', ')}`,
+                        describe : `issues with updatedDate >= start will be included ${dateSuffix}`,
                         type     : 'date'
                     })
                     .option('end', {
-                        describe : `issues with created <= end will be included\npossible formats: ${FORMATS.join(', ')}`,
+                        describe : `issues with created <= end will be included ${dateSuffix}`,
                         type     : 'date'
                     })
                     .option('file', {
@@ -211,18 +221,53 @@ export default async function run(cmd) {
                 desc    : 'Send task to testing',
                 builder : y => commonOpts(y)
                     .option('start', {
-                        describe : 'clear only worklogs after (>=) start date',
+                        describe : `clear only worklogs after (>=) start date ${dateSuffix}`,
                         type     : 'date'
                     })
                     .option('end', {
-                        describe : 'clear only worklogs before (<=) end date',
+                        describe : `clear only worklogs before (<=) end date ${dateSuffix}`,
                         type     : 'date'
                     })
                     .coerce('start', asDate)
                     .coerce('end', asDate),
                 handler : cliCommand(clearWorklog)
             })
-            .command('profiles', 'List stored attlasian profiles')
+            .command({
+                command : `log [--issues=<issues>] [--from=<from>] [--to=<to>] [--include=<include>] [--exclude=<exclude>] [--confirm] ${commonCommandArgs}`,
+                desc    : 'Log time in issues',
+                builder : y => commonOpts(y)
+                    .option('issues', {
+                        demandOption : true,
+                        describe     : 'path to file with issues',
+                        type         : 'path'
+                    })
+                    .option('include', {
+                        describe : 'add day to worklog',
+                        type     : 'array'
+                    })
+                    .option('exclude', {
+                        describe : 'remove day from worklog',
+                        type     : 'array'
+                    })
+                    .option('from', {
+                        demandOption : true,
+                        describe     : `start of worklog period ${dateSuffix}`,
+                        type         : 'date'
+                    })
+                    .option('to', {
+                        demandOption : true,
+                        describe     : `end of worklog period ${dateSuffix}`,
+                        type         : 'date'
+                    })
+                    .option('confirm', {
+                        describe : 'actually log time',
+                        alias    : 'y',
+                        type     : 'boolean'
+                    })
+                    .coerce('from', asDate)
+                    .coerce('to', asDate),
+                handler : cliCommand(logIssues)
+            })
             .help('h')
             .alias('h', 'help')
             .wrap(Math.min(95, process.stdout.columns))

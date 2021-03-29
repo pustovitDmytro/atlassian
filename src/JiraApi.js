@@ -3,6 +3,7 @@
 import { uniqueIdFilter } from 'myrmidon';
 import Api from './AtlassianApi';
 import { dumpStatus, dumpTask, dumpTransition, dumpComment, dumpWorklog } from './dumpUtils';
+import dayjs from './date';
 
 export default class JiraApi extends Api {
     async getStatuses() {
@@ -20,15 +21,6 @@ export default class JiraApi extends Api {
 
         const { issues, startAt, total } = await this.get('/rest/api/3/search', { ...params, ...extraParams });
         const nextStart = startAt + issues.length;
-
-        if (total > nextStart) {
-            const next = await this.getIssues({
-                ...params,
-                startAt : nextStart
-            }, includes);
-
-            return [ ...issues.map(dumpTask), ...next ].filter(uniqueIdFilter);
-        }
 
         if (includes.length) {
             await Promise.all(issues.map(async issue => {
@@ -58,6 +50,15 @@ export default class JiraApi extends Api {
                     issue[p.key] = res;
                 }));
             }));
+        }
+
+        if (total > nextStart) {
+            const next = await this.getIssues({
+                ...params,
+                startAt : nextStart
+            }, includes);
+
+            return [ ...issues.map(dumpTask), ...next ].filter(uniqueIdFilter);
         }
 
         return issues.map(dumpTask);
@@ -123,5 +124,14 @@ export default class JiraApi extends Api {
 
     async deleteWorklog(issueId, worklogId) {
         await this.delete(`/rest/api/3/issue/${issueId}/worklog/${worklogId}`);
+    }
+
+    async logTime(issueID, day, time) {
+        const res = await this.post(`/rest/api/3/issue/${issueID}/worklog`, {
+            'timeSpentSeconds' : time * 60 * 60,
+            'started'          : dayjs(day, 'D MMM YYYY').format('YYYY-MM-DD[T]HH:m:s.sssZZ')
+        });
+
+        return res.data;
     }
 }

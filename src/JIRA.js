@@ -2,13 +2,47 @@ import path from 'path';
 import os from 'os';
 import fs from 'fs-extra';
 import ms from 'ms';
-import axios from 'axios';
 import uuid from 'uuid';
+import { toArray } from 'myrmidon';
 import dayjs from './date';
 import Api from './JiraApi';
 
-function onError(error) {
-    throw error;
+
+function workingDays({ include = [], exclude = [], to, from } = {}) {
+    const totalDays = dayjs(to).diff(dayjs(from), 'day');
+
+    const days = [];
+
+    // eslint-disable-next-line more/no-c-like-loops
+    for (let i = 0; i < totalDays; i++) {
+        const day = dayjs(from)
+            .add(i, 'days')
+            .startOf('day');
+
+        let insert = ![ 0, 6 ].includes(day.day());
+
+        if (exclude.length && exclude.includes(day.date())) {
+            insert = false;
+        }
+        if (to && (day > dayjs(to))) {
+            insert = false;
+        }
+        if (from && (day < dayjs(from))) {
+            insert = false;
+        }
+        if (include.length && include.includes(day.date())) {
+            insert = true;
+        }
+        if (insert) days.push(day);
+    }
+
+    return days;
+}
+
+function round(value, step = 1.0) {
+    const inv = 1.0 / step;
+
+    return Math.round(value * inv) / inv;
 }
 
 export default class JIRA extends Api {
@@ -20,14 +54,17 @@ export default class JIRA extends Api {
         this.userId = config.userId;
         this.host = config.host;
         this.statuses = config.jira?.statuses;
-        this.gitlab = config.jira?.gitlab;
+        this.gitlab = config.jira?.gitlab && {
+            jiraId  : config.jira.gitlab.jiraId,
+            gitUser : toArray(config.jira.gitlab.gitUser)
+        };
         this.initLogger(logger);
     }
 
     async list({ isMine, wasMine, stages = [], from, to, search, sprint = [ 'open' ] }, includes) {
         const jql = [];
 
-        if (isMine) jql.push('assignee is currentuser()');
+        if (isMine) jql.push('assignee was currentuser()');
         if (wasMine) jql.push('assignee was currentuser()');
         if (from) jql.push(`updatedDate >= ${from.format('YYYY-MM-DD')}`);
         if (to) jql.push(`created <= ${to.format('YYYY-MM-DD')}`);
@@ -146,15 +183,20 @@ export default class JIRA extends Api {
             }
             if (!isMine) extra.assignee = t.assigneeName;
             if (t.worklog.length) {
-                const othersSpentTime = t.worklog.filter(w => w.author !== this.userId).reduce((a, b) => a + b.time, 0);
-                const meSpentTime = t.worklog.filter(w => w.author === this.userId).reduce((a, b) => a + b.time, 0);
+                const othersSpentTime = t.worklog
+                    .filter(w => w.author !== this.userId)
+                    .reduce((a, b) => a + b.time, 0);
+
+                const meSpentTime = t.worklog
+                    .filter(w => w.author === this.userId)
+                    .reduce((a, b) => a + b.time, 0);
 
                 extra.spent = `${ms(meSpentTime)   } / ${ms(meSpentTime + othersSpentTime)}`;
             }
             if (this.gitlab && t.comments.length) {
                 const commits = t.comments.filter(c => {
                     const isFromGitlab = c.author === this.gitlab.jiraId;
-                    const isMineCommit = JSON.stringify(c).includes(this.gitlab.gitlabUser);
+                    const isMineCommit = this.gitlab.gitUser.some(u => JSON.stringify(c).includes(u));
 
                     return isMineCommit && isFromGitlab;
                 }).length;
@@ -193,16 +235,70 @@ export default class JIRA extends Api {
         return worklogsToClear;
     }
 
-    async logTime(issueID, day, time) {
-        const payload = {
-            'timeSpentSeconds' : task.time * 60 * 60,
-            'started'          : dayjs(task.day, 'D MMM YYYY').format('YYYY-MM-DD[T]HH:m:s.sssZZ')
-        };
+    async logIssues({ issues, from, to, include, exclude, confirm }) {
+        const days = workingDays({ from, to, include, exclude });
+        const total = {};
 
-        const res = await axios.post(`${this.host}/rest/api/3/issue/${task.issue}/worklog`, payload, { auth: this.auth }).catch(onError);
+        days.forEach(day => total[day.format('D MMM YYYY')] = 8);
+        const sum = Object.values(total).reduce((a, b) => a + b, 0);
+        const sortIssues = {};
+        const arrayIssues = require(issues);
 
-        console.log('res: ', res.data);
+        arrayIssues
+            .filter(issue => issue.time)
+            .forEach(issue => sortIssues[issue.id] = issue.time);
 
-        return res.data;
+        const estimateSum = Object.values(sortIssues).reduce((a, b) => a + b, 0);
+        const next = [ Object.keys(total)[0], 0 ];
+        const tasks = [];
+        const shrinks = [];
+
+        for (const issueId in sortIssues) { // eslint-disable-line
+            const est = sortIssues[issueId];
+            const norm = Math.max(round(sum * est / estimateSum, 0.25), 0.25);
+
+            shrinks.push(norm / est);
+            // const currentDayTotal = total[next[0]];
+            // const currentDayLeft = currentDayTotal - next[1];
+
+            let leftToAdd = norm;
+
+            Object.entries(total)
+                // eslint-disable-next-line no-loop-func
+                .forEach(([ day, amount ], index) => {
+                    if (day !== next[0]) return;
+                    const currentDayLeft = amount - next[1];
+
+                    if (currentDayLeft > leftToAdd) {
+                        tasks.push({ day, time: leftToAdd, issue: issueId });
+                        next[1] = next[1] + leftToAdd;
+                        leftToAdd = 0;
+                    } else {
+                        tasks.push({ day, time: currentDayLeft, issue: issueId });
+                        if (index === Object.entries(total).length - 1) return;
+                        leftToAdd -= currentDayLeft;
+                        next[1] = 0;
+                        next[0] = Object.entries(total)[index + 1][0];
+                    }
+                });
+        }
+        const fullTasks = tasks
+            .filter(t => t.time > 0)
+            .sort((a, b) => a.issue < b.issue);
+
+        const checkSum = fullTasks.reduce((a, b) => a + b.time, 0);
+
+        shrinks.sort((a, b) =>  a - b);
+        this.logger.info('%s hours estimated to be logged during %s days', estimateSum, Object.keys(total).length);
+        this.logger.info('%s hours will be logged (shrink %s - %s)', checkSum, shrinks[0].toFixed(3), shrinks[shrinks.length - 1].toFixed(3));
+        if (confirm) {
+            // eslint-disable-next-line guard-for-in
+            for (const taskIndex in fullTasks) {
+                const task = fullTasks[taskIndex];
+
+                await this.logTime(task.issue, task.day, task.time);
+                this.logger.info('%s/%s: Logged %s hours for %s', +taskIndex + 1, fullTasks.length, task.time, task.day);
+            }
+        }
     }
 }
