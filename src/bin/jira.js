@@ -1,7 +1,7 @@
 #!./node_modules/.bin/babel-node
 
 import yargs from 'yargs/yargs';
-import { isPromise } from 'myrmidon';
+import { isPromise, isArray } from 'myrmidon';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import utc from 'dayjs/plugin/utc';
@@ -116,6 +116,7 @@ const FORMATS = [ 'DD MM', 'DD MMM', 'DD-MMM', 'DD-MM', 'DD-MM-YY', 'DD MM YY', 
 const dateSuffix = `\npossible formats: ${FORMATS.join(', ')}`;
 
 function asDate(date) {
+    if (isArray(date)) return date.map(asDate);
     for (const format of FORMATS) {
         const dated = dayjs.utc(date, format, true);
 
@@ -233,7 +234,7 @@ export default async function run(cmd) {
                 handler : cliCommand(clearWorklog)
             })
             .command({
-                command : `log [--issues=<issues>] [--from=<from>] [--to=<to>] [--include=<include>] [--exclude=<exclude>] [--confirm] ${commonCommandArgs}`,
+                command : `log ${commonCommandArgs} [--issues=<issues>] [--from=<from>] [--to=<to>] [--include=<include>] [--exclude=<exclude>] [--confirm]`,
                 desc    : 'Log time in issues',
                 builder : y => commonOpts(y)
                     .option('issues', {
@@ -265,7 +266,8 @@ export default async function run(cmd) {
                         type     : 'boolean'
                     })
                     .coerce('from', asDate)
-                    .coerce('to', asDate),
+                    .coerce('to', asDate)
+                    .coerce('exclude', asDate),
                 handler : cliCommand(logIssues)
             })
             .help('h')

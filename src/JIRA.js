@@ -10,7 +10,6 @@ import Api from './JiraApi';
 
 function workingDays({ include = [], exclude = [], to, from } = {}) {
     const totalDays = dayjs(to).diff(dayjs(from), 'day');
-
     const days = [];
 
     // eslint-disable-next-line more/no-c-like-loops
@@ -21,7 +20,7 @@ function workingDays({ include = [], exclude = [], to, from } = {}) {
 
         let insert = ![ 0, 6 ].includes(day.day());
 
-        if (exclude.length && exclude.includes(day.date())) {
+        if (exclude.length && exclude.some(d => d.isSame(day, 'day'))) {
             insert = false;
         }
         if (to && (day > dayjs(to))) {
@@ -30,7 +29,7 @@ function workingDays({ include = [], exclude = [], to, from } = {}) {
         if (from && (day < dayjs(from))) {
             insert = false;
         }
-        if (include.length && include.includes(day.date())) {
+        if (include.length && include.some(d => d.isSame(day, 'day'))) {
             insert = true;
         }
         if (insert) days.push(day);
@@ -240,6 +239,7 @@ export default class JIRA extends Api {
         const total = {};
 
         days.forEach(day => total[day.format('D MMM YYYY')] = 8);
+        this.logger.verbose(total);
         const sum = Object.values(total).reduce((a, b) => a + b, 0);
         const sortIssues = {};
         const arrayIssues = require(issues);
@@ -284,7 +284,7 @@ export default class JIRA extends Api {
         }
         const fullTasks = tasks
             .filter(t => t.time > 0)
-            .sort((a, b) => a.issue < b.issue);
+            .sort((a, b) => a.issue > b.issue ? 1 : -1);
 
         const checkSum = fullTasks.reduce((a, b) => a + b.time, 0);
 
