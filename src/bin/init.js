@@ -118,6 +118,7 @@ const JIRA_QUESTIONS = (currentConfig, credentials, context = {}) => [
 ];
 
 const CONFLUENCE_QUESTIONS = (currentConfig) => [
+    isUse(currentConfig, 'confluence'),
     isMakeDefault(currentConfig, 'confluence')
 ];
 

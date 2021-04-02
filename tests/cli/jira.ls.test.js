@@ -28,7 +28,7 @@ test('jira ls -dm', async function () {
         assert.equal(req.url, '/rest/api/3/search');
         assert.equal(
             req.params.jql,
-            'assignee is currentuser() AND status IN ("1", "2") AND Sprint in openSprints()'
+            'assignee was currentuser() AND status IN ("1", "2") AND Sprint in openSprints()'
         );
     });
     const [ first, second ] = apiCalls;

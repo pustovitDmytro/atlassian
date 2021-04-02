@@ -90,10 +90,11 @@ export default class Test {
             'email' : 'kuba@gu.nr',
             'token' : 'gUOv4Dn4o8iVYy53rrTK',
             'jira'  : {
+                'isUse'     : true,
                 'isDefault' : true,
                 'statuses'  : { 'dev': [ '1', '2' ], 'test': [ '3' ] }
             },
-            'confluence' : { 'isDefault': false },
+            'confluence' : { 'isUse': false },
             'userId'     : 1,
             '_version'   : '1.0.0'
         };
