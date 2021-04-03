@@ -105,7 +105,7 @@ The message summary should be a one-sentence description of the change. The issu
 
 [npm]: https://www.npmjs.com/package/atlassian
 [github]: https://github.com/pustovitDmytro/atlassian
-[travis]: https://travis-ci.org/pustovitDmytro/atlassian
+[travis]: https://travis-ci.com/pustovitDmytro/atlassian
 [coveralls]: https://coveralls.io/github/pustovitDmytro/atlassian?branch=master
 [badge-deps]: https://img.shields.io/david/pustovitDmytro/atlassian.svg
 [badge-tests]: https://img.shields.io/travis/pustovitDmytro/atlassian.svg
