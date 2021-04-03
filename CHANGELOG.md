@@ -1,3 +1,30 @@
+# [1.3.0](https://github.com/pustovitDmytro/atlassian/compare/v1.2.0...v1.3.0) (2021-04-03)
+
+
+### Chore
+
+* adds negative test case ([f7e0937](https://github.com/pustovitDmytro/atlassian/commit/f7e0937b057e0cd8e713739061f5f5dc6cd5c3a3))
+* fixes tests ([cd63232](https://github.com/pustovitDmytro/atlassian/commit/cd632326e414b7ece1ddd12081070fb3bc8a30df))
+* fixes tests for move issue ([356fc71](https://github.com/pustovitDmytro/atlassian/commit/356fc71efa4257fd51e4c926904aabf7c5333438))
+* refactor test command ([7d8da3d](https://github.com/pustovitDmytro/atlassian/commit/7d8da3d0df44d1a235aac249edb0f40fe735086f))
+
+### Fix
+
+* fixes automated time logging ([3fdc04a](https://github.com/pustovitDmytro/atlassian/commit/3fdc04a491595ba5f44fdc095fe41c99e7da2222))
+
+### New
+
+* adds clear worklog cli ([e5a8984](https://github.com/pustovitDmytro/atlassian/commit/e5a89847e3576a4937033eff334c242216e8b447))
+* adds cli logger ([b4eeb3d](https://github.com/pustovitDmytro/atlassian/commit/b4eeb3d6519ba4f94a2997ec161823dcd3062739))
+* adds date validation for export command ([1924f03](https://github.com/pustovitDmytro/atlassian/commit/1924f0331dea36bcf1de1c651e9be6a231f5e87b))
+* adds log time basic scenario ([0124bd2](https://github.com/pustovitDmytro/atlassian/commit/0124bd2c31549bcf6e10427931db3cefb9036915))
+* adds simple api error message ([8a04d93](https://github.com/pustovitDmytro/atlassian/commit/8a04d9375cd0e3eb4a757ed46551063b8a466b5e))
+* dont fill config if module not used ([1ffd1bd](https://github.com/pustovitDmytro/atlassian/commit/1ffd1bdd48defc6d83d99779eb54d27e1e2dd0a6))
+
+### Upgrade
+
+* fixes npm audit ([f92f2e2](https://github.com/pustovitDmytro/atlassian/commit/f92f2e2314a8bdefa596976f78514733634c51c3))
+
 # [1.2.0](https://github.com/pustovitDmytro/atlassian/compare/v1.1.0...v1.2.0) (2021-03-07)
 
 
