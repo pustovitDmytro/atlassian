@@ -7,6 +7,7 @@
 [![Build Status][badge-tests]][travis]
 [![Coverage Status][badge-coverage]](https://coveralls.io/github/pustovitDmytro/atlassian?branch=master)
 [![License][badge-lic]][github]
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FpustovitDmytro%2Fatlassian.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FpustovitDmytro%2Fatlassian?ref=badge_shield)
 
 ## Table of Contents
   - [Requirements](#requirements)
@@ -113,3 +114,6 @@ The message summary should be a one-sentence description of the change. The issu
 [badge-vers]: https://img.shields.io/npm/v/atlassian.svg
 [badge-lic]: https://img.shields.io/github/license/pustovitDmytro/atlassian.svg
 [badge-coverage]: https://coveralls.io/repos/github/pustovitDmytro/atlassian/badge.svg?branch=master
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FpustovitDmytro%2Fatlassian.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FpustovitDmytro%2Fatlassian?ref=badge_large)
