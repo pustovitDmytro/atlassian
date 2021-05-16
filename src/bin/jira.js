@@ -126,164 +126,161 @@ function asDate(date) {
 }
 
 export default async function run(cmd) {
-    await new Promise((res, rej) => {
-        function onYargsFail(message, error, ygs) {
-            const failMessage = message || error;
+    function onYargsFail(message, error, ygs) {
+        const failMessage = message || error;
 
-            ygs.showHelp('error');
-            if (failMessage) {
-                console.log();
-                logger.error(failMessage.toString());
-                logger.verbose(error?.stack);
-            }
-
-            if (!isMain) return rej(failMessage);
-            process.exit(1);
+        ygs.showHelp('error');
+        if (failMessage) {
+            console.log();
+            logger.error(failMessage.toString());
+            logger.verbose(error?.stack);
         }
 
-        const minTerminalWidth =  95;
-        const commonCommandArgs = '[--verbose] [--profile=<profile>]';
-        const commonOpts = y => y
-            .option('verbose', {
-                describe : 'verbose logs',
-                alias    : [ 'v' ],
-                type     : 'boolean'
-            })
-            .option('profile', {
-                alias    : [ 'p' ],
-                describe : 'specify profile name',
-                type     : 'string'
-            });
+        if (!isMain) throw (failMessage);
+        process.exit(1);
+    }
 
-        const Argv = yargs(cmd)
-            .usage('Usage: $0 <command> [options]')
-            .command({
-                command : 'init',
-                desc    : 'Add attlasian profile',
-                handler : cliCommand(init)
-            })
-            .command({
-                command : `list [--dev] [--mine] [--search=<search>] [--sprint=<sprint>] ${commonCommandArgs}`,
-                aliases : [ 'ls' ],
-                builder : y => commonOpts(y)
-                    .option('dev', {
-                        alias    : [ 'd', 'development' ],
-                        describe : 'filter only tasks in development',
-                        type     : 'boolean'
-                    })
-                    .option('mine', {
-                        alias    : [ 'm', 'my' ],
-                        describe : 'filter only mine issues',
-                        type     : 'boolean'
-                    })
-                    .option('search', {
-                        alias    : [ 's', 'grep' ],
-                        describe : 'search issues by summary',
-                        type     : 'string'
-                    })
-                    .option('sprint', {
-                        describe : 'specify sprints for filter',
-                        choices  : [ 'all', 'open' ],
-                        default  : [ 'open' ],
-                        type     : 'array'
-                    }),
-                desc    : 'List Tasks',
-                handler : cliCommand(list)
-            })
-            .command({
-                command : `test ${commonCommandArgs} <issueId...>`,
-                desc    : 'Send task to testing',
-                builder : y => commonOpts(y)
-                    .option('issueId', {
-                        describe : 'id(s) of task',
-                        type     : 'array'
-                    }),
-                handler : cliCommand(test)
-            })
-            .command({
-                command : `export log ${commonCommandArgs} <start> <end> [file]`,
-                desc    : 'Send task to testing',
-                builder : y => commonOpts(y)
-                    .option('start', {
-                        describe : `issues with updatedDate >= start will be included ${dateSuffix}`,
-                        type     : 'date'
-                    })
-                    .option('end', {
-                        describe : `issues with created <= end will be included ${dateSuffix}`,
-                        type     : 'date'
-                    })
-                    .option('file', {
-                        describe : 'path to resulting file',
-                        type     : 'string'
-                    })
-                    .coerce('start', asDate)
-                    .coerce('end', asDate),
-                handler : cliCommand(exportLog)
-            })
-            .command({
-                command : `worklog clear <issueId> ${commonCommandArgs} [--start=<start>] [--end=<end>]`,
-                desc    : 'Send task to testing',
-                builder : y => commonOpts(y)
-                    .option('start', {
-                        describe : `clear only worklogs after (>=) start date ${dateSuffix}`,
-                        type     : 'date'
-                    })
-                    .option('end', {
-                        describe : `clear only worklogs before (<=) end date ${dateSuffix}`,
-                        type     : 'date'
-                    })
-                    .coerce('start', asDate)
-                    .coerce('end', asDate),
-                handler : cliCommand(clearWorklog)
-            })
-            .command({
-                command : `log ${commonCommandArgs} [--issues=<issues>] [--from=<from>] [--to=<to>] [--include=<include>] [--exclude=<exclude>] [--confirm]`,
-                desc    : 'Log time in issues',
-                builder : y => commonOpts(y)
-                    .option('issues', {
-                        demandOption : true,
-                        describe     : 'path to file with issues',
-                        type         : 'path'
-                    })
-                    .option('include', {
-                        describe : 'add day to worklog',
-                        type     : 'array'
-                    })
-                    .option('exclude', {
-                        describe : 'remove day from worklog',
-                        type     : 'array'
-                    })
-                    .option('from', {
-                        demandOption : true,
-                        describe     : `start of worklog period ${dateSuffix}`,
-                        type         : 'date'
-                    })
-                    .option('to', {
-                        demandOption : true,
-                        describe     : `end of worklog period ${dateSuffix}`,
-                        type         : 'date'
-                    })
-                    .option('confirm', {
-                        describe : 'actually log time',
-                        alias    : 'y',
-                        type     : 'boolean'
-                    })
-                    .coerce('from', asDate)
-                    .coerce('to', asDate)
-                    .coerce('exclude', asDate),
-                handler : cliCommand(logIssues)
-            })
-            .help('h')
-            .alias('h', 'help')
-            .wrap(Math.min(minTerminalWidth, process.stdout.columns))
-            .version(packageInfo.version)
-            .demandCommand(1, '').recommendCommands().strict()
-            .epilog(`${packageInfo.name} v.${packageInfo.version}`)
-            .onFinishCommand(res)
-            .fail(onYargsFail);
+    const minTerminalWidth =  95;
+    const commonCommandArgs = '[--verbose] [--profile=<profile>]';
+    const commonOpts = y => y
+        .option('verbose', {
+            describe : 'verbose logs',
+            alias    : [ 'v' ],
+            type     : 'boolean'
+        })
+        .option('profile', {
+            alias    : [ 'p' ],
+            describe : 'specify profile name',
+            type     : 'string'
+        });
 
-        return Argv.argv;
-    });
+    const Argv = yargs(cmd)
+        .usage('Usage: $0 <command> [options]')
+        .command({
+            command : 'init',
+            desc    : 'Add attlasian profile',
+            handler : cliCommand(init)
+        })
+        .command({
+            command : `list [--dev] [--mine] [--search=<search>] [--sprint=<sprint>] ${commonCommandArgs}`,
+            aliases : [ 'ls' ],
+            builder : y => commonOpts(y)
+                .option('dev', {
+                    alias    : [ 'd', 'development' ],
+                    describe : 'filter only tasks in development',
+                    type     : 'boolean'
+                })
+                .option('mine', {
+                    alias    : [ 'm', 'my' ],
+                    describe : 'filter only mine issues',
+                    type     : 'boolean'
+                })
+                .option('search', {
+                    alias    : [ 's', 'grep' ],
+                    describe : 'search issues by summary',
+                    type     : 'string'
+                })
+                .option('sprint', {
+                    describe : 'specify sprints for filter',
+                    choices  : [ 'all', 'open' ],
+                    default  : [ 'open' ],
+                    type     : 'array'
+                }),
+            desc    : 'List Tasks',
+            handler : cliCommand(list)
+        })
+        .command({
+            command : `test ${commonCommandArgs} <issueId...>`,
+            desc    : 'Send task to testing',
+            builder : y => commonOpts(y)
+                .option('issueId', {
+                    describe : 'id(s) of task',
+                    type     : 'array'
+                }),
+            handler : cliCommand(test)
+        })
+        .command({
+            command : `export log ${commonCommandArgs} <start> <end> [file]`,
+            desc    : 'Send task to testing',
+            builder : y => commonOpts(y)
+                .option('start', {
+                    describe : `issues with updatedDate >= start will be included ${dateSuffix}`,
+                    type     : 'date'
+                })
+                .option('end', {
+                    describe : `issues with created <= end will be included ${dateSuffix}`,
+                    type     : 'date'
+                })
+                .option('file', {
+                    describe : 'path to resulting file',
+                    type     : 'string'
+                })
+                .coerce('start', asDate)
+                .coerce('end', asDate),
+            handler : cliCommand(exportLog)
+        })
+        .command({
+            command : `worklog clear <issueId> ${commonCommandArgs} [--start=<start>] [--end=<end>]`,
+            desc    : 'Send task to testing',
+            builder : y => commonOpts(y)
+                .option('start', {
+                    describe : `clear only worklogs after (>=) start date ${dateSuffix}`,
+                    type     : 'date'
+                })
+                .option('end', {
+                    describe : `clear only worklogs before (<=) end date ${dateSuffix}`,
+                    type     : 'date'
+                })
+                .coerce('start', asDate)
+                .coerce('end', asDate),
+            handler : cliCommand(clearWorklog)
+        })
+        .command({
+            command : `log ${commonCommandArgs} [--issues=<issues>] [--from=<from>] [--to=<to>] [--include=<include>] [--exclude=<exclude>] [--confirm]`,
+            desc    : 'Log time in issues',
+            builder : y => commonOpts(y)
+                .option('issues', {
+                    demandOption : true,
+                    describe     : 'path to file with issues',
+                    type         : 'path'
+                })
+                .option('include', {
+                    describe : 'add day to worklog',
+                    type     : 'array'
+                })
+                .option('exclude', {
+                    describe : 'remove day from worklog',
+                    type     : 'array'
+                })
+                .option('from', {
+                    demandOption : true,
+                    describe     : `start of worklog period ${dateSuffix}`,
+                    type         : 'date'
+                })
+                .option('to', {
+                    demandOption : true,
+                    describe     : `end of worklog period ${dateSuffix}`,
+                    type         : 'date'
+                })
+                .option('confirm', {
+                    describe : 'actually log time',
+                    alias    : 'y',
+                    type     : 'boolean'
+                })
+                .coerce('from', asDate)
+                .coerce('to', asDate)
+                .coerce('exclude', asDate),
+            handler : cliCommand(logIssues)
+        })
+        .help('h')
+        .alias('h', 'help')
+        .wrap(Math.min(minTerminalWidth, process.stdout.columns))
+        .version(packageInfo.version)
+        .demandCommand(1, '').recommendCommands().strict()
+        .epilog(`${packageInfo.name} v.${packageInfo.version}`)
+        .fail(onYargsFail);
+
+    await Argv.argv;
 }
 
 const firstCmdArgIndex = 2;

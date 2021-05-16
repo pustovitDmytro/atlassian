@@ -31,6 +31,13 @@ beforeEach(function setClsFromContext() {
     };
 });
 
+afterEach(function () {
+    if (this.currentTest.state === 'failed') {
+        console.error(this.currentTest.err);
+        throw this.currentTest.err;
+    }
+});
+
 async function clean(dirPath, opts) {
     const files = await fs.readdir(tmpFolder);
 

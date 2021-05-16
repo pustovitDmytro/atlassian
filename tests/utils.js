@@ -32,7 +32,6 @@ export class CLITester {
         const item = this.dialog[index];
 
         this.stdin.send([ item.input, null ]);
-
         this.factory.logger.log('info', { item, out, service: 'CLITester' });
         assert.match(out, new RegExp(item.output), JSON.stringify(item));
         await this.test(index + 1);

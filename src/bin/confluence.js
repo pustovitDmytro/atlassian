@@ -33,36 +33,33 @@ async function exportPage(args) {
 }
 
 export default async function run(cmd) {
-    await new Promise((res) => {
-    // eslint-disable-next-line no-unused-expressions
-        yargs(cmd)
-            .usage('Usage: $0 <command> [options]')
-            .command({
-                command : 'init',
-                desc    : 'Add attlasian profile',
-                handler : init
-            })
-            .command({
-                command : 'pages <space> [--profile=<profile>]',
-                builder : y => y
-                    .alias('-p', '--profile'),
-                desc    : 'List Pages',
-                handler : listPages
-            })
-            .command({
-                command : 'export <page> [--path=<path>]',
-                builder : y => y
-                    .alias('-p', '--profile'),
-                desc    : 'Export Page as pdf',
-                handler : exportPage
-            })
-            .help('h')
-            .alias('h', 'help')
-            .help()
-            .showHelpOnFail(true).demandCommand(1, '').recommendCommands().strict()
-            .epilog(`${packageInfo.name} v.${packageInfo.version}`)
-            .onFinishCommand(res).argv;
-    });
+    await  yargs(cmd)
+        .usage('Usage: $0 <command> [options]')
+        .command({
+            command : 'init',
+            desc    : 'Add attlasian profile',
+            handler : init
+        })
+        .command({
+            command : 'pages <space> [--profile=<profile>]',
+            builder : y => y
+                .alias('-p', '--profile'),
+            desc    : 'List Pages',
+            handler : listPages
+        })
+        .command({
+            command : 'export <page> [--path=<path>]',
+            builder : y => y
+                .alias('-p', '--profile'),
+            desc    : 'Export Page as pdf',
+            handler : exportPage
+        })
+        .help('h')
+        .alias('h', 'help')
+        .help()
+        .showHelpOnFail(true).demandCommand(1, '').recommendCommands().strict()
+        .epilog(`${packageInfo.name} v.${packageInfo.version}`)
+        .argv;
 }
 
 if (isMain) {
