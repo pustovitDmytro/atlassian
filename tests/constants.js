@@ -5,7 +5,7 @@ const entry = process.env.ENTRY && path.resolve(process.env.ENTRY)
 || isBuild && path.resolve(__dirname, '../lib')
 || path.resolve(__dirname, '../src');
 
-const tmpFolder = path.join(__dirname, '../tmp/tests');
+const tmpFolder = path.join(process.cwd(), 'tmp/tests');
 const configPath = process.env.ATLASSIAN_CONFIG_PATH;
 const logsPath = path.join(tmpFolder, 'test.log');
 

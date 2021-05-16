@@ -15,7 +15,7 @@ const DIR = path.resolve('./tmp/package-tests');
 
 const COPY = [
     [ 'tests/init.js',  'tests-init.js' ],
-
+    [ 'tests/test.env', 'test.env' ],
     [ '.mocharc.bundle.json', '.mocharc.json' ]
 ];
 
@@ -23,7 +23,8 @@ const TEST_MODULES = [
     'mocha',
     'cls-hooked',
     'winston',
-    'winston-array-transport'
+    'winston-array-transport',
+    'uuid'
 ];
 
 const resolveIgnoreRegexp = `^(?!${TEST_MODULES.join('|')}).*$`;
