@@ -5,7 +5,7 @@ import os from 'os';
 import yargs from 'yargs/yargs';
 import chalk from 'chalk';
 import fs from 'fs-extra';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import Confluence from '../Confluence';
 import packageInfo from '../../package.json';
 import { configPath } from './utils';
@@ -66,5 +66,7 @@ export default async function run(cmd) {
 }
 
 if (isMain) {
-    run(process.argv.slice(2));
+    const firstCmdArgIndex = 2;
+
+    run(process.argv.slice(firstCmdArgIndex));
 }

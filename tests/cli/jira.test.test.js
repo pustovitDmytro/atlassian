@@ -48,7 +48,6 @@ test('Negative: specify not existing task', async function () {
 
     const [ output ] = await Promise.all([
         tester.test(),
-        // eslint-disable-next-line more/no-then
         jiraRunner([ 'test', '00' ])
             .then(() => assert.fail('request must fail'))
             .catch(e => {

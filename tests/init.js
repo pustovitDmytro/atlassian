@@ -1,6 +1,7 @@
 /* eslint-disable import/no-commonjs */
 const { Module } = require('module');
 const path = require('path');
+const dotenv = require('dotenv');
 
 function clearRequireCache() {
     Object.keys(require.cache).forEach((key) => {
@@ -34,5 +35,10 @@ function preventParentScopeModules() {
     };
 }
 
+function loadEnv() {
+    dotenv.config({ path: path.join(__dirname, './test.env') });
+}
+
 clearRequireCache();
 preventParentScopeModules();
+loadEnv();

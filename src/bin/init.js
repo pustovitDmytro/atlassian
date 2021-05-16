@@ -5,6 +5,8 @@ import JIRA from '../JIRA';
 import packageInfo from '../../package.json';
 import { configPath, getDefaultProfile, loadConfig,  untilConfirm } from './utils';
 
+const JSON_PRETTY_OFFSET = 4;
+
 const validate = (required, regexp, msg = 'invalid value') => value => {
     if (!value) return 'value is required';
     if (regexp && !regexp.test(value)) return msg;
@@ -47,7 +49,7 @@ const CREDENTIALS_QUESTIONS = (context = {}) => [
     {
         type    : 'confirm',
         name    : 'confirm',
-        message : () => `User found:\n${JSON.stringify(context.myself, null, 4)}\nis this you?`
+        message : () => `User found:\n${JSON.stringify(context.myself, null, JSON_PRETTY_OFFSET)}\nis this you?`
     }
 ];
 
@@ -84,6 +86,7 @@ const JIRA_QUESTIONS = (currentConfig, credentials, context = {}) => [
 
                 if (isFirst) {
                     context.jira = new JIRA(credentials);
+                    // eslint-disable-next-line require-atomic-updates
                     context.statuses = await context.jira.loadStatuses();
 
                     messages.push(
@@ -91,6 +94,7 @@ const JIRA_QUESTIONS = (currentConfig, credentials, context = {}) => [
                         ...context.statuses.map(s => `${s.id} ${s.name}`)
                     );
                 }
+
                 messages.push(`\nEnter list of statuses for ${name}`);
 
                 return messages.join('\n');
@@ -112,7 +116,7 @@ const JIRA_QUESTIONS = (currentConfig, credentials, context = {}) => [
         type    : 'confirm',
         name    : 'confirm',
         message : answ => answ.isUse
-            ? `jira config: \n${JSON.stringify(answ, null, 4)}\nis everything correct?`
+            ? `jira config: \n${JSON.stringify(answ, null, JSON_PRETTY_OFFSET)}\nis everything correct?`
             : 'Are you sure?'
     }
 ];
@@ -165,6 +169,7 @@ export default async function init() {
             }
         }
     });
+    // eslint-disable-next-line require-atomic-updates
     currentConfig[profile] = profileConfig;
     await fs.writeJSON(configPath, currentConfig);
     console.log(`Profile ${profile} saved`);

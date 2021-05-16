@@ -1,15 +1,15 @@
 import path from 'path';
 import fs from 'fs-extra';
 import axios from 'axios';
-
-const { htmlToText } = require('html-to-text');
+import { htmlToText } from 'html-to-text';
+import { pause } from 'myrmidon';
 
 function onError(error) {
     console.error(error.response ? error.response.data : error);
     throw error;
 }
 
-const pause = t => new Promise(res => setTimeout(res, t));
+const CONFLUENCE_LOG_POLLING_INTERVAL = 500;
 
 export default class Confluence {
     constructor(config) {
@@ -48,6 +48,7 @@ export default class Confluence {
                     return { status: 1, text, taskId };
                 }
             }
+
             throw err;
         });
 
@@ -59,7 +60,7 @@ export default class Confluence {
         let task = longRes.data;
 
         while (!task.finished) {
-            await pause(500);
+            await pause(CONFLUENCE_LOG_POLLING_INTERVAL);
             const longIterRes = await axios.get(`${this.host}/wiki/rest/api/longtask/${res.taskId}`, {
                 auth : this.auth
             }).catch(onError);

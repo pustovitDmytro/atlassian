@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import './mock/JiraApi';
 import './mock/AtlassianApi';
 import { createNamespace } from 'cls-hooked';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import { tmpFolder, configPath, logsPath } from './constants';
 import { factoryLogger } from './logger';
 
@@ -12,7 +12,7 @@ const context = createNamespace('__TEST__');
 beforeEach(function setClsFromContext() {
     const old = this.currentTest.fn;
 
-    this.currentTest._TRACE_ID = uuid.v4();
+    this.currentTest._TRACE_ID = uuid();
     this.currentTest.fn = function clsWrapper() {
         return new Promise((res, rej) => {
             context.run(() => {
@@ -23,7 +23,6 @@ beforeEach(function setClsFromContext() {
                     id    : this.test._TRACE_ID
                 });
 
-                // eslint-disable-next-line more/no-then
                 Promise.resolve(old.apply(this, arguments))
                     .then(res)
                     .catch(rej);
@@ -53,7 +52,6 @@ async function clean(dirPath, opts) {
 }
 
 export * from './utils';
-// eslint-disable-next-line import/export
 export * from './constants';
 
 export default class Test {
@@ -64,6 +62,7 @@ export default class Test {
 
         this.logger = factoryLogger;
     }
+
     async setTmpFolder() {
         await this.cleanTmpFolder();
         await fs.ensureDir(tmpFolder);
@@ -74,6 +73,7 @@ export default class Test {
             [logsPath] : 'truncate'
         });
     }
+
     async saveProfile(name, profile) {
         const config = await this.loadConfig();
 

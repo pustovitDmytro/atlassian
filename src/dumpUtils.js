@@ -1,5 +1,7 @@
 import { flatten } from 'myrmidon';
 
+const MS_TO_SEC = 1000;
+
 export function dumpTask(issue = {}) {
     const history = issue.changelog
         ? flatten(issue.changelog.histories.map(h => h.items.map(i => ({ item: i, history: h }))))
@@ -44,7 +46,7 @@ function dumpHistory(h) {
 
 export function dumpWorklog(w) {
     return {
-        time   : w.timeSpentSeconds * 1000,
+        time   : w.timeSpentSeconds * MS_TO_SEC,
         author : w.author.accountId,
         start  : w.started
     };

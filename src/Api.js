@@ -2,7 +2,7 @@ import { URL } from 'url';
 import os from 'os';
 import axios from 'axios';
 import ms from 'ms';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import defaultLogger from './logger';
 
 function resolveUrl(base, relativeUrl) {
@@ -86,7 +86,7 @@ export default class API {
     }
 
     getTraceId({ traceId }) {
-        return traceId || uuid.v4();
+        return traceId || uuid();
     }
 
     async request(method, url, reqOptions = {}, settings = {}) {

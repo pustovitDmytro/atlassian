@@ -2,36 +2,43 @@ import path from 'path';
 import os from 'os';
 import fs from 'fs-extra';
 import ms from 'ms';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import { toArray } from 'myrmidon';
 import dayjs from './date';
 import Api from './JiraApi';
 
+const WEEKEND_INDEXES = [ 0, 6 ]; // eslint-disable-line no-magic-numbers
+const LOG_FLOAT_PRECISION = 3;
+const MIN_LOGGED_TIME = 0.25;
+const ROUND_LOGGED_TIME = 0.25;
 
 function workingDays({ include = [], exclude = [], to, from } = {}) {
     const totalDays = dayjs(to).diff(dayjs(from), 'day');
     const days = [];
 
-    // eslint-disable-next-line more/no-c-like-loops
     for (let i = 0; i < totalDays; i++) {
         const day = dayjs(from)
             .add(i, 'days')
             .startOf('day');
 
-        let insert = ![ 0, 6 ].includes(day.day());
+        let insert = !WEEKEND_INDEXES.includes(day.day());
 
         if (exclude.length && exclude.some(d => d.isSame(day, 'day'))) {
             insert = false;
         }
+
         if (to && (day > dayjs(to))) {
             insert = false;
         }
+
         if (from && (day < dayjs(from))) {
             insert = false;
         }
+
         if (include.length && include.some(d => d.isSame(day, 'day'))) {
             insert = true;
         }
+
         if (insert) days.push(day);
     }
 
@@ -74,9 +81,11 @@ export default class JIRA extends Api {
             if (stages.includes('dev')) jql.push(`status IN (${devStatusesList})`);
             if (stages.includes('test')) jql.push(`status IN (${testStatusesList})`);
         }
+
         if (!sprint.includes('all')) {
             if (sprint.includes('open')) jql.push('Sprint in openSprints()');
         }
+
         if (search) jql.push(`summary ~ "${search}"`);
 
         const query = {};
@@ -109,6 +118,7 @@ export default class JIRA extends Api {
                 return this.move(issueID, status);
             }
         }
+
         this.logger.log('warn', 'No transitions to status %s found', status);
     }
 
@@ -149,7 +159,7 @@ export default class JIRA extends Api {
             .map(d => d.format(format));
     }
 
-    async exportLog([ start, end ], file = path.join(os.tmpdir(), `${uuid.v4()}.json`)) {
+    async exportLog([ start, end ], file = path.join(os.tmpdir(), `${uuid()}.json`)) {
         const allModifiedTasks = await this.list({
             from    : start,
             to      : end,
@@ -180,6 +190,7 @@ export default class JIRA extends Api {
                 if (fromDev.length) extra.transitions.OUT = fromDev.join(', ');
                 if (toDev.length) extra.transitions.IN = toDev.join(', ');
             }
+
             if (!isMine) extra.assignee = t.assigneeName;
             if (t.worklog.length) {
                 const othersSpentTime = t.worklog
@@ -192,6 +203,7 @@ export default class JIRA extends Api {
 
                 extra.spent = `${ms(meSpentTime)   } / ${ms(meSpentTime + othersSpentTime)}`;
             }
+
             if (this.gitlab && t.comments.length) {
                 const commits = t.comments.filter(c => {
                     const isFromGitlab = c.author === this.gitlab.jiraId;
@@ -242,7 +254,7 @@ export default class JIRA extends Api {
         this.logger.verbose(total);
         const sum = Object.values(total).reduce((a, b) => a + b, 0);
         const sortIssues = {};
-        const arrayIssues = require(issues);
+        const arrayIssues = await fs.readJSON(issues);
 
         arrayIssues
             .filter(issue => issue.time)
@@ -255,7 +267,7 @@ export default class JIRA extends Api {
 
         for (const issueId in sortIssues) { // eslint-disable-line
             const est = sortIssues[issueId];
-            const norm = Math.max(round(sum * est / estimateSum, 0.25), 0.25);
+            const norm = Math.max(round(sum * est / estimateSum, ROUND_LOGGED_TIME), MIN_LOGGED_TIME);
 
             shrinks.push(norm / est);
             // const currentDayTotal = total[next[0]];
@@ -282,6 +294,7 @@ export default class JIRA extends Api {
                     }
                 });
         }
+
         const fullTasks = tasks
             .filter(t => t.time > 0)
             .sort((a, b) => a.issue > b.issue ? 1 : -1);
@@ -290,7 +303,7 @@ export default class JIRA extends Api {
 
         shrinks.sort((a, b) =>  a - b);
         this.logger.info('%s hours estimated to be logged during %s days', estimateSum, Object.keys(total).length);
-        this.logger.info('%s hours will be logged (shrink %s - %s)', checkSum, shrinks[0].toFixed(3), shrinks[shrinks.length - 1].toFixed(3));
+        this.logger.info('%s hours will be logged (shrink %s - %s)', checkSum, shrinks[0].toFixed(LOG_FLOAT_PRECISION), shrinks[shrinks.length - 1].toFixed(LOG_FLOAT_PRECISION));
         if (confirm) {
             // eslint-disable-next-line guard-for-in
             for (const taskIndex in fullTasks) {

@@ -1,3 +1,4 @@
+import path from 'path';
 import { pause } from 'myrmidon';
 import mockStdin from  'mock-stdin';
 import { stdout } from 'test-console';
@@ -5,6 +6,8 @@ import { assert } from 'chai';
 import { getNamespace } from 'cls-hooked';
 import jsonQuery from 'json-query';
 import { apiTraces } from './logger';
+
+import { entry } from './constants';
 
 export class CLITester {
     constructor(dialog, factory) {
@@ -49,14 +52,12 @@ export async function getApiCalls(query, { trace = true } = {}) {
 
         queryItems.push(`traceId=${traceId}`);
     }
+
     const q = `[*${queryItems.join('&')}]`;
     const res = jsonQuery(q, { data: apiTraces });
 
     return res.value;
 }
-
-import path from 'path';
-import { entry } from './constants';
 
 export function load(relPath, clearCache) {
     const absPath = path.resolve(entry, relPath);

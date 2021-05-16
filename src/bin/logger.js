@@ -1,9 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { createLogger, format, transports } from 'winston';
 import chalk from 'chalk';
+import { SPLAT, MESSAGE, LEVEL }  from 'triple-beam';
 import { level, levels, JSONFormats } from '../logger';
-
-const { SPLAT, MESSAGE, LEVEL } = require('triple-beam');
 
 const splatChalkFormat = format(info => {
     if (info[SPLAT]) {
@@ -26,8 +25,7 @@ const simpleChalkFormat = format(info => {
     if (levelTag) messages.push(chalk.hex(levelTag.color).bold(`${levelTag.name}: `));
     messages.push(levelTag?.fillMessage
         ? chalk.hex(levelTag.color)(info.message)
-        : info.message
-    );
+        : info.message);
     info[MESSAGE] = messages.join('');
 
     return info;

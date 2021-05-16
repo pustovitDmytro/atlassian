@@ -1,4 +1,5 @@
 #!./node_modules/.bin/babel-node
+/* eslint-disable max-lines-per-function */
 
 import yargs from 'yargs/yargs';
 import { isPromise, isArray } from 'myrmidon';
@@ -30,12 +31,12 @@ function onSuccess(result) {
 }
 
 function cliCommand(method) {
-    const f =  function (...args) {
+    return function (...args) {
         try {
             const promise = method.apply(this, args);
 
             if (isPromise(promise)) {
-                return promise // eslint-disable-line more/no-then
+                return promise
                     .then(result => onSuccess(result))
                     .catch(error => onError(error));
             }
@@ -45,8 +46,6 @@ function cliCommand(method) {
             onError(error);
         }
     };
-
-    return f;
 }
 
 async function list(args) {
@@ -122,6 +121,7 @@ function asDate(date) {
 
         if (dated.isValid()) return dated;
     }
+
     throw new Error(`Invalid date ${date}`);
 }
 
@@ -136,9 +136,12 @@ export default async function run(cmd) {
                 logger.error(failMessage.toString());
                 logger.verbose(error?.stack);
             }
+
             if (!isMain) return rej(failMessage);
-            process.exit(2);
+            process.exit(1);
         }
+
+        const minTerminalWidth =  95;
         const commonCommandArgs = '[--verbose] [--profile=<profile>]';
         const commonOpts = y => y
             .option('verbose', {
@@ -272,7 +275,7 @@ export default async function run(cmd) {
             })
             .help('h')
             .alias('h', 'help')
-            .wrap(Math.min(95, process.stdout.columns))
+            .wrap(Math.min(minTerminalWidth, process.stdout.columns))
             .version(packageInfo.version)
             .demandCommand(1, '').recommendCommands().strict()
             .epilog(`${packageInfo.name} v.${packageInfo.version}`)
@@ -283,5 +286,7 @@ export default async function run(cmd) {
     });
 }
 
-if (isMain) run(process.argv.slice(2));
+const firstCmdArgIndex = 2;
+
+if (isMain) run(process.argv.slice(firstCmdArgIndex));
 

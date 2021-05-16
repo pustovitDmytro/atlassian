@@ -32,18 +32,21 @@ export default class JiraApi extends Api {
                         action : this.getTransitions(issue.id)
                     });
                 }
+
                 if (includes.includes('comments')) {
                     promises.push({
                         key    : '_comments',
                         action : this.getComments(issue.id)
                     });
                 }
+
                 if (includes.includes('worklogs')) {
                     promises.push({
                         key    : '_worklog',
                         action : this.getWorklog(issue.id)
                     });
                 }
+
                 await Promise.all(promises.map(async p => {
                     const res = await p.action;
 
@@ -76,12 +79,14 @@ export default class JiraApi extends Api {
                     action : this.getTransitions(id)
                 });
             }
+
             if (includes.includes('comments')) {
                 promises.push({
                     key    : '_comments',
                     action : this.getComments(id)
                 });
             }
+
             if (includes.includes('worklogs')) {
                 promises.push({
                     key    : '_worklog',
