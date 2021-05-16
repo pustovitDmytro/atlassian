@@ -1,0 +1,61 @@
+{
+    "extends": [
+        "config:base"
+    ],
+
+    "rangeStrategy": "replace",
+    "ignoreUnstable": true,
+    
+    "semanticCommits": "enabled",
+    "semanticCommitScope": null,
+    "semanticCommitType": "Chore",
+
+    "separateMinorPatch": false,
+    "dependencyDashboard": true,
+    "dependencyDashboardAutoclose": true,
+
+    "lockFileMaintenance": {
+       "enabled": true,
+       "automerge": true,
+       "extends": [
+            "schedule:monthly"
+       ]
+    },
+
+    "circleci": {
+      "enabled": false
+    },
+
+    "prConcurrentLimit": 5,
+    "prHourlyLimit": 1,
+    "rebaseWhen": "conflicted",
+    "assigneesFromCodeOwners": true,
+    "labels": ["dependencies"],
+
+    "vulnerabilityAlerts": {
+        "labels": ["dependencies", "security"],
+        "enabled": true
+    },
+
+    "packageRules": [
+        {
+            "matchDepTypes": ["devDependencies"],
+            "automerge": true,
+            "semanticCommitType": "Chore"
+        },
+        {
+            "matchDepTypes": ["dependencies"],
+            "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+            "automerge": true
+        },                
+        {
+            "matchDepTypes": [ "dependencies", "require" ],
+            "rangeStrategy": "pin",
+            "semanticCommitType": "Upgrade"
+        },
+        {
+          "matchDepTypes": [ "peerDependencies"],
+          "rangeStrategy": "widen"
+        }
+    ]
+}

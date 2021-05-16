@@ -52,6 +52,10 @@ async function clean(dirPath, opts) {
     }));
 }
 
+export * from './utils';
+// eslint-disable-next-line import/export
+export * from './constants';
+
 export default class Test {
     constructor() {
         const relative = path.relative(tmpFolder, configPath);
@@ -64,6 +68,7 @@ export default class Test {
         await this.cleanTmpFolder();
         await fs.ensureDir(tmpFolder);
     }
+
     async cleanTmpFolder() {
         await clean(tmpFolder, {
             [logsPath] : 'truncate'
@@ -100,5 +105,3 @@ export default class Test {
         };
     }
 }
-
-export * from './constants';

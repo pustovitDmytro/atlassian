@@ -2,7 +2,9 @@ node_modules
 etc/*.js
 etc/*.json
 lib/*
-coverage/*
 tmp/*
 logs/*
 *.log
+*.tgz
+reports/*
+.coveralls.yml

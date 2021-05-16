@@ -1,4 +1,5 @@
 {
+    "branches": ["master"],
     "branch": "master",
     "ci": false,
     "plugins": [
@@ -9,21 +10,38 @@
                 "changelogFile": "CHANGELOG.md"
             }
         ],
-            "@semantic-release/npm",
+        [
+            "@semantic-release/npm",{
+                "tarballDir": "./"
+            }
+        ],
         [
             "@semantic-release/git", {
+                "assets": ["README.md", "CHANGELOG.md", "package.json"],
                 "message": "Chore: (release) add version ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
             }
+        ],
+        [
+            "@semantic-release/github", {
+                "assets": [
+                    { "path": "*.tgz", "label": "npm tarball" }
+                ]
+            }
+        ],
+        [ 
+            "semantic-release-telegram", {
+                "chats": [ 238585617 ]
+            } 
         ]
     ],
     "preset": "eslint",
     "releaseRules": [
-        { "type": "Fix", "release": "patch" },
-        { "type": "Update", "release": "minor" },
-        { "type": "New", "release": "minor" },
-        { "type": "Breaking", "release": "major" },
-        { "type": "Docs", "release": "patch" },
-        { "type": "Upgrade", "release": "patch" }
+        { "tag": "Fix", "release": "patch" },
+        { "tag": "Update", "release": "minor" },
+        { "tag": "New", "release": "minor" },
+        { "tag": "Breaking", "release": "major" },
+        { "tag": "Docs", "release": "patch" },
+        { "tag": "Upgrade", "release": "patch" }
     ],
     "parserOpts": {
         "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES"]

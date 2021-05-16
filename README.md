@@ -1,11 +1,23 @@
 # atlassian
-**atlassian** jira and confluence command line interface.
+jira and confluence command line interface.
 
 [![Version][badge-vers]][npm]
+[![Bundle size][npm-size-badge]][npm-size-url]
+[![Downloads][npm-downloads-badge]][npm]
+
+[![CodeFactor][codefactor-badge]][codefactor-url]
+[![SonarCloud][sonarcloud-badge]][sonarcloud-url]
+[![Codacy][codacy-badge]][codacy-url]
+[![Total alerts][lgtm-alerts-badge]][lgtm-alerts-url]
+[![Language grade][lgtm-lg-badge]][lgtm-lg-url]
+[![Scrutinizer][scrutinizer-badge]][scrutinizer-url]
+
 [![Dependencies][badge-deps]][npm]
 [![Vulnerabilities][badge-vuln]](https://snyk.io/)
-[![Build Status][badge-tests]][travis]
-[![Coverage Status][badge-coverage]](https://coveralls.io/github/pustovitDmytro/atlassian?branch=master)
+[![Build Status][tests-badge]][tests-url]
+[![Coverage Status][badge-coverage]][url-coverage]
+
+[![Commit activity][commit-activity-badge]][github]
 [![License][badge-lic]][github]
 
 ## Table of Contents
@@ -15,18 +27,22 @@
   - [Contribute](#contribute)
 
 ## Requirements
+[![Platform Status][appveyor-badge]][appveyor-url]
+
 To use library you need to have [node](https://nodejs.org) and [npm](https://www.npmjs.com) installed in your machine:
 
-* node `6.0+`
-* npm `3.0+`
+* node `>=10`
+* npm `>=6`
 
 ## Installation
 
-To install the library run following command
+To install the library run the following command
 
 ```bash
   npm i -g atlassian
 ```
+
+## Usage
 
 ## Jira cli
 
@@ -60,11 +76,11 @@ Some common examples:
    ```
    where ```ls``` is alias for ```list``` command and ```-dm``` means *mine* tasks in *dev* status
 
-2) search issues which contains *memory leak* words:
+2) search issues that contains *memory leak* words:
    ```bash
       jira ls -s 'memory leak'
    ```
-   where ```-s``` is shortcut for ```--search``` or ```--grep```
+   where ```-s``` is a shortcut for ```--search``` or ```--grep```
 
 ### Send issue(s) to testing
 
@@ -83,7 +99,7 @@ Options:
 
 ## Contribute
 
-Make the changes to the code and tests and then commit to your branch. Be sure to follow the commit message conventions.
+Make the changes to the code and tests. Then commit to your branch. Be sure to follow the commit message conventions.
 
 Commit message summaries must follow this basic format:
 ```
@@ -105,11 +121,42 @@ The message summary should be a one-sentence description of the change. The issu
 
 [npm]: https://www.npmjs.com/package/atlassian
 [github]: https://github.com/pustovitDmytro/atlassian
-[travis]: https://travis-ci.com/pustovitDmytro/atlassian
 [coveralls]: https://coveralls.io/github/pustovitDmytro/atlassian?branch=master
 [badge-deps]: https://img.shields.io/david/pustovitDmytro/atlassian.svg
-[badge-tests]: https://img.shields.io/travis/pustovitDmytro/atlassian.svg
 [badge-vuln]: https://img.shields.io/snyk/vulnerabilities/npm/atlassian.svg?style=popout
 [badge-vers]: https://img.shields.io/npm/v/atlassian.svg
 [badge-lic]: https://img.shields.io/github/license/pustovitDmytro/atlassian.svg
 [badge-coverage]: https://coveralls.io/repos/github/pustovitDmytro/atlassian/badge.svg?branch=master
+[url-coverage]: https://coveralls.io/github/pustovitDmytro/atlassian?branch=master
+
+[tests-badge]: https://img.shields.io/circleci/build/github/pustovitDmytro/atlassian
+[tests-url]: https://app.circleci.com/pipelines/github/pustovitDmytro/atlassian
+
+[codefactor-badge]: https://www.codefactor.io/repository/github/pustovitdmytro/atlassian/badge
+[codefactor-url]: https://www.codefactor.io/repository/github/pustovitdmytro/atlassian
+
+[commit-activity-badge]: https://img.shields.io/github/commit-activity/m/pustovitDmytro/atlassian
+
+[scrutinizer-badge]: https://scrutinizer-ci.com/g/pustovitDmytro/atlassian/badges/quality-score.png?b=master
+[scrutinizer-url]: https://scrutinizer-ci.com/g/pustovitDmytro/atlassian/?branch=master
+
+[lgtm-lg-badge]: https://img.shields.io/lgtm/grade/javascript/g/pustovitDmytro/atlassian.svg?logo=lgtm&logoWidth=18
+[lgtm-lg-url]: https://lgtm.com/projects/g/pustovitDmytro/atlassian/context:javascript
+
+[lgtm-alerts-badge]: https://img.shields.io/lgtm/alerts/g/pustovitDmytro/atlassian.svg?logo=lgtm&logoWidth=18
+[lgtm-alerts-url]: https://lgtm.com/projects/g/pustovitDmytro/atlassian/alerts/
+
+[codacy-badge]: https://app.codacy.com/project/badge/Grade/8667aa23afaa4725854f098c4b5e8890
+[codacy-url]: https://www.codacy.com/gh/pustovitDmytro/atlassian/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pustovitDmytro/atlassian&amp;utm_campaign=Badge_Grade
+
+[sonarcloud-badge]: https://sonarcloud.io/api/project_badges/measure?project=pustovitDmytro_atlassian&metric=alert_status
+[sonarcloud-url]: https://sonarcloud.io/dashboard?id=pustovitDmytro_atlassian
+
+[npm-downloads-badge]: https://img.shields.io/npm/dw/atlassian
+[npm-size-badge]: https://img.shields.io/bundlephobia/min/atlassian
+[npm-size-url]: https://bundlephobia.com/result?p=atlassian
+
+[appveyor-badge]: https://ci.appveyor.com/api/projects/status/ux42y068m7c2yl2p/branch/master?svg=true
+[appveyor-url]: https://ci.appveyor.com/project/pustovitDmytro/atlassian/branch/master
+
+

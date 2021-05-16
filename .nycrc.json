@@ -11,8 +11,8 @@
         "@babel/register",
         "@babel/polyfill"
     ],
-    "report-dir": "./coverage",
-    "temp-dir": "./coverage",
+    "report-dir": "./reports/coverage",
+    "temp-dir": "./reports/coverage",
     "lines": 50,
     "statements": 50,
     "functions": 40,
