@@ -1,7 +1,8 @@
 import { assert } from 'chai';
-import jiraRunner from '../../src/bin/jira';
 import Test from '../Test';
-import { CLITester, getApiCalls } from '../utils';
+import { CLITester, getApiCalls, load } from '../utils';
+
+const jiraRunner = load('bin/jira').default;
 
 const factory = new Test();
 

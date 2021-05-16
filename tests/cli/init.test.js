@@ -1,10 +1,11 @@
 import { assert } from 'chai';
 import fs from 'fs-extra';
-import jiraRunner from '../../src/bin/jira';
-import confluenceRunner from '../../src/bin/confluence';
 import packageInfo from '../../package.json';
-import Test, { configPath } from '../Test';
+import Test, { configPath, load } from '../Test';
 import { CLITester } from '../utils';
+
+const jiraRunner = load('bin/jira').default;
+const confluenceRunner = load('bin/confluence').default;
 
 const factory = new Test();
 

@@ -1,7 +1,9 @@
 import { URL } from 'url';
 import sinon from 'sinon';
 import createAxiosError from 'axios/lib/core/createError';
-import JIRA_API from '../../src/JiraApi';
+import { load } from '../utils';
+
+const JIRA_API = load('JiraApi').default;
 
 const ISSUES = [ {
     key    : 'A-1',

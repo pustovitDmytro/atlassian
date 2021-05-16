@@ -68,7 +68,7 @@ async function run(tarFilePath) {
                         ignoreDynamicRequires : true
                     }),
                     json({
-                        include : 'node_modules/**',
+                        include : [ 'node_modules/**', 'tests/**', 'package.json' ],
                         compact : true
                     }),
                     multi()

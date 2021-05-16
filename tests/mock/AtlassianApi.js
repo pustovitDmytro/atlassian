@@ -1,7 +1,9 @@
 import sinon from 'sinon';
 import { getNamespace } from 'cls-hooked';
-import ATLASSIAN_API from '../../src/AtlassianApi';
 import { apiLogger } from '../logger';
+import { load } from '../utils';
+
+const ATLASSIAN_API = load('AtlassianApi').default;
 
 class API extends ATLASSIAN_API {
     async getMyself() {
