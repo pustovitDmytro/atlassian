@@ -1,3 +1,14 @@
+## [1.4.1](https://github.com/pustovitDmytro/atlassian/compare/v1.4.0...v1.4.1) (2021-05-16)
+
+
+### Chore
+
+* dont store package-tests artifacts ([50ebff1](https://github.com/pustovitDmytro/atlassian/commit/50ebff16449ff34f474587136dca4e4740ed4bf7))
+
+### Upgrade
+
+* Pin dependencies ([3396f15](https://github.com/pustovitDmytro/atlassian/commit/3396f15c85e8f716f7bbf8951dbcc297b2b30028))
+
 # [1.4.0](https://github.com/pustovitDmytro/atlassian/compare/v1.3.0...v1.4.0) (2021-05-16)
 
 
