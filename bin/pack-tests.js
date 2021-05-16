@@ -24,7 +24,8 @@ const TEST_MODULES = [
     'cls-hooked',
     'winston',
     'winston-array-transport',
-    'uuid'
+    'uuid',
+    'dotenv'
 ];
 
 const resolveIgnoreRegexp = `^(?!${TEST_MODULES.join('|')}).*$`;
