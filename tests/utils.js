@@ -5,9 +5,9 @@ import { stdout } from 'test-console';
 import { assert } from 'chai';
 import { getNamespace } from 'cls-hooked';
 import jsonQuery from 'json-query';
+import { entry } from './constants';
 import { apiTraces } from './logger';
 
-import { entry } from './constants';
 
 export class CLITester {
     constructor(dialog, factory) {
