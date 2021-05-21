@@ -1,3 +1,17 @@
+## [1.4.2](https://github.com/pustovitDmytro/atlassian/compare/v1.4.1...v1.4.2) (2021-05-21)
+
+
+### Chore
+
+* adds dotenv to test package exeptions ([71830f6](https://github.com/pustovitDmytro/atlassian/commit/71830f6a21abbbe515bcd5f8d511381393397be5))
+* integrate APPVEYOR_BUILD_ID to build tests ([16cdd48](https://github.com/pustovitDmytro/atlassian/commit/16cdd48ddb7da5000c6df88ceb1f2513225a4a5b))
+* Update dependency dotenv to v9 ([242b0bd](https://github.com/pustovitDmytro/atlassian/commit/242b0bdd1050cde03dbe082c34f9aff500f0b339))
+* Update dependency sinon to v10 ([8839322](https://github.com/pustovitDmytro/atlassian/commit/8839322ff239473d0fcaf2833565325082e0796b))
+
+### Fix
+
+* workaround for node 10 ([c6156f2](https://github.com/pustovitDmytro/atlassian/commit/c6156f2b3d01149757cd78d4c81245bba1579dfe))
+
 ## [1.4.1](https://github.com/pustovitDmytro/atlassian/compare/v1.4.0...v1.4.1) (2021-05-16)
 
 
