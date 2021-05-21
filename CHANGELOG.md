@@ -1,3 +1,15 @@
+## [1.4.3](https://github.com/pustovitDmytro/atlassian/compare/v1.4.2...v1.4.3) (2021-05-21)
+
+
+### Chore
+
+* fixes package tests on windows ([16a181e](https://github.com/pustovitDmytro/atlassian/commit/16a181ecbdc7d1c70735efccfdb9b2bf189f94ec))
+* Update dependency dotenv to v10 ([3abbbfa](https://github.com/pustovitDmytro/atlassian/commit/3abbbfa56c50ffd6eb87307a8056246eb66c7b6c))
+
+### Upgrade
+
+* Update dependency inquirer to v8.1.0 ([eae8fb7](https://github.com/pustovitDmytro/atlassian/commit/eae8fb7661368f4fdc4bd8c3ecc33e2c259a77eb))
+
 ## [1.4.2](https://github.com/pustovitDmytro/atlassian/compare/v1.4.1...v1.4.2) (2021-05-21)
 
 
