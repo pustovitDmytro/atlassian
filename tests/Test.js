@@ -43,6 +43,8 @@ async function clean(dirPath, opts) {
 
     await Promise.all(files.map(async f => {
         const fullPath = path.resolve(dirPath, f);
+
+        if (!await fs.exists(fullPath)) return;
         const stat = await fs.stat(fullPath);
 
         if (stat.isDirectory()) return clean(fullPath, opts);
