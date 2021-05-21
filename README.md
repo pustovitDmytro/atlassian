@@ -34,6 +34,7 @@ To use library you need to have [node](https://nodejs.org) and [npm](https://www
 * node `>=10`
 * npm `>=6`
 
+**Note:** if you received yargs error ```"yargs parser supports a minimum Node.js version of x"```, try to set evironment variable ```YARGS_MIN_NODE_VERSION=10```.
 ## Installation
 
 To install the library run the following command
