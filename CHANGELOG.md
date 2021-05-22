@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/pustovitDmytro/atlassian/compare/v1.4.3...v1.5.0) (2021-05-22)
+
+
+### New
+
+* adds show task ([6c18470](https://github.com/pustovitDmytro/atlassian/commit/6c184701809a8f1a926284df623551b8d6d3b4f5))
+
 ## [1.4.3](https://github.com/pustovitDmytro/atlassian/compare/v1.4.2...v1.4.3) (2021-05-21)
 
 
