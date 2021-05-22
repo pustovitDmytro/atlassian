@@ -98,7 +98,6 @@ async function show(args) {
     logger.info(`Priority: ${task.priority}`);
 
     logger.info(adfToText(task.description));
-    console.log('args.comments', args.comments, task.comments.length);
     if (args.comments && task.comments.length) {
         logger.info('\nComments:');
         task.comments.forEach(com => {
@@ -142,6 +141,7 @@ const FORMATS = [ 'DD MM', 'DD MMM', 'DD-MMM', 'DD-MM', 'DD-MM-YY', 'DD MM YY', 
 const dateSuffix = `\npossible formats: ${FORMATS.join(', ')}`;
 
 function asDate(date) {
+    if (!date) return;
     if (isArray(date)) return date.map(asDate);
     for (const format of FORMATS) {
         const dated = dayjs.utc(date, format, true);
@@ -310,6 +310,7 @@ export default async function run(cmd) {
                 })
                 .coerce('from', asDate)
                 .coerce('to', asDate)
+                .coerce('include', asDate)
                 .coerce('exclude', asDate),
             handler : cliCommand(logIssues)
         })
