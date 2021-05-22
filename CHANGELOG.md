@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/pustovitDmytro/atlassian/compare/v1.5.0...v1.6.0) (2021-05-22)
+
+
+### New
+
+* Integrate base-api-client, fixes #4 ([f081b00](https://github.com/pustovitDmytro/atlassian/commit/f081b0092d5f7131ed4bfa8c615862494cd84e34)), closes [#4](https://github.com/pustovitDmytro/atlassian/issues/4)
+
 # [1.5.0](https://github.com/pustovitDmytro/atlassian/compare/v1.4.3...v1.5.0) (2021-05-22)
 
 
