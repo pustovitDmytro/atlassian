@@ -35,7 +35,7 @@ test('jira export with explicit dates', async function () {
         'assignee was currentuser() AND updatedDate >= 1900-01-01 AND created <= 2100-01-01 AND Sprint in openSprints()'
     );
 
-    assert.include(output, outFile);
+    assert.include(output.replace(/\\\\/g, '\\'), outFile);
 });
 
 after(async function () {
