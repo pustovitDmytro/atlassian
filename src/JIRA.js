@@ -98,7 +98,7 @@ export default class JIRA extends Api {
     }
 
     async move(issueID, status) {
-        const issue = await this.getIssue(issueID, 'transitions');
+        const issue = await this.getIssue(issueID, [ 'transitions' ]);
         const statuses = [ ...this.statuses.dev, ...this.statuses.test ].reverse();
         const desirableIndex = statuses.findIndex(s => s === status);
 
@@ -130,9 +130,9 @@ export default class JIRA extends Api {
     }
 
     async show(issueID) {
-        const task = this.getIssue(
+        const task = await this.getIssue(
             issueID,
-            [ 'changelog', 'transitions', 'comments', 'worklogs' ]
+            [ 'changelog', 'transitions' ]
         );
 
         this.logger.verbose(task);

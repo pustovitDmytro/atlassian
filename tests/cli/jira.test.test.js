@@ -44,7 +44,7 @@ test('Positive: jira test A-1', async function () {
 });
 
 test('Negative: specify not existing task', async function () {
-    const errorMessage = new RegExp('API_ERROR: Request failed with status code 404.*\\s*.*Issue does not exist or you do not have permission to see it');
+    const errorMessage = new RegExp('ATLASSIAN_ERROR: Request failed with status code 404.*\\s*.*Issue does not exist or you do not have permission to see it');
     const tester = new CLITester([], factory);
 
     const [ output ] = await Promise.all([
@@ -52,6 +52,7 @@ test('Negative: specify not existing task', async function () {
         jiraRunner([ 'test', '00' ])
             .then(() => assert.fail('request must fail'))
             .catch(e => {
+                console.log(111111111, e);
                 assert.match(e.toString(), errorMessage);
             })
     ]);
@@ -66,7 +67,6 @@ test('Negative: specify not existing task', async function () {
         method : 'GET',
         url    : '/rest/api/3/issue/00'
     });
-
     assert.match(output, errorMessage);
 });
 

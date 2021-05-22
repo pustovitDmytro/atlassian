@@ -22,8 +22,8 @@ export function dumpTask(issue = {}) {
         status       : issue.fields.status?.id,
         statusName   : issue.fields.status?.name,
 
-        worklog  : issue._worklog || [],
-        comments : issue._comments || [],
+        worklog  : issue._worklog || issue.fields.worklog?.worklogs.map(dumpWorklog) || [],
+        comments : issue._comments || issue.fields.comment?.comments.map(dumpComment) || [],
         history  : history
             .filter(({ item }) => {
                 return item.field === 'status';

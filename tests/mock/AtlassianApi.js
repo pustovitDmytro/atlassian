@@ -1,4 +1,3 @@
-import sinon from 'sinon';
 import { getNamespace } from 'cls-hooked';
 import { apiLogger } from '../logger';
 import { load } from '../utils';
@@ -19,12 +18,12 @@ class API extends ATLASSIAN_API {
     }
 
     initLogger() {
-        this.logger = apiLogger;
+        this._logger = this.logger =  apiLogger;
     }
 }
 
 const methods = Object.getOwnPropertyNames(API.prototype).filter(m => m !== 'constructor');
 
 methods.forEach(methodName => {
-    sinon.replace(ATLASSIAN_API.prototype, methodName, API.prototype[methodName]);
+    ATLASSIAN_API.prototype[methodName] = API.prototype[methodName];
 });
