@@ -9,6 +9,7 @@ import utc from 'dayjs/plugin/utc';
 import ms from 'ms';
 import JIRA from '../JIRA';
 import packageInfo from '../../package.json';
+import { adfToText } from '../utils';
 import { loadProfile, installLogger } from './utils';
 import init from './init';
 import logger from './logger';
@@ -17,6 +18,10 @@ dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 
 const isMain = !module.parent;
+
+function prettyDate(date) {
+    return dayjs(date).format('DD-MM-YYYY');
+}
 
 function onError(e) {
     logger.error(e.toString());
@@ -78,6 +83,28 @@ async function test(args) {
 
     for (const issueId of args.issueId) {
         await jira.test(issueId);
+    }
+}
+
+async function show(args) {
+    installLogger(logger, args);
+    const profile = await loadProfile('jira', args.profile);
+    const jira = new JIRA(profile, logger);
+
+    const task = await jira.show(args.issueId);
+
+    logger.info(`%s: ${task.summary}\n`, task.key);
+    logger.info(`Assignee: ${task.assigneeName} (${task.assignee})`);
+    logger.info(`Status: ${task.status} (${task.statusName})`);
+    logger.info(`Priority: ${task.priority}`);
+
+    logger.info(adfToText(task.description));
+    if (args.comments && task.comments.length) {
+        logger.info('\nComments:');
+        task.comments.forEach(com => {
+            logger.info(`\n%s (${com.author}) ${prettyDate(com.date)}`, com.authorName);
+            logger.info(adfToText(com.text));
+        });
     }
 }
 
@@ -191,7 +218,7 @@ export default async function run(cmd) {
         })
         .command({
             command : `test ${commonCommandArgs} <issueId...>`,
-            desc    : 'Send task to testing',
+            desc    : 'Send task(s) to testing',
             builder : y => commonOpts(y)
                 .option('issueId', {
                     describe : 'id(s) of task',
@@ -200,8 +227,22 @@ export default async function run(cmd) {
             handler : cliCommand(test)
         })
         .command({
+            command : `show ${commonCommandArgs} [--comments] <issueId>`,
+            desc    : 'Show task description',
+            builder : y => commonOpts(y)
+                .option('issueId', {
+                    describe : 'id of task',
+                    type     : 'string'
+                })
+                .option('comments', {
+                    describe : 'Show comments',
+                    type     : 'boolean'
+                }),
+            handler : cliCommand(show)
+        })
+        .command({
             command : `export log ${commonCommandArgs} <start> <end> [file]`,
-            desc    : 'Send task to testing',
+            desc    : 'Export tasks for time tracking',
             builder : y => commonOpts(y)
                 .option('start', {
                     describe : `issues with updatedDate >= start will be included ${dateSuffix}`,
@@ -221,7 +262,7 @@ export default async function run(cmd) {
         })
         .command({
             command : `worklog clear <issueId> ${commonCommandArgs} [--start=<start>] [--end=<end>]`,
-            desc    : 'Send task to testing',
+            desc    : 'Clear worklog',
             builder : y => commonOpts(y)
                 .option('start', {
                     describe : `clear only worklogs after (>=) start date ${dateSuffix}`,

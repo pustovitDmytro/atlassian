@@ -129,6 +129,17 @@ export default class JIRA extends Api {
         return this._STATUSES = statuses;
     }
 
+    async show(issueID) {
+        const task = this.getIssue(
+            issueID,
+            [ 'changelog', 'transitions', 'comments', 'worklogs' ]
+        );
+
+        this.logger.verbose(task);
+
+        return task;
+    }
+
     async test(issueID) {
         await this.move(issueID, this.statuses.test[0]);
     }
@@ -304,14 +315,14 @@ export default class JIRA extends Api {
         shrinks.sort((a, b) =>  a - b);
         this.logger.info('%s hours estimated to be logged during %s days', estimateSum, Object.keys(total).length);
         this.logger.info('%s hours will be logged (shrink %s - %s)', checkSum, shrinks[0].toFixed(LOG_FLOAT_PRECISION), shrinks[shrinks.length - 1].toFixed(LOG_FLOAT_PRECISION));
-        if (confirm) {
-            // eslint-disable-next-line guard-for-in
-            for (const taskIndex in fullTasks) {
-                const task = fullTasks[taskIndex];
+        // eslint-disable-next-line guard-for-in
+        for (const taskIndex in fullTasks) {
+            const task = fullTasks[taskIndex];
 
-                await this.logTime(task.issue, task.day, task.time);
-                this.logger.info('%s/%s: Logged %s hours for %s', +taskIndex + 1, fullTasks.length, task.time, task.day);
-            }
+            if (confirm) await this.logTime(task.issue, task.day, task.time);
+            this.logger.info('%s/%s: Logged %s hours for %s', +taskIndex + 1, fullTasks.length, task.time, task.day);
         }
+
+        if (!confirm) this.logger.info('Confirm operation to actually log time');
     }
 }

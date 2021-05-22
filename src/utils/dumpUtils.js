@@ -80,8 +80,9 @@ export function dumpTransition(t) {
 
 export function dumpComment(c) {
     return {
-        author : c.author.accountId,
-        text   : c.body,
-        date   : c.updated
+        author     : c.author.accountId,
+        authorName : c.author.displayName,
+        text       : c.body,
+        date       : c.updated
     };
 }

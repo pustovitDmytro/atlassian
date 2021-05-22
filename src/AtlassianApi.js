@@ -1,6 +1,6 @@
 
 import Api from './Api';
-import { dumpUser } from './dumpUtils';
+import { dumpUser } from './utils/dumpUtils';
 
 export default class AtlassianApi extends Api {
     async getMyself() {

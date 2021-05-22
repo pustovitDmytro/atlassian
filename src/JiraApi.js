@@ -2,7 +2,7 @@
 
 import { uniqueIdFilter } from 'myrmidon';
 import Api from './AtlassianApi';
-import { dumpStatus, dumpTask, dumpTransition, dumpComment, dumpWorklog } from './dumpUtils';
+import { dumpStatus, dumpTask, dumpTransition, dumpComment, dumpWorklog } from './utils/dumpUtils';
 import dayjs from './date';
 
 export default class JiraApi extends Api {
@@ -126,6 +126,13 @@ export default class JiraApi extends Api {
 
         return res.worklogs.map(dumpWorklog);
     }
+
+    async getAttachments(issueId) {
+        const res =  await this.get(`/rest/api/3/issue/${issueId}/attachment`);
+
+        return res.comments.map(dumpComment);
+    }
+
 
     async deleteWorklog(issueId, worklogId) {
         await this.delete(`/rest/api/3/issue/${issueId}/worklog/${worklogId}`);
