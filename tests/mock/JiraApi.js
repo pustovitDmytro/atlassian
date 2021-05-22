@@ -7,7 +7,7 @@ import STATUSES from './fixtures/statuses.json';
 const JIRA_API = load('JiraApi').default;
 
 function axiosResponse(data) {
-    return { data };
+    return { data: JSON.parse(JSON.stringify(data)) };
 }
 
 function axiosError(opts, { message, code }, data) {
@@ -40,11 +40,17 @@ class JIRA_MOCK_API extends JIRA_API {
             ] });
         }
 
+        if (opts.url.match('/rest/api/3/issue/.*/comment')) {
+            return axiosResponse({ comments: [] });
+        }
+
+        if (opts.url.match('/rest/api/3/issue/.*/worklog')) {
+            return axiosResponse({ worklogs: [] });
+        }
+
         if (opts.url.match('/rest/api/3/issue')) {
             const { pathname } = new URL(opts.url);
             const id = pathname.split('/').reverse().[0];
-
-            console.log('id: ', id);
             const issue = ISSUES.find(i => i.key === id);
 
             if (!issue) {

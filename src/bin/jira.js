@@ -90,7 +90,6 @@ async function show(args) {
     installLogger(logger, args);
     const profile = await loadProfile('jira', args.profile);
     const jira = new JIRA(profile, logger);
-
     const task = await jira.show(args.issueId);
 
     logger.info(`%s: ${task.summary}\n`, task.key);
@@ -99,6 +98,7 @@ async function show(args) {
     logger.info(`Priority: ${task.priority}`);
 
     logger.info(adfToText(task.description));
+    console.log('args.comments', args.comments, task.comments.length);
     if (args.comments && task.comments.length) {
         logger.info('\nComments:');
         task.comments.forEach(com => {
@@ -241,7 +241,7 @@ export default async function run(cmd) {
             handler : cliCommand(show)
         })
         .command({
-            command : `export log ${commonCommandArgs} <start> <end> [file]`,
+            command : `export log ${commonCommandArgs} <start> <end> [--file=<file>]`,
             desc    : 'Export tasks for time tracking',
             builder : y => commonOpts(y)
                 .option('start', {
