@@ -1,3 +1,16 @@
+## [1.6.1](https://github.com/pustovitDmytro/atlassian/compare/v1.6.0...v1.6.1) (2021-05-26)
+
+
+### Chore
+
+* adds export log tests ([c8832eb](https://github.com/pustovitDmytro/atlassian/commit/c8832eb0a82cc58bc3ec7b878f4aab86db7e9052))
+* adds tests for logIssues ([0f60101](https://github.com/pustovitDmytro/atlassian/commit/0f60101e2fa7b87d464eb4c8bde7cf958c4827dc))
+* fixes export test for windows ([b1e2702](https://github.com/pustovitDmytro/atlassian/commit/b1e270259aebcce51f39598b9154d078f987a16c))
+
+### Upgrade
+
+* Update dependency dayjs to v1.10.5 ([fd832fa](https://github.com/pustovitDmytro/atlassian/commit/fd832faade089455b595985fca5637ce6ccacea2))
+
 # [1.6.0](https://github.com/pustovitDmytro/atlassian/compare/v1.5.0...v1.6.0) (2021-05-22)
 
 
