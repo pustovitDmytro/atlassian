@@ -1,3 +1,17 @@
+## [1.6.2](https://github.com/pustovitDmytro/atlassian/compare/v1.6.1...v1.6.2) (2021-05-26)
+
+
+### Chore
+
+* contributor login in danger message ([76349e6](https://github.com/pustovitDmytro/atlassian/commit/76349e6ee87b0e59f8fff9402eb10fa66d23a188))
+* export default in tests ([9d210e6](https://github.com/pustovitDmytro/atlassian/commit/9d210e6f511a42a9c42f415ba6a64834346c11b0))
+* update eslint ([6b174b1](https://github.com/pustovitDmytro/atlassian/commit/6b174b184a792fc282ef3228079f23fa81f2bcb5))
+
+### Docs
+
+* adds node releases roadmap ([ba16142](https://github.com/pustovitDmytro/atlassian/commit/ba16142230db2895ecd9855d5746648075f0b8e8))
+* move Contributing Guidelines to separate file. ([081e4ed](https://github.com/pustovitDmytro/atlassian/commit/081e4ed03eebef0eda5305a1486a32cf91cdc62b))
+
 ## [1.6.1](https://github.com/pustovitDmytro/atlassian/compare/v1.6.0...v1.6.1) (2021-05-26)
 
 
