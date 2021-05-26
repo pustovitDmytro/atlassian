@@ -22,13 +22,13 @@ export function dumpTask(issue = {}) {
         status       : issue.fields.status?.id,
         statusName   : issue.fields.status?.name,
 
-        worklog  : issue._worklog || issue.fields.worklog?.worklogs.map(dumpWorklog) || [],
-        comments : issue._comments || issue.fields.comment?.comments.map(dumpComment) || [],
+        worklog  : issue._worklog || issue.fields.worklog?.worklogs.map(w => dumpWorklog(w)) || [],
+        comments : issue._comments || issue.fields.comment?.comments.map(c => dumpComment(c)) || [],
         history  : history
             .filter(({ item }) => {
                 return item.field === 'status';
             })
-            .map(dumpHistory),
+            .map(h => dumpHistory(h)),
         transitions : issue._transitions || []
     };
 }

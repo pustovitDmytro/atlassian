@@ -1,5 +1,5 @@
 import { URL } from 'url';
-import createAxiosError from 'axios/lib/core/createError';
+import createAxiosError from 'axios/lib/core/createError'; // eslint-disable-line import/no-extraneous-dependencies
 import { load } from '../utils';
 import ISSUES from './fixtures/issues.json';
 import STATUSES from './fixtures/statuses.json';
@@ -71,6 +71,6 @@ class JIRA_MOCK_API extends JIRA_API {
 
 const methods = Object.getOwnPropertyNames(JIRA_MOCK_API.prototype).filter(m => m !== 'constructor');
 
-methods.forEach(methodName => {
+for (const methodName of methods) {
     JIRA_API.prototype[methodName] = JIRA_MOCK_API.prototype[methodName];
-});
+}

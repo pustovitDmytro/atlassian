@@ -39,21 +39,20 @@ test('Positive: jira test A-1', async function () {
 
     assert.match(
         output,
-        new RegExp('info.*moved A-1 from In progress to In testing')
+        /info.*moved A-1 from In progress to In testing/
     );
 });
 
 test('Negative: specify not existing task', async function () {
-    const errorMessage = new RegExp('ATLASSIAN_ERROR: Request failed with status code 404.*\\s*.*Issue does not exist or you do not have permission to see it');
+    const errorMessage = /ATLASSIAN_ERROR: Request failed with status code 404.*\s*.*Issue does not exist or you do not have permission to see it/;
     const tester = new CLITester([], factory);
 
     const [ output ] = await Promise.all([
         tester.test(),
         jiraRunner([ 'test', '00' ])
             .then(() => assert.fail('request must fail'))
-            .catch(e => {
-                console.log(111111111, e);
-                assert.match(e.toString(), errorMessage);
+            .catch(error => {
+                assert.match(error.toString(), errorMessage);
             })
     ]);
 

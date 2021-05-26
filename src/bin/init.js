@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { isString } from 'myrmidon';
 import fs from 'fs-extra';
-import JIRA from '../JIRA';
+import JIRA from '../Jira';
 import packageInfo from '../../package.json';
 import { configPath, getDefaultProfile, loadConfig,  untilConfirm } from './utils';
 
@@ -30,13 +30,13 @@ const CREDENTIALS_QUESTIONS = (context = {}) => [
     {
         type     : 'input',
         name     : 'host',
-        validate : validate(true, /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/, 'not a valid host'),
+        validate : validate(true, /https?:\/\/(www\.)?[\w#%+.:=@\\~-]{1,256}\.[\d()A-Za-z]{1,6}\b([\w#%&()+./:=?@\\~-]*)/, 'not a valid host'),
         message  : 'Enter atlassian host:'
     },
     {
         type     : 'input',
         name     : 'email',
-        validate : validate(true, /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/, 'not a valid host'),
+        validate : validate(true, /^[\w+.-]+@[\dA-Za-z-]+\.[\d.A-Za-z-]+$/, 'not a valid host'),
         message  : 'Past your email:'
     },
     {
@@ -147,7 +147,7 @@ export default async function init() {
     const context = {};
     const credentials = await untilConfirm(CREDENTIALS_QUESTIONS(context));
     const jira = await untilConfirm(JIRA_QUESTIONS(currentConfig, credentials, context));
-    const confluence = await untilConfirm(CONFLUENCE_QUESTIONS(currentConfig, credentials));
+    const confluence = await untilConfirm(CONFLUENCE_QUESTIONS(currentConfig));
     const { profile } = await untilConfirm(PROFILE_QUESTIONS(currentConfig));
 
     const profileConfig = {
@@ -158,7 +158,7 @@ export default async function init() {
         _version : packageInfo.version
     };
 
-    [ 'jira', 'confluence' ].forEach(key => {
+    for (const key of [ 'jira', 'confluence' ]) {
         const { isDefault } = profileConfig[key];
 
         if (isDefault) {
@@ -168,7 +168,8 @@ export default async function init() {
                 currentConfig[currentDefault][key].isDefault = false;
             }
         }
-    });
+    }
+
     // eslint-disable-next-line require-atomic-updates
     currentConfig[profile] = profileConfig;
     await fs.writeJSON(configPath, currentConfig);

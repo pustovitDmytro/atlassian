@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs-extra';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import axios from 'axios';
 import { htmlToText } from 'html-to-text';
 import { pause } from 'myrmidon';
@@ -22,7 +23,7 @@ export default class Confluence {
     }
 
     async getPages(space) {
-        const res =  await axios.get(`${this.host}/wiki/rest/api/space/${space}/content?expand=body.storage`, {
+        const res =  await this.get(`${this.host}/wiki/rest/api/space/${space}/content?expand=body.storage`, {
             auth : this.auth
         }).catch(onError);
 
@@ -32,24 +33,24 @@ export default class Confluence {
     async printPages() {
         const pages = await this.getPages();
 
-        pages.forEach(p => console.log(`${p.id}: ${p.title}`));
+        for (const p of pages)  console.log(`${p.id}: ${p.title}`);
     }
 
     async exportPage(pageId, filename) {
         const res = await axios.get(`${this.host}/wiki/spaces/flyingpdf/pdfpageexport.action?pageId=${pageId}`, {
             auth : this.auth
-        }).catch(err => {
-            if (err.response.headers['content-type'].match('text/html')) {
-                const text = htmlToText(err.response.data);
+        }).catch(error => {
+            if (error.response.headers['content-type'].match('text/html')) {
+                const text = htmlToText(error.response.data);
 
                 if (text.match('PDF EXPORT - IN PROGRESS')) {
-                    const taskId = err.response.data.match(/ajs-taskId.*content="(\d+)/i)[1];
+                    const taskId = error.response.data.match(/ajs-taskid.*content="(\d+)/i)[1];
 
                     return { status: 1, text, taskId };
                 }
             }
 
-            throw err;
+            throw error;
         });
 
         // console.log(res.taskId, res.text);

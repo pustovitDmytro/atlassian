@@ -15,11 +15,13 @@ export function getDefaultProfile(config, scope) {
 }
 
 export async function loadConfig() {
-    return fs.readJSON(configPath).catch(async () => {
+    try {
+        return await fs.readJSON(configPath);
+    } catch  {
         await fs.ensureDir(path.dirname(configPath));
 
         return {};
-    });
+    }
 }
 
 export async function loadProfile(scope, name) {

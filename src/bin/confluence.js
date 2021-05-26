@@ -20,7 +20,7 @@ async function listPages(args) {
     const confluence = new Confluence(profile);
     const pages = await confluence.getPages(args.space);
 
-    pages.forEach(p => console.log(chalk.bold(p.id), `${p.title}`));
+    for (const p of pages)  console.log(chalk.bold(p.id), `${p.title}`);
 }
 
 async function exportPage(args) {

@@ -7,9 +7,9 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import utc from 'dayjs/plugin/utc';
 import ms from 'ms';
-import JIRA from '../JIRA';
+import JIRA from '../Jira';
 import packageInfo from '../../package.json';
-import { adfToText } from '../utils';
+import { adfToText } from '../utils/adfUtils';
 import { loadProfile, installLogger } from './utils';
 import init from './init';
 import logger from './logger';
@@ -42,8 +42,8 @@ function cliCommand(method) {
 
             if (isPromise(promise)) {
                 return promise
-                    .then(result => onSuccess(result))
-                    .catch(error => onError(error));
+                    // eslint-disable-next-line promise/prefer-await-to-then,promise/prefer-await-to-callbacks
+                    .then(result => onSuccess(result)).catch(error => onError(error));
             }
 
             return onSuccess(promise);
@@ -68,9 +68,9 @@ async function list(args) {
             stages
         });
 
-        tasks.forEach(t => {
+        for (const t of tasks) {
             logger.info(`%s ${t.summary}`, t.key);
-        });
+        }
     } catch (error) {
         onError(error);
     }
@@ -98,12 +98,12 @@ async function show(args) {
     logger.info(`Priority: ${task.priority}`);
 
     logger.info(adfToText(task.description));
-    if (args.comments && task.comments.length) {
+    if (args.comments && task.comments.length > 0) {
         logger.info('\nComments:');
-        task.comments.forEach(com => {
+        for (const com of task.comments) {
             logger.info(`\n%s (${com.author}) ${prettyDate(com.date)}`, com.authorName);
             logger.info(adfToText(com.text));
-        });
+        }
     }
 }
 
@@ -122,10 +122,10 @@ async function clearWorklog(args) {
 
     const cleared = await jira.clearWorklog(args.issueId);
 
-    if (!cleared.length) logger.warn('No worklogs found');
-    cleared.forEach(i => {
+    if (cleared.length === 0) logger.warn('No worklogs found');
+    for (const i of cleared) {
         logger.info('Removed %s for %s', ms(i.time), dayjs(i.start).format('DD MMM YYYY'));
-    });
+    }
 }
 
 async function logIssues(args) {
@@ -142,7 +142,7 @@ const dateSuffix = `\npossible formats: ${FORMATS.join(', ')}`;
 
 function asDate(date) {
     if (!date) return;
-    if (isArray(date)) return date.map(asDate);
+    if (isArray(date)) return date.map(d => asDate(d));
     for (const format of FORMATS) {
         const dated = dayjs.utc(date, format, true);
 
@@ -151,6 +151,18 @@ function asDate(date) {
 
     throw new Error(`Invalid date ${date}`);
 }
+
+const commonOpts = y => y
+    .option('verbose', {
+        describe : 'verbose logs',
+        alias    : [ 'v' ],
+        type     : 'boolean'
+    })
+    .option('profile', {
+        alias    : [ 'p' ],
+        describe : 'specify profile name',
+        type     : 'string'
+    });
 
 export default async function run(cmd) {
     function onYargsFail(message, error, ygs) {
@@ -169,17 +181,6 @@ export default async function run(cmd) {
 
     const minTerminalWidth =  95;
     const commonCommandArgs = '[--verbose] [--profile=<profile>]';
-    const commonOpts = y => y
-        .option('verbose', {
-            describe : 'verbose logs',
-            alias    : [ 'v' ],
-            type     : 'boolean'
-        })
-        .option('profile', {
-            alias    : [ 'p' ],
-            describe : 'specify profile name',
-            type     : 'string'
-        });
 
     const Argv = yargs(cmd)
         .usage('Usage: $0 <command> [options]')

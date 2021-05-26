@@ -24,6 +24,6 @@ class API extends ATLASSIAN_API {
 
 const methods = Object.getOwnPropertyNames(API.prototype).filter(m => m !== 'constructor');
 
-methods.forEach(methodName => {
+for (const methodName of methods) {
     ATLASSIAN_API.prototype[methodName] = API.prototype[methodName];
-});
+}

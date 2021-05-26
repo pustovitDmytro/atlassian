@@ -19,7 +19,7 @@ test('init profile from jira', async function () {
     const config = {
         'host'  : 'http://wuztum.nu',
         'email' : 'kuba@gu.nr',
-        'token' : 'gUOv4Dn4o8iVYy53rrTK',
+        'token' : 'atlassian_token',
         'jira'  : {
             'isUse'     : true,
             'isDefault' : false,

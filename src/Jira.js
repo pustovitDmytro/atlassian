@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/no-array-reduce */
+/* eslint-disable sonarjs/cognitive-complexity */
 import path from 'path';
 import os from 'os';
 import fs from 'fs-extra';
@@ -7,7 +9,7 @@ import { toArray } from 'myrmidon';
 import dayjs from './date';
 import Api from './JiraApi';
 
-const WEEKEND_INDEXES = [ 0, 6 ]; // eslint-disable-line no-magic-numbers
+const WEEKEND_INDEXES = new Set([ 0, 6 ]); // eslint-disable-line no-magic-numbers
 const LOG_FLOAT_PRECISION = 3;
 const MIN_LOGGED_TIME = 0.25;
 const ROUND_LOGGED_TIME = 0.25;
@@ -21,9 +23,9 @@ function workingDays({ include = [], exclude = [], to, from } = {}) {
             .add(i, 'days')
             .startOf('day');
 
-        let insert = !WEEKEND_INDEXES.includes(day.day());
+        let insert = !WEEKEND_INDEXES.has(day.day());
 
-        if (exclude.length && exclude.some(d => d.isSame(day, 'day'))) {
+        if (exclude.length > 0 && exclude.some(d => d.isSame(day, 'day'))) {
             insert = false;
         }
 
@@ -35,7 +37,7 @@ function workingDays({ include = [], exclude = [], to, from } = {}) {
             insert = false;
         }
 
-        if (include.length && include.some(d => d.isSame(day, 'day'))) {
+        if (include.length > 0 && include.some(d => d.isSame(day, 'day'))) {
             insert = true;
         }
 
@@ -45,8 +47,8 @@ function workingDays({ include = [], exclude = [], to, from } = {}) {
     return days;
 }
 
-function round(value, step = 1.0) {
-    const inv = 1.0 / step;
+function round(value, step = 1) {
+    const inv = 1 / step;
 
     return Math.round(value * inv) / inv;
 }
@@ -74,7 +76,7 @@ export default class JIRA extends Api {
         if (wasMine) jql.push('assignee was currentuser()');
         if (from) jql.push(`updatedDate >= ${from.format('YYYY-MM-DD')}`);
         if (to) jql.push(`created <= ${to.format('YYYY-MM-DD')}`);
-        if (stages.length) {
+        if (stages.length > 0) {
             const [ devStatusesList, testStatusesList ] = [ this.statuses.dev, this.statuses.test ]
                 .map(statusList => statusList.map(s => `"${s}"`).join(', '));
 
@@ -82,25 +84,21 @@ export default class JIRA extends Api {
             if (stages.includes('test')) jql.push(`status IN (${testStatusesList})`);
         }
 
-        if (!sprint.includes('all')) {
-            if (sprint.includes('open')) jql.push('Sprint in openSprints()');
-        }
+        if (!sprint.includes('all') && sprint.includes('open')) jql.push('Sprint in openSprints()');
 
         if (search) jql.push(`summary ~ "${search}"`);
 
         const query = {};
 
-        if (jql.length) query.jql = jql.join(' AND ');
+        if (jql.length > 0) query.jql = jql.join(' AND ');
 
-        const issues = await this.getIssues(query, includes);
-
-        return issues;
+        return this.getIssues(query, includes);
     }
 
     async move(issueID, status) {
         const issue = await this.getIssue(issueID, [ 'transitions' ]);
         const statuses = [ ...this.statuses.dev, ...this.statuses.test ].reverse();
-        const desirableIndex = statuses.findIndex(s => s === status);
+        const desirableIndex = statuses.indexOf(status);
 
         for (const i in statuses) {
             if (i < desirableIndex) continue;
@@ -164,7 +162,7 @@ export default class JIRA extends Api {
         }[type];
 
         return history
-            .filter(filter)
+            .filter((element, index, array) => filter(element, index, array))
             .map(tr => dayjs(tr.date))
             .sort((a, b) => a - b)
             .map(d => d.format(format));
@@ -193,17 +191,17 @@ export default class JIRA extends Api {
             const extra =  {};
             const isMine = t.assignee === this.userId;
 
-            if (t.history.length) {
+            if (t.history.length > 0) {
                 extra.transitions = {};
                 const fromDev = this.transitionDates(t.history, 'fromDev');
                 const toDev = this.transitionDates(t.history, 'toDev');
 
-                if (fromDev.length) extra.transitions.OUT = fromDev.join(', ');
-                if (toDev.length) extra.transitions.IN = toDev.join(', ');
+                if (fromDev.length > 0) extra.transitions.OUT = fromDev.join(', ');
+                if (toDev.length > 0) extra.transitions.IN = toDev.join(', ');
             }
 
             if (!isMine) extra.assignee = t.assigneeName;
-            if (t.worklog.length) {
+            if (t.worklog.length > 0) {
                 const othersSpentTime = t.worklog
                     .filter(w => w.author !== this.userId)
                     .reduce((a, b) => a + b.time, 0);
@@ -215,7 +213,7 @@ export default class JIRA extends Api {
                 extra.spent = `${ms(meSpentTime)   } / ${ms(meSpentTime + othersSpentTime)}`;
             }
 
-            if (this.gitlab && t.comments.length) {
+            if (this.gitlab && t.comments.length > 0) {
                 const commits = t.comments.filter(c => {
                     const isFromGitlab = c.author === this.gitlab.jiraId;
                     const isMineCommit = this.gitlab.gitUser.some(u => JSON.stringify(c).includes(u));
@@ -261,22 +259,23 @@ export default class JIRA extends Api {
         const days = workingDays({ from, to, include, exclude });
         const total = {};
 
-        days.forEach(day => total[day.format('D MMM YYYY')] = 8);
+        for (const day of days)  total[day.format('D MMM YYYY')] = 8;
         this.logger.verbose(total);
         const sum = Object.values(total).reduce((a, b) => a + b, 0);
         const sortIssues = {};
         const arrayIssues = await fs.readJSON(issues);
 
-        arrayIssues
-            .filter(issue => issue.time)
-            .forEach(issue => sortIssues[issue.id] = issue.time);
+        for (const issue of arrayIssues.filter(iss => iss.time)) {
+            sortIssues[issue.id] = issue.time;
+        }
 
         const estimateSum = Object.values(sortIssues).reduce((a, b) => a + b, 0);
         const next = [ Object.keys(total)[0], 0 ];
         const tasks = [];
         const shrinks = [];
 
-        for (const issueId in sortIssues) { // eslint-disable-line
+        // eslint-disable-next-line guard-for-in
+        for (const issueId in sortIssues) {
             const est = sortIssues[issueId];
             const norm = Math.max(round(sum * est / estimateSum, ROUND_LOGGED_TIME), MIN_LOGGED_TIME);
 
@@ -286,24 +285,22 @@ export default class JIRA extends Api {
 
             let leftToAdd = norm;
 
-            Object.entries(total)
-                // eslint-disable-next-line no-loop-func
-                .forEach(([ day, amount ], index) => {
-                    if (day !== next[0]) return;
-                    const currentDayLeft = amount - next[1];
+            for (const [ index, [ day, amount ] ] of Object.entries(total).entries()) {
+                if (day !== next[0]) continue;
+                const currentDayLeft = amount - next[1];
 
-                    if (currentDayLeft > leftToAdd) {
-                        tasks.push({ day, time: leftToAdd, issue: issueId });
-                        next[1] = next[1] + leftToAdd;
-                        leftToAdd = 0;
-                    } else {
-                        tasks.push({ day, time: currentDayLeft, issue: issueId });
-                        if (index === Object.entries(total).length - 1) return;
-                        leftToAdd -= currentDayLeft;
-                        next[1] = 0;
-                        next[0] = Object.entries(total)[index + 1][0];
-                    }
-                });
+                if (currentDayLeft > leftToAdd) {
+                    tasks.push({ day, time: leftToAdd, issue: issueId });
+                    next[1] = next[1] + leftToAdd;
+                    leftToAdd = 0;
+                } else {
+                    tasks.push({ day, time: currentDayLeft, issue: issueId });
+                    if (index === Object.entries(total).length - 1) continue;
+                    leftToAdd -= currentDayLeft;
+                    next[1] = 0;
+                    next[0] = Object.entries(total)[index + 1][0];
+                }
+            }
         }
 
         const fullTasks = tasks

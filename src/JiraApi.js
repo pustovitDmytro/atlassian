@@ -9,20 +9,18 @@ export default class JiraApi extends Api {
     async getStatuses() {
         const res = await this.get('/rest/api/latest/status/');
 
-        return res.map(dumpStatus);
+        return res.map(s => dumpStatus(s));
     }
 
     async getIssues(params, includes = []) {
         const extraParams = {};
 
-        if (includes.length) {
-            if (includes.includes('changelog')) extraParams.expand = 'changelog';
-        }
+        if (includes.length > 0 && includes.includes('changelog')) extraParams.expand = 'changelog';
 
         const { issues, startAt, total } = await this.get('/rest/api/3/search', { ...params, ...extraParams });
         const nextStart = startAt + issues.length;
 
-        if (includes.length) {
+        if (includes.length > 0) {
             await Promise.all(issues.map(async issue => {
                 const promises = [];
 
@@ -61,17 +59,18 @@ export default class JiraApi extends Api {
                 startAt : nextStart
             }, includes);
 
-            return [ ...issues.map(dumpTask), ...next ].filter(uniqueIdFilter);
+            return [ ...issues.map(i => dumpTask(i)), ...next ]
+                .filter((element, index, array) => uniqueIdFilter(element, index, array));
         }
 
-        return issues.map(dumpTask);
+        return issues.map(t => dumpTask(t));
     }
 
     async getIssue(id, includes = []) {
         const extraParams = {};
         const promises = [];
 
-        if (includes.length) {
+        if (includes.length > 0) {
             if (includes.includes('changelog')) extraParams.expand = 'changelog';
             if (includes.includes('transitions')) {
                 promises.push({
@@ -100,7 +99,7 @@ export default class JiraApi extends Api {
             ...promises.map(p => p.action)
         ]);
 
-        promises.forEach((p, i) => issue[p.key] = results[i]);
+        for (const [ i, p ] of promises.entries())  issue[p.key] = results[i];
 
         return dumpTask(issue);
     }
@@ -108,7 +107,7 @@ export default class JiraApi extends Api {
     async getTransitions(id) {
         const res = await this.get(`/rest/api/3/issue/${id}/transitions`);
 
-        return res.transitions.map(dumpTransition);
+        return res.transitions.map((element) => dumpTransition(element));
     }
 
     async transit(issueId, transitionId) {
@@ -118,19 +117,19 @@ export default class JiraApi extends Api {
     async getComments(issueId) {
         const res =  await this.get(`/rest/api/3/issue/${issueId}/comment`);
 
-        return res.comments.map(dumpComment);
+        return res.comments.map((element) => dumpComment(element));
     }
 
     async getWorklog(issueId) {
         const res =  await this.get(`/rest/api/3/issue/${issueId}/worklog`);
 
-        return res.worklogs.map(dumpWorklog);
+        return res.worklogs.map((element) => dumpWorklog(element));
     }
 
     async getAttachments(issueId) {
         const res =  await this.get(`/rest/api/3/issue/${issueId}/attachment`);
 
-        return res.comments.map(dumpComment);
+        return res.comments.map((element) => dumpComment(element));
     }
 
 

@@ -23,9 +23,8 @@ beforeEach(function setClsFromContext() {
                     id    : this.test._TRACE_ID
                 });
 
-                Promise.resolve(old.apply(this, arguments))
-                    .then(res)
-                    .catch(rej);
+                Promise.resolve(Reflect.apply(old, this, arguments))
+                    .then(res).catch(rej); // eslint-disable-line promise/prefer-await-to-then
             });
         });
     };
@@ -90,19 +89,21 @@ export default class Test {
         await fs.writeJSON(configPath, config);
     }
 
-    loadConfig() {
-        return fs.readJSON(configPath).catch(async () => {
+    async loadConfig() {
+        try {
+            return await fs.readJSON(configPath);
+        } catch  {
             await fs.ensureDir(path.dirname(configPath));
 
             return {};
-        });
+        }
     }
 
     get 'jira_default'() {
         return {
             'host'  : 'http://wuztum.nu',
             'email' : 'kuba@gu.nr',
-            'token' : 'gUOv4Dn4o8iVYy53rrTK',
+            'token' : 'atlassian_token',
             'jira'  : {
                 'isUse'     : true,
                 'isDefault' : true,

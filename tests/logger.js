@@ -1,9 +1,21 @@
 import { createLogger, transports, format } from 'winston';
 import arrayTransport from 'winston-array-transport';
-import { load } from './utils';
 import { logsPath } from './constants';
 
-const { levels, JSONFormats } = load('logger');
+const levels = {
+    error   : 0,
+    warn    : 1,
+    info    : 2,
+    notice  : 3,
+    verbose : 4,
+    debug   : 5
+};
+
+const JSONFormats = [
+    format.splat(),
+    format.timestamp(),
+    format.json()
+];
 
 export const factoryLogger = createLogger({
     transports : [

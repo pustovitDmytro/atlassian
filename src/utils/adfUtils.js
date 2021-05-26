@@ -62,9 +62,9 @@ class ADFTextVisitor extends Visitor {
 
         this.call(adf);
 
-        adf.children.forEach(childNode => {
+        for (const childNode of adf.children) {
             this.parseADF(childNode, adf);
-        });
+        }
 
         return this.result;
     }
@@ -72,7 +72,6 @@ class ADFTextVisitor extends Visitor {
 
 export function adfToText(root) {
     const visitor = new ADFTextVisitor();
-    const result = visitor.parseADF(root);
 
-    return result;
+    return visitor.parseADF(root);
 }
