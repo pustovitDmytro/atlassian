@@ -1,3 +1,10 @@
+## [1.6.5](https://github.com/pustovitDmytro/atlassian/compare/v1.6.4...v1.6.5) (2021-05-28)
+
+
+### Upgrade
+
+* Update dependency base-api-client to v1.4.4 ([7532269](https://github.com/pustovitDmytro/atlassian/commit/7532269af4388dbd8c573d53e4f22fc6cc7aeac0))
+
 ## [1.6.4](https://github.com/pustovitDmytro/atlassian/compare/v1.6.3...v1.6.4) (2021-05-28)
 
 
