@@ -1,3 +1,10 @@
+## [1.6.6](https://github.com/pustovitDmytro/atlassian/compare/v1.6.5...v1.6.6) (2021-05-31)
+
+
+### Fix
+
+* prevent failiture when adfNode not present ([cd0f7fc](https://github.com/pustovitDmytro/atlassian/commit/cd0f7fc413afe1381257ba14f67e91f0d50bdb0b))
+
 ## [1.6.5](https://github.com/pustovitDmytro/atlassian/compare/v1.6.4...v1.6.5) (2021-05-28)
 
 
