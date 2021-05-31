@@ -71,6 +71,7 @@ class ADFTextVisitor extends Visitor {
 }
 
 export function adfToText(root) {
+    if (!root) return '';
     const visitor = new ADFTextVisitor();
 
     return visitor.parseADF(root);
