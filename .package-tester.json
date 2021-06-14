@@ -1,0 +1,9 @@
+{
+    "dir": "tmp/package-tests",
+    "modules": [ "cls-hooked", "winston", "winston-array-transport", "uuid", "dotenv" ],
+    "copy": [ 
+        [ "tests/test.env", "test.env" ],
+        [ "tests/init.js", "tests-init.js" ]
+    ],
+    "copyDefaultFiles": true
+}

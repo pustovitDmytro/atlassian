@@ -18,6 +18,7 @@ jira and confluence command line interface.
 [![Coverage Status][badge-coverage]][url-coverage]
 
 [![Commit activity][commit-activity-badge]][github]
+[![FOSSA][fossa-badge]][fossa-url]
 [![License][badge-lic]][github]
 
 ## Table of Contents
@@ -144,4 +145,6 @@ Make the changes to the code and tests. Then commit to your branch. Be sure to f
 [appveyor-badge]: https://ci.appveyor.com/api/projects/status/ux42y068m7c2yl2p/branch/master?svg=true
 [appveyor-url]: https://ci.appveyor.com/project/pustovitDmytro/atlassian/branch/master
 
+[fossa-badge]: https://app.fossa.com/api/projects/custom%2B24828%2Fatlassian.svg?type=shield
+[fossa-url]: https://app.fossa.com/projects/custom%2B24828%2Fatlassian?ref=badge_shield
 
