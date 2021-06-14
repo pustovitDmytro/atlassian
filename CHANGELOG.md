@@ -1,3 +1,29 @@
+## [1.6.7](https://github.com/pustovitDmytro/atlassian/compare/v1.6.6...v1.6.7) (2021-06-14)
+
+
+### Chore
+
+* adds stabilityDays to renovate ([3b262bc](https://github.com/pustovitDmytro/atlassian/commit/3b262bcefc6db318d2a7d9103f9f5f42315202d5))
+* fix json in renovate ([8ad7928](https://github.com/pustovitDmytro/atlassian/commit/8ad792825b2703e3159b65faf722eb43a1d9d421))
+* fixes npm  audit ([c3beccd](https://github.com/pustovitDmytro/atlassian/commit/c3beccdf1926d72dcf9b13cd153e37916f1a8d13))
+* fixes npm audit ([1264bd2](https://github.com/pustovitDmytro/atlassian/commit/1264bd20e8a2f8482062bb0a19150c2216c916f1))
+* integrate fossa ([b65e961](https://github.com/pustovitDmytro/atlassian/commit/b65e961a5ae500b1b5fd12fce3436e71c1518e35))
+* integrate node-package-tester ([9d53bf3](https://github.com/pustovitDmytro/atlassian/commit/9d53bf30d295368e7f1e925c18b00e48cc16014e))
+* Lock file maintenance ([3291a21](https://github.com/pustovitDmytro/atlassian/commit/3291a2144ee143dc327f6fb4a8b82e62e07b1c1f))
+* Lock file maintenance ([5acf9a1](https://github.com/pustovitDmytro/atlassian/commit/5acf9a1f69e27ec4db4a2af89f4da92a174499d3))
+* removes unused devDependencies ([ddb100a](https://github.com/pustovitDmytro/atlassian/commit/ddb100aa634ab2e1d2695de73d9aeb4a7795ccce))
+* set YARGS_MIN_NODE_VERSION 10 ([9b6bef9](https://github.com/pustovitDmytro/atlassian/commit/9b6bef9d89f8f0c958ee1fe60f20475dd20c8276))
+* Update dependency eslint-plugin-unicorn to v33 ([8589e91](https://github.com/pustovitDmytro/atlassian/commit/8589e915d1dd017cd16e525b6983cd5d6d6f5095))
+* Update dependency eslint-plugin-unicorn to v33 ([bfa00ff](https://github.com/pustovitDmytro/atlassian/commit/bfa00ff354dfb9ffe717e9a36f7a938d44b32611))
+* Update dependency glob-parent to 5.1.2 [SECURITY] ([c957512](https://github.com/pustovitDmytro/atlassian/commit/c957512cf496d9b99e2278b44b6bb9da545f57a8))
+* Update dependency mocha to v9 ([93b7a17](https://github.com/pustovitDmytro/atlassian/commit/93b7a1783ea97a7bcd94d570ef33b61314c93746))
+* update eslint-config-incredible ([2f39edb](https://github.com/pustovitDmytro/atlassian/commit/2f39edb6b44795918e8650be3e727b8e7abb61b7))
+* update eslint-config-incredible ([58c31d2](https://github.com/pustovitDmytro/atlassian/commit/58c31d295fa2df7cb3dceda8db6a417144a4b1c3))
+
+### Fix
+
+* set babel target node version to 10 ([f736568](https://github.com/pustovitDmytro/atlassian/commit/f73656838a20d11da6680579cfccc24a9f4a1201))
+
 ## [1.6.6](https://github.com/pustovitDmytro/atlassian/compare/v1.6.5...v1.6.6) (2021-05-31)
 
 
