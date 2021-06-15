@@ -1,3 +1,10 @@
+## [1.6.8](https://github.com/pustovitDmytro/atlassian/compare/v1.6.7...v1.6.8) (2021-06-15)
+
+
+### Upgrade
+
+* Update dependency html-to-text to v8 (#24) ([69a4185](https://github.com/pustovitDmytro/atlassian/commit/69a41857948d342d751df4dc0d58a97035516c91)), closes [#24](https://github.com/pustovitDmytro/atlassian/issues/24)
+
 ## [1.6.7](https://github.com/pustovitDmytro/atlassian/compare/v1.6.6...v1.6.7) (2021-06-14)
 
 
