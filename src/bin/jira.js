@@ -2,7 +2,7 @@
 /* eslint-disable max-lines-per-function */
 
 import yargs from 'yargs/yargs';
-import { isPromise, isArray } from 'myrmidon';
+import { isArray } from 'myrmidon';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import utc from 'dayjs/plugin/utc';
@@ -10,7 +10,7 @@ import ms from 'ms';
 import JIRA from '../Jira';
 import packageInfo from '../../package.json';
 import { adfToText } from '../utils/adfUtils';
-import { loadProfile, installLogger } from './utils';
+import { getCLIRunner } from './utils';
 import init from './init';
 import logger from './logger';
 
@@ -19,66 +19,33 @@ dayjs.extend(customParseFormat);
 
 const isMain = !module.parent;
 
+const cliCommand = getCLIRunner({
+    isMain,
+    profile : 'jira'
+});
+
 function prettyDate(date) {
     return dayjs(date).format('DD-MM-YYYY');
 }
 
-function onError(e) {
-    logger.error(e.toString());
-    logger.verbose(e.stack);
-    if (isMain) process.exit(1);
+async function list(args, profile) {
+    const jira = new JIRA(profile, logger);
+    const stages = [];
 
-    throw e;
-}
+    if (args.dev) stages.push('dev');
+    const tasks = await jira.list({
+        isMine : args.mine,
+        search : args.search,
+        sprint : args.sprint,
+        stages
+    });
 
-function onSuccess(result) {
-    return result;
-}
-
-function cliCommand(method) {
-    return function (...args) {
-        try {
-            const promise = method.apply(this, args);
-
-            if (isPromise(promise)) {
-                return promise
-                    // eslint-disable-next-line promise/prefer-await-to-then,promise/prefer-await-to-callbacks
-                    .then(result => onSuccess(result)).catch(error => onError(error));
-            }
-
-            return onSuccess(promise);
-        } catch (error) {
-            onError(error);
-        }
-    };
-}
-
-async function list(args) {
-    try {
-        installLogger(logger, args);
-        const profile = await loadProfile('jira', args.profile);
-        const jira = new JIRA(profile, logger);
-        const stages = [];
-
-        if (args.dev) stages.push('dev');
-        const tasks = await jira.list({
-            isMine : args.mine,
-            search : args.search,
-            sprint : args.sprint,
-            stages
-        });
-
-        for (const t of tasks) {
-            logger.info(`%s ${t.summary}`, t.key);
-        }
-    } catch (error) {
-        onError(error);
+    for (const t of tasks) {
+        logger.info(`%s ${t.summary}`, t.key);
     }
 }
 
-async function test(args) {
-    installLogger(logger, args);
-    const profile = await loadProfile('jira', args.profile);
+async function test(args, profile) {
     const jira = new JIRA(profile, logger);
 
     for (const issueId of args.issueId) {
@@ -86,9 +53,7 @@ async function test(args) {
     }
 }
 
-async function show(args) {
-    installLogger(logger, args);
-    const profile = await loadProfile('jira', args.profile);
+async function show(args, profile) {
     const jira = new JIRA(profile, logger);
     const task = await jira.show(args.issueId);
 
@@ -107,17 +72,13 @@ async function show(args) {
     }
 }
 
-async function exportLog(args) {
-    installLogger(logger, args);
-    const profile = await loadProfile('jira', args.profile);
+async function exportLog(args, profile) {
     const jira = new JIRA(profile, logger);
 
     await jira.exportLog([ args.start, args.end ], args.file);
 }
 
-async function clearWorklog(args) {
-    installLogger(logger, args);
-    const profile = await loadProfile('jira', args.profile);
+async function clearWorklog(args, profile) {
     const jira = new JIRA(profile, logger);
 
     const cleared = await jira.clearWorklog(args.issueId);
@@ -128,9 +89,7 @@ async function clearWorklog(args) {
     }
 }
 
-async function logIssues(args) {
-    installLogger(logger, args);
-    const profile = await loadProfile('jira', args.profile);
+async function logIssues(args, profile) {
     const jira = new JIRA(profile, logger);
 
     await jira.logIssues(args);
@@ -187,7 +146,7 @@ export default async function run(cmd) {
         .command({
             command : 'init',
             desc    : 'Add attlasian profile',
-            handler : cliCommand(init)
+            handler : cliCommand(init, { noLoadProfile: true })
         })
         .command({
             command : `list [--dev] [--mine] [--search=<search>] [--sprint=<sprint>] ${commonCommandArgs}`,

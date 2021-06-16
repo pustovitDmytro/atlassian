@@ -9,8 +9,7 @@ const factory = new Test();
 suite('cli jira test');
 
 before(async function () {
-    await factory.setTmpFolder();
-    await factory.saveProfile('jira_default', factory.jira_default);
+    await factory.setJIRADefault();
 });
 
 test('Positive: jira test A-1', async function () {

@@ -101,6 +101,23 @@ Options:
       --issueId  id(s) of task                                                          [array]
 ```
 
+## Confluence cli
+
+### Get list of pages
+```
+confluence.js pages <space> [--profile=<profile>] [--verbose]
+
+List Pages
+
+Options:
+      --version  Show version number                                                  [boolean]
+  -h, --help     Show help                                                            [boolean]
+  -v, --verbose  verbose logs                                                         [boolean]
+      --debug    debug logs                                                           [boolean]
+      --space    Id of confluence space                                                [string]
+```
+
+
 ## Contribute
 
 Make the changes to the code and tests. Then commit to your branch. Be sure to follow the commit message conventions. Read [Contributing Guidelines](.github/CONTRIBUTING.md) for details.

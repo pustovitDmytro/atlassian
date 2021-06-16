@@ -3,62 +3,101 @@
 import path from 'path';
 import os from 'os';
 import yargs from 'yargs/yargs';
-import chalk from 'chalk';
-import fs from 'fs-extra';
 import { v4 as uuid } from 'uuid';
 import Confluence from '../Confluence';
 import packageInfo from '../../package.json';
-import { configPath } from './utils';
+import { getCLIRunner } from './utils';
 import init from './init';
+import logger from './logger';
 
 const isMain = !module.parent;
 
-async function listPages(args) {
-    const config = await fs.readJSON(configPath);
-    const profile =  args.profile ? config[args.profile] : Object.values(config)[0];
+const cliCommand = getCLIRunner({
+    isMain,
+    profile : 'confluence'
+});
 
-    const confluence = new Confluence(profile);
+async function listPages(args, profile) {
+    const confluence = new Confluence(profile, logger);
     const pages = await confluence.getPages(args.space);
 
-    for (const p of pages)  console.log(chalk.bold(p.id), `${p.title}`);
+    for (const p of pages) {
+        logger.info(`%s ${p.title}`, p.id);
+    }
 }
 
-async function exportPage(args) {
-    const config = await fs.readJSON(configPath);
-    const profile =  args.profile ? config[args.profile] : Object.values(config)[0];
+async function exportPage(args, profile) {
     const fileName = args.path ? path.resolve(args.path) : path.resolve(os.tmpdir(), `${uuid.v4()}.pdf`);
-    const confluence = new Confluence(profile);
+    const confluence = new Confluence(profile, logger);
 
     await confluence.exportPage(args.page, fileName);
 }
 
+const commonOpts = y => y
+    .option('verbose', {
+        describe : 'verbose logs',
+        alias    : [ 'v' ],
+        type     : 'boolean'
+    })
+    .option('debug', {
+        describe : 'debug logs',
+        type     : 'boolean'
+    })
+    .option('profile', {
+        alias    : [ 'p' ],
+        describe : 'specify profile name',
+        type     : 'string'
+    });
+
 export default async function run(cmd) {
+    function onYargsFail(message, error, ygs) {
+        const failMessage = message || error;
+
+        ygs.showHelp('error');
+        if (failMessage) {
+            console.log();
+            logger.error(failMessage.toString());
+            logger.verbose(error?.stack);
+        }
+
+        if (!isMain) throw (failMessage);
+        process.exit(1);
+    }
+
+    const minTerminalWidth =  95;
+    const commonCommandArgs = '[--verbose] [--debug] [--profile=<profile>]';
+
     await  yargs(cmd)
         .usage('Usage: $0 <command> [options]')
         .command({
             command : 'init',
             desc    : 'Add attlasian profile',
-            handler : init
+            handler : cliCommand(init, { noLoadProfile: true })
         })
         .command({
-            command : 'pages <space> [--profile=<profile>]',
-            builder : y => y
+            command : `pages <space> ${commonCommandArgs}`,
+            builder : y => commonOpts(y)
+                .option('space', {
+                    describe : 'Id of confluence space',
+                    type     : 'string'
+                })
                 .alias('-p', '--profile'),
             desc    : 'List Pages',
-            handler : listPages
+            handler : cliCommand(listPages)
         })
         .command({
-            command : 'export <page> [--path=<path>]',
-            builder : y => y
+            command : `export <page> [--path=<path>] ${commonCommandArgs}`,
+            builder : y => commonOpts(y)
                 .alias('-p', '--profile'),
             desc    : 'Export Page as pdf',
-            handler : exportPage
+            handler : cliCommand(exportPage)
         })
         .help('h')
         .alias('h', 'help')
-        .help()
+        .wrap(Math.min(minTerminalWidth, process.stdout.columns))
         .showHelpOnFail(true).demandCommand(1, '').recommendCommands().strict()
         .epilog(`${packageInfo.name} v.${packageInfo.version}`)
+        .fail(onYargsFail)
         .argv;
 }
 

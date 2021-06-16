@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs-extra';
 import './mock/JiraApi';
 import './mock/AtlassianApi';
+import './mock/ConfluenceApi';
 import { createNamespace } from 'cls-hooked';
 import { v4 as uuid } from 'uuid';
 import { tmpFolder, configPath, logsPath } from './constants';
@@ -89,6 +90,16 @@ export default class Test {
         await fs.writeJSON(configPath, config);
     }
 
+    async setConfluenceDefault() {
+        await this.setTmpFolder();
+        await this.saveProfile('confluence_default', this.confluence_default);
+    }
+
+    async setJIRADefault() {
+        await this.setTmpFolder();
+        await this.saveProfile('jira_default', this.jira_default);
+    }
+
     async loadConfig() {
         try {
             return await fs.readJSON(configPath);
@@ -112,6 +123,22 @@ export default class Test {
             'confluence' : { 'isUse': false },
             'userId'     : 1,
             '_version'   : '1.0.0'
+        };
+    }
+
+    get 'confluence_default'() {
+        return {
+            'host'  : 'http://oh.lr/vuuh',
+            'email' : 'pop@sobi.in',
+            'token' : 'atlassian_token',
+            'jira'  : { 'isUse': false },
+
+            'confluence' : {
+                'isDefault' : true,
+                'isUse'     : true
+            },
+            'userId'   : 1,
+            '_version' : '1.4.0'
         };
     }
 }

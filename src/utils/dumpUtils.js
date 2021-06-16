@@ -2,6 +2,8 @@ import { flatten } from 'myrmidon';
 
 const MS_TO_SEC = 1000;
 
+// JIRA
+
 export function dumpTask(issue = {}) {
     const history = issue.changelog
         ? flatten(issue.changelog.histories.map(h => h.items.map(i => ({ item: i, history: h }))))
@@ -84,5 +86,16 @@ export function dumpComment(c) {
         authorName : c.author.displayName,
         text       : c.body,
         date       : c.updated
+    };
+}
+
+// Confluence
+
+export function dumpPage(p) {
+    return {
+        id     : p.id,
+        type   : p.type,
+        status : p.status,
+        title  : p.title
     };
 }

@@ -4,6 +4,7 @@ import fs from 'fs-extra';
 import axios from 'axios';
 import { htmlToText } from 'html-to-text';
 import { pause } from 'myrmidon';
+import Api from './ConfluenceApi';
 
 function onError(error) {
     console.error(error.response ? error.response.data : error);
@@ -12,28 +13,19 @@ function onError(error) {
 
 const CONFLUENCE_LOG_POLLING_INTERVAL = 500;
 
-export default class Confluence {
-    constructor(config) {
-        this.userId = config.userId;
-        this.host = config.host;
-        this.auth = {
+export default class Confluence extends Api {
+    constructor(config, logger) {
+        super(config.host, {
             username : config.email,
             password : config.token
-        };
+        });
+        this.userId = config.userId;
+        this.host = config.host;
+        this.initLogger(logger);
     }
 
     async getPages(space) {
-        const res =  await this.get(`${this.host}/wiki/rest/api/space/${space}/content?expand=body.storage`, {
-            auth : this.auth
-        }).catch(onError);
-
-        return res.data.page.results;
-    }
-
-    async printPages() {
-        const pages = await this.getPages();
-
-        for (const p of pages)  console.log(`${p.id}: ${p.title}`);
+        return this.pagesList(space);
     }
 
     async exportPage(pageId, filename) {

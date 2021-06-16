@@ -3,14 +3,12 @@ import Test from '../Test';
 import { CLITester, getApiCalls, load } from '../utils';
 
 const jiraRunner = load('bin/jira').default;
-
 const factory = new Test();
 
 suite('cli jira list');
 
 before(async function () {
-    await factory.setTmpFolder();
-    await factory.saveProfile('jira_default', factory.jira_default);
+    await factory.setJIRADefault();
 });
 
 test('jira ls -dm', async function () {

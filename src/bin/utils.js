@@ -4,6 +4,7 @@ import os from 'os';
 import inquirer from 'inquirer';
 import fs from 'fs-extra';
 import Api from '../AtlassianApi';
+import cliLogger from './logger';
 
 const homedir = os.homedir();
 const defaultConfigPath = path.join(homedir, '.atlassian');
@@ -63,4 +64,29 @@ export async function untilConfirm(q) {
     if (confirm !== false) return res;
 
     return untilConfirm(q);
+}
+
+export function getCLIRunner({ isMain, profile }) {
+    function onError(e) {
+        cliLogger.error(e.toString());
+        cliLogger.verbose(e.stack);
+        if (isMain) process.exit(1);
+
+        throw e;
+    }
+
+    return function cliCommand(method, { noLoadProfile } = {}) {
+        return async function (args) {
+            try {
+                installLogger(cliLogger, args);
+                const profileConf = noLoadProfile
+                    ? null
+                    : await loadProfile(profile, args.profile);
+
+                await method(args, profileConf);
+            } catch (error) {
+                onError(error);
+            }
+        };
+    };
 }

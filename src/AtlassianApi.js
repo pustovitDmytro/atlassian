@@ -9,7 +9,7 @@ export class ATLASSIAN_ERROR extends API_ERROR {
         const messages = [ this.payload.message ];
         const inner  = this.payload.response?.data;
 
-        if (inner.message) {
+        if (inner?.message) {
             messages.push(inner.message);
         } else if (inner?.errorMessages?.length) {
             messages.push(...inner.errorMessages);
@@ -34,6 +34,7 @@ export default class AtlassianApi extends Api {
     }
 
     initLogger(logger = defaultLogger) {
+        super.initLogger(logger);
         this.logger = logger;
     }
 

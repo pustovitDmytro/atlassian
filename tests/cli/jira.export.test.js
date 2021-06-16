@@ -12,8 +12,7 @@ const factory = new Test();
 suite('cli jira export');
 
 before(async function () {
-    await factory.setTmpFolder();
-    await factory.saveProfile('jira_default', factory.jira_default);
+    await factory.setJIRADefault();
 });
 
 test('jira export with explicit dates', async function () {

@@ -16,8 +16,7 @@ const emptyOutFile = path.join(tmpFolder, `${uuid()}.json`);
 const fullOutFile = path.join(tmpFolder, `${uuid()}.json`);
 
 before(async function () {
-    await factory.setTmpFolder();
-    await factory.saveProfile('jira_default', factory.jira_default);
+    await factory.setJIRADefault();
     await fs.writeJSON(emptyOutFile, []);
     await fs.writeJSON(fullOutFile, exportWorkflow);
 });
