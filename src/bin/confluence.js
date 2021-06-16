@@ -88,6 +88,10 @@ export default async function run(cmd) {
         .command({
             command : `export <page> [--path=<path>] ${commonCommandArgs}`,
             builder : y => commonOpts(y)
+                .option('page', {
+                    describe : 'Id of space page',
+                    type     : 'string'
+                })
                 .alias('-p', '--profile'),
             desc    : 'Export Page as pdf',
             handler : cliCommand(exportPage)

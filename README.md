@@ -117,6 +117,25 @@ Options:
       --space    Id of confluence space                                                [string]
 ```
 
+### Export page of pdf
+
+To export specific page as pdf firstly [obtain pageId](#get-list-of-pages). Then use pageId as argument for next command:
+
+```
+confluence.js export <page> [--path=<path>] [--verbose] [--debug] [--profile=<profile>]
+
+Export Page as pdf
+
+Options:
+      --version  Show version number                                                  [boolean]
+  -h, --help     Show help                                                            [boolean]
+  -v, --verbose  verbose logs                                                         [boolean]
+      --debug    debug logs                                                           [boolean]
+      --page     Id of space page                                                      [string]
+
+```
+
+Path to generated .pdf will be written to stdout.
 
 ## Contribute
 
