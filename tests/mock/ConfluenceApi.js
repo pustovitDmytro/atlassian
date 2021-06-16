@@ -1,6 +1,11 @@
-// import createAxiosError from 'axios/lib/core/createError'; // eslint-disable-line import/no-extraneous-dependencies
+import path from 'path';
+import createAxiosError from 'axios/lib/core/createError'; // eslint-disable-line import/no-extraneous-dependencies
+import fs from 'fs-extra';
 import { load } from '../utils';
+import { testsRootFolder } from '../constants';
 import PAGES from './fixtures/confluence/pages-list.json';
+import longTaskFinished from './fixtures/confluence/longtask-finished.json';
+import longTaskUnFinished from './fixtures/confluence/longtask-unfinished.json';
 
 const CONFLUENCE_API = load('ConfluenceApi').default;
 
@@ -8,9 +13,9 @@ function axiosResponse(data) {
     return { data: JSON.parse(JSON.stringify(data)) };
 }
 
-// function axiosError(opts, { message, code }, data) {
-//     return createAxiosError(message, opts, code, {}, { data });
-// }
+function axiosError(opts, { message, code }, data) {
+    return createAxiosError(message, opts, code, {}, { data });
+}
 
 class CONFLUENCE_MOCK_API extends CONFLUENCE_API {
     async _axios(opts) {
@@ -28,6 +33,41 @@ class CONFLUENCE_MOCK_API extends CONFLUENCE_API {
             }
 
             return axiosResponse(PAGES);
+        }
+
+        if (opts.url.match('longtask')) {
+            if (!this.__longTaskFired) this.__longTaskFired = 0;
+            this.__longTaskFired++;
+            if (this.__longTaskFired === 1) return  axiosResponse(longTaskUnFinished);
+            if (this.__longTaskFired === 2) {
+                this.__longTaskFired = 0;
+
+                return axiosResponse(longTaskFinished);
+            }
+        }
+
+        if (opts.url.match('pdfpageexport')) {
+            const htmlFilePath = path.join(testsRootFolder, 'mock/fixtures/confluence/pdfexport.html');
+            const html = await fs.readFile(htmlFilePath);
+            const error = axiosError(opts, {
+                message : 'Request failed with status code 403'
+            });
+
+            error.response = {
+                status  : 403,
+                headers : { 'content-type': 'text/html' },
+                data    : html.toString()
+            };
+
+            throw error;
+        }
+
+        if (opts.url.match('download/temp/filestore')) {
+            const samplePdfPath = path.join(testsRootFolder, 'mock/fixtures/confluence/sample.pdf');
+
+            return {
+                data : fs.createReadStream(samplePdfPath)
+            };
         }
 
         return axiosResponse(1);

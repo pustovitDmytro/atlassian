@@ -2,7 +2,6 @@ import path from 'path';
 import fs from 'fs-extra';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import axios from 'axios';
-import { htmlToText } from 'html-to-text';
 import { pause } from 'myrmidon';
 import Api from './ConfluenceApi';
 
@@ -28,57 +27,37 @@ export default class Confluence extends Api {
         return this.pagesList(space);
     }
 
+    async resolveLongTask(taskId) {
+        const task = await this.getLongTask(taskId);
+
+        if (task.finished) return task;
+        await pause(CONFLUENCE_LOG_POLLING_INTERVAL);
+
+        return this.resolveLongTask(taskId);
+    }
+
     async exportPage(pageId, filename) {
-        const res = await axios.get(`${this.host}/wiki/spaces/flyingpdf/pdfpageexport.action?pageId=${pageId}`, {
-            auth : this.auth
-        }).catch(error => {
-            if (error.response.headers['content-type'].match('text/html')) {
-                const text = htmlToText(error.response.data);
+        const pdfpageexport = await this.pdfpageexport(pageId);
 
-                if (text.match('PDF EXPORT - IN PROGRESS')) {
-                    const taskId = error.response.data.match(/ajs-taskid.*content="(\d+)/i)[1];
+        if (!pdfpageexport?.taskId) throw new Error('Task has not been started by pdfpageexport');
 
-                    return { status: 1, text, taskId };
-                }
-            }
-
-            throw error;
-        });
-
-        // console.log(res.taskId, res.text);
-        const longRes = await axios.get(`${this.host}/wiki/rest/api/longtask/${res.taskId}`, {
-            auth : this.auth
-        }).catch(onError);
-
-        let task = longRes.data;
-
-        while (!task.finished) {
-            await pause(CONFLUENCE_LOG_POLLING_INTERVAL);
-            const longIterRes = await axios.get(`${this.host}/wiki/rest/api/longtask/${res.taskId}`, {
-                auth : this.auth
-            }).catch(onError);
-
-            task = longIterRes.data;
-        }
-
-        const downloadUrl = task.messages[0].translation
-            .match(/<a class="space-export-download-path" href="([^">]*)">/i)[1];
+        const task = await this.resolveLongTask(pdfpageexport.taskId);
+        const downloadUrl = task.text.match(/<a class="space-export-download-path" href="([^">]*)">/i)[1];
         const filePath = path.resolve(filename);
         const writer = fs.createWriteStream(filePath);
 
-        console.log(`${this.host}${downloadUrl}`);
-        const response = await axios.get(`${this.host}${downloadUrl}`, {
-            auth         : this.auth,
-            responseType : 'stream'
-        });
+        this.logger.log('verbose', { downloadUrl: `${this.host}${downloadUrl}` });
 
-        response.data.pipe(writer);
+        const stream = await this.downloadFile(downloadUrl);
+
+        stream.pipe(writer);
 
         await new Promise((resolve, reject) => {
             writer.on('finish', resolve);
             writer.on('error', reject);
         });
-        console.log(`written to ${filePath}`);
+
+        this.logger.log('info', `written to ${filePath}`);
 
         return filePath;
     }

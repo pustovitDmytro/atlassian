@@ -99,3 +99,16 @@ export function dumpPage(p) {
         title  : p.title
     };
 }
+
+export function dumpLongTask(t) {
+    return {
+        id : t.id,
+
+        elapsedTime        : t.elapsedTime,
+        percentageComplete : t.percentageComplete,
+        successful         : t.successful,
+        finished           : t.finished,
+
+        text : t.messages?.[0].translation
+    };
+}

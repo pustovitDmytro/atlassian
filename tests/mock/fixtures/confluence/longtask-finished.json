@@ -1,0 +1,21 @@
+{
+    "id": "1573748738",
+    "name": {
+        "key": "title.pdfexport.space",
+        "args": []
+    },
+    "elapsedTime": 2060,
+    "percentageComplete": 100,
+    "successful": true,
+    "finished": true,
+    "messages": [
+        {
+            "translation": "Your PDF file is ready to go. <a class=\"space-export-download-path\" href=\"/wiki/download/temp/filestore/82a3c5be-29b3-4d14-b3db-5507063bfa66\">Download PDF</a><div class=\"aui-message aui-message-info\"><p>Tables that exceed the width of a page, particularly with images in them, may not display properly. See <a href=\"https://confluence.atlassian.com/confcloud/wide-tables-may-be-cut-off-in-pdf-export-951397153.html\">this Knowledge Base article</a> for more information.</p></div>",
+            "args": []
+        }
+    ],
+    "_links": {
+        "base": "http://hekpesev.na/olilobcil/wiki",
+        "context": "/wiki"
+    }
+}
