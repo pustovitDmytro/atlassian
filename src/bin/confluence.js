@@ -27,7 +27,7 @@ async function listPages(args, profile) {
 }
 
 async function exportPage(args, profile) {
-    const fileName = args.path ? path.resolve(args.path) : path.resolve(os.tmpdir(), `${uuid.v4()}.pdf`);
+    const fileName = args.path ? path.resolve(args.path) : path.resolve(os.tmpdir(), `${uuid()}.pdf`);
     const confluence = new Confluence(profile, logger);
 
     await confluence.exportPage(args.page, fileName);
