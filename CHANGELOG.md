@@ -1,3 +1,16 @@
+# [1.7.0](https://github.com/pustovitDmytro/atlassian/compare/v1.6.9...v1.7.0) (2021-06-16)
+
+
+### Chore
+
+* Update dependency eslint-plugin-regexp to ^0.12.0 ([51ff304](https://github.com/pustovitDmytro/atlassian/commit/51ff3049b892e9ee5655761e53454e4c601fba27))
+* Update dependency eslint-plugin-regexp to ^0.12.0 (#26) ([03d2fd0](https://github.com/pustovitDmytro/atlassian/commit/03d2fd07553446c9b683a700a0023b4affaee2e8)), closes [#26](https://github.com/pustovitDmytro/atlassian/issues/26)
+* Update dependency test-console to v2 ([f07b51f](https://github.com/pustovitDmytro/atlassian/commit/f07b51fccaa5ee1e193191ef7c25f33844b8f17b))
+
+### New
+
+* paggination in confluence getPages #14 #15 ([66a95ff](https://github.com/pustovitDmytro/atlassian/commit/66a95ffd401ae67738432dfab31d1acc50813bfe)), closes [#14](https://github.com/pustovitDmytro/atlassian/issues/14) [#15](https://github.com/pustovitDmytro/atlassian/issues/15)
+
 ## [1.6.9](https://github.com/pustovitDmytro/atlassian/compare/v1.6.8...v1.6.9) (2021-06-15)
 
 
