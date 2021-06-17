@@ -1,3 +1,19 @@
+## [1.7.1](https://github.com/pustovitDmytro/atlassian/compare/v1.7.0...v1.7.1) (2021-06-17)
+
+
+### Chore
+
+* fixes tests ([fb9c992](https://github.com/pustovitDmytro/atlassian/commit/fb9c992e6ac5bfd50b29c727fecc58cd819a96bc))
+* rewrite exportPage confluence handler closes #14 closes #15 ([deb414e](https://github.com/pustovitDmytro/atlassian/commit/deb414e5b8b4195803f6002241fbddf09518ebfe)), closes [#14](https://github.com/pustovitDmytro/atlassian/issues/14) [#15](https://github.com/pustovitDmytro/atlassian/issues/15)
+
+### Docs
+
+* adds Readme for Export Page as pdf ([7d51235](https://github.com/pustovitDmytro/atlassian/commit/7d51235d16cf7dc236d7b85732220d5d48b7b00e))
+
+### Fix
+
+* fixes uuid in confluence exportPage ([0a3d4c6](https://github.com/pustovitDmytro/atlassian/commit/0a3d4c6f6e4226bf6a4c128290f5b6866d414947))
+
 # [1.7.0](https://github.com/pustovitDmytro/atlassian/compare/v1.6.9...v1.7.0) (2021-06-16)
 
 
