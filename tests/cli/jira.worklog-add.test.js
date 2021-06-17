@@ -5,7 +5,7 @@ import fs from 'fs-extra';
 import Test from '../Test';
 import { CLITester, getApiCalls, load } from '../utils';
 import { tmpFolder } from '../constants';
-import exportWorkflow from '../mock/fixtures/export.json';
+import exportWorkflow from '../mock/fixtures/jira/export.json';
 
 const jiraRunner = load('bin/jira').default;
 

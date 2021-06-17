@@ -1,0 +1,37 @@
+{
+    "startAt": 0,
+    "maxResults": 1048576,
+    "total": 1,
+    "worklogs": [
+        {
+            "self": "http://hearu.af/ajca/rest/api/3/issue/A-4/worklog/17252",
+            "author": {
+                "self": "http://hearu.af/ajca/rest/api/3/user?accountId=123456789",
+                "accountId": 1,
+                "emailAddress": "kahro@fapfiuv.se",
+                "avatarUrls": {},
+                "displayName": "James Gill",
+                "active": true,
+                "timeZone": "Europe/Kiev",
+                "accountType": "atlassian"
+            },
+            "updateAuthor": {
+                "self": "http://hearu.af/ajca/rest/api/3/user?accountId=123456789",
+                "accountId": 1,
+                "emailAddress": "kahro@fapfiuv.se",
+                "avatarUrls": {},
+                "displayName": "James Gill",
+                "active": true,
+                "timeZone": "Europe/Kiev",
+                "accountType": "atlassian"
+            },
+            "created": "2021-06-17T23:13:13.081+0300",
+            "updated": "2021-06-17T23:13:13.081+0300",
+            "started": "2021-06-17T23:03:04.623+0300",
+            "timeSpent": "10m",
+            "timeSpentSeconds": 600,
+            "id": "17252",
+            "issueId": "A-4"
+        }
+    ]
+}

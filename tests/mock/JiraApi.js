@@ -1,14 +1,14 @@
 import { URL } from 'url';
 import { load } from '../utils';
-import ISSUES from './fixtures/issues.json';
-import STATUSES from './fixtures/statuses.json';
+import ISSUES from './fixtures/jira/issues.json';
+import STATUSES from './fixtures/jira/statuses.json';
+import WORKLOGS from './fixtures/jira/worklogs.json';
 import ATLASSIAN_API, {
     axiosResponse,
     axiosError
 } from './AtlassianApi';
 
 const JIRA_API = load('JiraApi').default;
-
 
 class JIRA_MOCK_API extends JIRA_API {
     async getStatuses() {
@@ -41,7 +41,7 @@ class JIRA_MOCK_API extends JIRA_API {
         }
 
         if (opts.url.match('/rest/api/3/issue/.*/worklog')) {
-            return axiosResponse({ worklogs: [] });
+            return axiosResponse(WORKLOGS);
         }
 
         if (opts.url.match('/rest/api/3/issue')) {

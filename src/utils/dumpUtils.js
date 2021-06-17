@@ -48,6 +48,7 @@ function dumpHistory(h) {
 
 export function dumpWorklog(w) {
     return {
+        id     : w.id,
         time   : w.timeSpentSeconds * MS_TO_SEC,
         author : w.author.accountId,
         start  : w.started

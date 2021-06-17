@@ -242,6 +242,7 @@ export default class JIRA extends Api {
     async clearWorklog(issueID, { mine = true, period = [] } = {}) {
         const [ start, end ] = period;
         const worklogs =  await this.getWorklog(issueID);
+
         const worklogsToClear = worklogs.filter(w => {
             const isMine = !mine || w.author === this.userId;
             const isAfterStart = !start || start.isSameOrAfter(dayjs(w.start), 'day');

@@ -221,19 +221,13 @@ export default async function run(cmd) {
             handler : cliCommand(exportLog)
         })
         .command({
-            command : `worklog clear <issueId> ${commonCommandArgs} [--start=<start>] [--end=<end>]`,
+            command : `worklog clear <issueId> ${commonCommandArgs}`,
             desc    : 'Clear worklog',
             builder : y => commonOpts(y)
-                .option('start', {
-                    describe : `clear only worklogs after (>=) start date ${dateSuffix}`,
-                    type     : 'date'
-                })
-                .option('end', {
-                    describe : `clear only worklogs before (<=) end date ${dateSuffix}`,
-                    type     : 'date'
-                })
-                .coerce('start', asDate)
-                .coerce('end', asDate),
+                .positional('<issueId>', {
+                    describe : 'Id of the issue',
+                    type     : 'string'
+                }),
             handler : cliCommand(clearWorklog)
         })
         .command({

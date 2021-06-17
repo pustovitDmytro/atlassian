@@ -101,6 +101,23 @@ Options:
       --issueId  id(s) of task                                                          [array]
 ```
 
+### Clear worklog
+
+```
+jira.js worklog clear <issueId> [--verbose] [--profile=<profile>]
+
+Clear worklog
+
+Positionals:
+  <issueId>  Id of the issue                                                           [string]
+
+Options:
+  -h, --help     Show help                                                            [boolean]
+      --version  Show version number                                                  [boolean]
+  -v, --verbose  verbose logs                                                         [boolean]
+  -p, --profile  specify profile name                                                  [string]
+```
+
 ## Confluence cli
 
 ### Get list of pages

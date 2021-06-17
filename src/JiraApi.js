@@ -132,7 +132,6 @@ export default class JiraApi extends Api {
         return res.comments.map((element) => dumpComment(element));
     }
 
-
     async deleteWorklog(issueId, worklogId) {
         await this.delete(`/rest/api/3/issue/${issueId}/worklog/${worklogId}`);
     }
