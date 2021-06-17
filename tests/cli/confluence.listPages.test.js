@@ -37,6 +37,29 @@ test('Confluence list pages for default space', async function () {
     assert.match(output, /539689093.* Retrospectives/);
 });
 
+test('Negative: specify not existing space', async function () {
+    const errorMessage = /ATLASSIAN_ERROR: Request failed with status code 404 com.atlassian.confluence.api.service.exceptions.NotFoundException: No space found with key : space_404/;
+    const tester = new CLITester([], factory);
+
+    const [ output ] = await Promise.all([
+        tester.test(),
+        cliRunner([ 'pages', 'space_404' ])
+            .then(() => assert.fail('request must fail'))
+            .catch(error => {
+                assert.match(error.toString(), errorMessage);
+            })
+    ]);
+
+    const requests = await getApiCalls('type=requestSent');
+
+    assert.lengthOf(requests, 1);
+    assert.deepOwnInclude(requests[0], {
+        method : 'GET',
+        url    : '/wiki/rest/api/space/space_404/content'
+    });
+    assert.match(output, errorMessage);
+});
+
 after(async function () {
     await factory.cleanTmpFolder();
 });

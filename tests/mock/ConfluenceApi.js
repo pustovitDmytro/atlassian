@@ -20,6 +20,16 @@ function axiosError(opts, { message, code }, data) {
 class CONFLUENCE_MOCK_API extends CONFLUENCE_API {
     async _axios(opts) {
         if (opts.url.match('/content')) {
+            if (opts.url.match('space_404')) {
+                throw axiosError(opts, {
+                    message : 'Request failed with status code 404'
+                }, {
+                    statusCode : 404,
+                    message    : 'com.atlassian.confluence.api.service.exceptions.NotFoundException: No space found with key : space_404',
+                    data       : { authorized: false, valid: true, errors: [], successful: false }
+                });
+            }
+
             const { start } = opts.params;
 
             if (start) {
