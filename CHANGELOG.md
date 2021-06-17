@@ -1,3 +1,16 @@
+# [1.8.0](https://github.com/pustovitDmytro/atlassian/compare/v1.7.1...v1.8.0) (2021-06-17)
+
+
+### Chore
+
+* "adds Negative:  existing space confluence test" ([04ffdc1](https://github.com/pustovitDmytro/atlassian/commit/04ffdc1fc068b8571ca2becf539c058a46d06843))
+* adds profile missmatch test ([c7854da](https://github.com/pustovitDmytro/atlassian/commit/c7854da9f65b2ff602802b99b82c0153db1a0ded))
+* adds tests for atlassian getMyself ([db624b5](https://github.com/pustovitDmytro/atlassian/commit/db624b50f98caa3cbecb93844ba62864d81985ca))
+
+### New
+
+* adds clear worklog functionality ([386e3f0](https://github.com/pustovitDmytro/atlassian/commit/386e3f01b8037a6151ca46daf96f8cf9951ea1b7))
+
 ## [1.7.1](https://github.com/pustovitDmytro/atlassian/compare/v1.7.0...v1.7.1) (2021-06-17)
 
 
