@@ -1,14 +1,7 @@
 import path from 'path';
 import fs from 'fs-extra';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import axios from 'axios';
 import { pause } from 'myrmidon';
 import Api from './ConfluenceApi';
-
-function onError(error) {
-    console.error(error.response ? error.response.data : error);
-    throw error;
-}
 
 const CONFLUENCE_LOG_POLLING_INTERVAL = 500;
 
