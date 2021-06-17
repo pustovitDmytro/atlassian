@@ -98,6 +98,10 @@ export default class Test {
     async setJIRADefault() {
         await this.setTmpFolder();
         await this.saveProfile('jira_default', this.jira_default);
+        await this.saveProfile('missmatch', {
+            ...this.jira_default,
+            userId : -1
+        });
     }
 
     async loadConfig() {

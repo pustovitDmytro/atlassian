@@ -33,6 +33,29 @@ test('jira show with comments', async function () {
     assert.match(output, /Sadie Shelton.* \(voq2ULLho\) 25-03-2021/);
 });
 
+test('Negative: Profile missmatch', async function () {
+    const errorMessage = /Error: Profile missmatch not matches user {"email":"guomidin@wiore.cg","id":1,"name":"Stella Murphy"}/;
+    const tester = new CLITester([], factory);
+
+    const [ output ] = await Promise.all([
+        tester.test(),
+        jiraRunner([ 'show', 'A-1', '--profile', 'missmatch' ])
+            .then(() => assert.fail('request must fail'))
+            .catch(error => {
+                assert.match(error.toString(), errorMessage);
+            })
+    ]);
+
+    const [ getMyself ] = await getApiCalls('type=requestSent');
+
+    assert.deepOwnInclude(getMyself, {
+        method : 'GET',
+        url    : '/rest/api/3/myself'
+    });
+
+    assert.match(output, errorMessage);
+});
+
 after(async function () {
     await factory.cleanTmpFolder();
 });
