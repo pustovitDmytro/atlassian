@@ -30,7 +30,7 @@ test('jira add time to worklog from empty list', async function () {
 
     const apiCalls = await getApiCalls('type=requestSent');
 
-    assert.isEmpty(apiCalls);
+    assert.isEmpty(apiCalls.filter(r => r.url !== '/rest/api/3/myself'));
     assert.include(output, '0 hours will be logged');
 });
 

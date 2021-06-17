@@ -1,16 +1,24 @@
 import { getNamespace } from 'cls-hooked';
+import createAxiosError from 'axios/lib/core/createError'; // eslint-disable-line import/no-extraneous-dependencies
 import { apiLogger } from '../logger';
 import { load } from '../utils';
+import user from './fixtures/atlassian/user.json';
 
 const ATLASSIAN_API = load('AtlassianApi').default;
 
-class API extends ATLASSIAN_API {
-    async getMyself() {
-        return {
-            id    : 1,
-            email : this.auth.username,
-            name  : 'Tyler Simpson'
-        };
+export function axiosResponse(data) {
+    return { data: JSON.parse(JSON.stringify(data)) };
+}
+
+export function axiosError(opts, { message, code }, data) {
+    return createAxiosError(message, opts, code, {}, { data });
+}
+
+export default class API extends ATLASSIAN_API {
+    async _axios(opts) {
+        if (opts.url.match('/rest/api/3/myself')) return axiosResponse(user);
+
+        return axiosResponse(1);
     }
 
     getTraceId() {

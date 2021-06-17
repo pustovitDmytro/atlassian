@@ -1,12 +1,12 @@
 import path from 'path';
 import fs from 'fs-extra';
 import './mock/JiraApi';
-import './mock/AtlassianApi';
 import './mock/ConfluenceApi';
 import { createNamespace } from 'cls-hooked';
 import { v4 as uuid } from 'uuid';
 import { tmpFolder, configPath, logsPath } from './constants';
 import { factoryLogger } from './logger';
+import defaultUser from './mock/fixtures/atlassian/user.json';
 
 const context = createNamespace('__TEST__');
 
@@ -113,15 +113,15 @@ export default class Test {
     get 'jira_default'() {
         return {
             'host'  : 'http://wuztum.nu',
-            'email' : 'kuba@gu.nr',
-            'token' : 'atlassian_token',
+            'email' : defaultUser.emailAddress,
+            'token' : 'jira_atlassian_token',
             'jira'  : {
                 'isUse'     : true,
                 'isDefault' : true,
                 'statuses'  : { 'dev': [ '1', '2' ], 'test': [ '3' ] }
             },
             'confluence' : { 'isUse': false },
-            'userId'     : 1,
+            'userId'     : defaultUser.accountId,
             '_version'   : '1.0.0'
         };
     }
@@ -129,15 +129,15 @@ export default class Test {
     get 'confluence_default'() {
         return {
             'host'  : 'http://oh.lr/vuuh',
-            'email' : 'pop@sobi.in',
-            'token' : 'atlassian_token',
+            'email' : defaultUser.emailAddress,
+            'token' : 'confluence_atlassian_token',
             'jira'  : { 'isUse': false },
 
             'confluence' : {
                 'isDefault' : true,
                 'isUse'     : true
             },
-            'userId'   : 1,
+            'userId'   : defaultUser.accountId,
             '_version' : '1.4.0'
         };
     }

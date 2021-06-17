@@ -23,6 +23,8 @@ export class CLITester {
         inspect.restore();
         const out = inspect.output.join('\n');
 
+        // console.log(out);
+
         if (index === this.dialog.length) {
             this.stdin.restore();
 

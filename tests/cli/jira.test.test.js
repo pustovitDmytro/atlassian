@@ -20,7 +20,7 @@ test('Positive: jira test A-1', async function () {
         jiraRunner([ 'test', 'A-1' ])
     ]);
 
-    const [ getTransitions, getIssue, transit ] = await getApiCalls('type=requestSent');
+    const [ , getTransitions, getIssue, transit ] = await getApiCalls('type=requestSent');
 
     assert.deepOwnInclude(getTransitions, {
         method : 'GET',
@@ -55,7 +55,7 @@ test('Negative: specify not existing task', async function () {
             })
     ]);
 
-    const [ getTransitions, getIssue ] = await getApiCalls('type=requestSent');
+    const [ , getTransitions, getIssue ] = await getApiCalls('type=requestSent');
 
     assert.deepOwnInclude(getTransitions, {
         method : 'GET',

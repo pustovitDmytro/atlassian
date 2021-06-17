@@ -21,12 +21,12 @@ test('jira show with comments', async function () {
 
     const apiCalls = await getApiCalls('type=requestSent');
 
-    assert.lengthOf(apiCalls, 2);
+    assert.lengthOf(apiCalls, 3);
     for (const req of apiCalls) {
         assert.equal(req.method, 'GET');
     }
 
-    assert.exists(apiCalls.find(c => c.url === '/rest/api/3/issue/A-4'));
+    assert.exists(apiCalls.find(c => c.url === '/rest/api/3/issue/A-4' && c.method === 'GET'));
 
     assert.include(output, 'Assignee: Lucinda Vasquez (IUiyLR5qVQAAh)');
     assert.include(output, '[file] 5b36655c-60ca-4a26-be48-db0a1c5d2f1d');

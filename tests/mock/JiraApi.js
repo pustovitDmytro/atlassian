@@ -1,18 +1,14 @@
 import { URL } from 'url';
-import createAxiosError from 'axios/lib/core/createError'; // eslint-disable-line import/no-extraneous-dependencies
 import { load } from '../utils';
 import ISSUES from './fixtures/issues.json';
 import STATUSES from './fixtures/statuses.json';
+import ATLASSIAN_API, {
+    axiosResponse,
+    axiosError
+} from './AtlassianApi';
 
 const JIRA_API = load('JiraApi').default;
 
-function axiosResponse(data) {
-    return { data: JSON.parse(JSON.stringify(data)) };
-}
-
-function axiosError(opts, { message, code }, data) {
-    return createAxiosError(message, opts, code, {}, { data });
-}
 
 class JIRA_MOCK_API extends JIRA_API {
     async getStatuses() {
@@ -65,7 +61,7 @@ class JIRA_MOCK_API extends JIRA_API {
             return axiosResponse(issue);
         }
 
-        return axiosResponse(1);
+        return ATLASSIAN_API.prototype._axios(opts);
     }
 }
 

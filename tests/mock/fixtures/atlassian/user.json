@@ -1,0 +1,24 @@
+{
+    "self": "http://woirtuv.sd/ricot/rest/api/3/user?accountId=1",
+    "accountId": 1,
+    "emailAddress": "guomidin@wiore.cg",
+    "avatarUrls": {
+        "48x48": "https://secure.gravatar.com/avatar/0r8ew0r80ewr0wer0ew8r?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FIP-4.png",
+        "24x24": "https://secure.gravatar.com/avatar/0r8ew0r80ewr0wer0ew8r?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FIP-4.png",
+        "16x16": "https://secure.gravatar.com/avatar/0r8ew0r80ewr0wer0ew8r?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FIP-4.png",
+        "32x32": "https://secure.gravatar.com/avatar/0r8ew0r80ewr0wer0ew8r?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FIP-4.png"
+    },
+    "displayName": "Stella Murphy",
+    "active": true,
+    "timeZone": "Europe/Kiev",
+    "locale": "en_US",
+    "groups": {
+        "size": 4,
+        "items": []
+    },
+    "applicationRoles": {
+        "size": 2,
+        "items": []
+    },
+    "expand": "groups,applicationRoles"
+}

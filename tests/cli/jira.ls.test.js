@@ -21,20 +21,29 @@ test('jira ls -dm', async function () {
 
     const apiCalls = await getApiCalls('type=requestSent');
 
-    assert.lengthOf(apiCalls, 2);
-    for (const req of apiCalls) {
-        assert.equal(req.method, 'GET');
-        assert.equal(req.url, '/rest/api/3/search');
-        assert.equal(
-            req.params.jql,
-            'assignee was currentuser() AND status IN ("1", "2") AND Sprint in openSprints()'
-        );
-    }
+    assert.lengthOf(apiCalls, 3);
 
-    const [ first, second ] = apiCalls;
+    const [ , first, second ] = apiCalls;
+
+    assert.deepOwnInclude(first, {
+        method : 'GET',
+        url    : '/rest/api/3/search'
+    });
 
     assert.notExists(first.params.startAt);
-    assert.exists(second.params.startAt, 'second request for paggination');
+    assert.deepOwnInclude(first.params, {
+        jql : 'assignee was currentuser() AND status IN ("1", "2") AND Sprint in openSprints()'
+    });
+
+    assert.deepOwnInclude(second, {
+        method : 'GET',
+        url    : '/rest/api/3/search'
+    });
+
+    assert.deepOwnInclude(second.params, {
+        jql     : 'assignee was currentuser() AND status IN ("1", "2") AND Sprint in openSprints()',
+        startAt : 2
+    }, 'second request for paggination');
 
     assert.match(output, /A-1.*brief tie pool present sharp/);
     assert.match(output, /A-2.*symbol stock taste combine identity/);

@@ -21,7 +21,7 @@ test('Confluence export page as pdf', async function () {
 
     const apiCalls = await getApiCalls('type=requestSent');
 
-    assert.lengthOf(apiCalls, 4);
+    assert.lengthOf(apiCalls, 5);
     assert.lengthOf(apiCalls.filter(a => a.url.includes('longtask')), 2);
     assert.match(output, /written to.*pdf/);
     // TODO: compare files

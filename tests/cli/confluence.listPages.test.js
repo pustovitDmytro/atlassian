@@ -21,8 +21,8 @@ test('Confluence list pages for default space', async function () {
 
     const apiCalls = await getApiCalls('type=requestSent');
 
-    assert.lengthOf(apiCalls, 2);
-    const [ first, ending ] = apiCalls;
+    assert.lengthOf(apiCalls, 3);
+    const [ , first, ending ] = apiCalls;
 
     assert.equal(first.method, 'GET');
     assert.equal(first.url, '/wiki/rest/api/space/space-a/content');
@@ -52,8 +52,8 @@ test('Negative: specify not existing space', async function () {
 
     const requests = await getApiCalls('type=requestSent');
 
-    assert.lengthOf(requests, 1);
-    assert.deepOwnInclude(requests[0], {
+    assert.lengthOf(requests, 2);
+    assert.deepOwnInclude(requests[1], {
         method : 'GET',
         url    : '/wiki/rest/api/space/space_404/content'
     });
