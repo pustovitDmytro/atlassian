@@ -1,1 +1,1 @@
-tests/mock/fixtures/* linguist-vendored
+tests/mock/fixtures/* linguist-vendored=true
