@@ -1,3 +1,15 @@
+## [1.8.1](https://github.com/pustovitDmytro/atlassian/compare/v1.8.0...v1.8.1) (2021-06-18)
+
+
+### Chore
+
+* adds sonarcloud config ([25d25ca](https://github.com/pustovitDmytro/atlassian/commit/25d25caef8b6ab7ffaf034c70cde50d76097dcf8))
+* adds tests fixtures to linguist-vendored ([5a18488](https://github.com/pustovitDmytro/atlassian/commit/5a18488c46abd663bf70c97ed32a5ddef9bbcb4d))
+
+### Upgrade
+
+* Update dependency inquirer to v8.1.1 ([1a7cc64](https://github.com/pustovitDmytro/atlassian/commit/1a7cc645d659bef648417a520b3034dc6fb08474))
+
 # [1.8.0](https://github.com/pustovitDmytro/atlassian/compare/v1.7.1...v1.8.0) (2021-06-17)
 
 
