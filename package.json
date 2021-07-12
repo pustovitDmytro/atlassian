@@ -99,7 +99,7 @@
   "dependencies": {
     "base-api-client": "1.4.5",
     "chalk": "4.1.1",
-    "dayjs": "1.10.5",
+    "dayjs": "1.10.6",
     "fs-extra": "10.0.0",
     "html-to-text": "8.0.0",
     "inquirer": "8.1.1",
