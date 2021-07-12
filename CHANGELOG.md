@@ -1,3 +1,21 @@
+## [1.8.2](https://github.com/pustovitDmytro/atlassian/compare/v1.8.1...v1.8.2) (2021-07-12)
+
+
+### Chore
+
+* adds sonarcloud config ([c92973d](https://github.com/pustovitDmytro/atlassian/commit/c92973d998ecee059594fbcdd35b9be0c08ffd0b))
+* adds true flag to linguist-vendored option ([7561a61](https://github.com/pustovitDmytro/atlassian/commit/7561a61329d85adbf9f28f5698d162f6e68ae273))
+* correct linguist-vendored glob pattern ([b1be6f3](https://github.com/pustovitDmytro/atlassian/commit/b1be6f3f3dc8aa5784350ebb9f80822946068597))
+* Lock file maintenance ([e8a591a](https://github.com/pustovitDmytro/atlassian/commit/e8a591a2df88cbf3827c10e8aeca25c64f1953eb))
+* Update dependency eslint-plugin-regexp to ^0.13.0 ([a6d2bd0](https://github.com/pustovitDmytro/atlassian/commit/a6d2bd0de2ee5a22c851f3971e6f89a360e8c729))
+* Update dependency eslint-plugin-sonarjs to ^0.9.0 ([842e191](https://github.com/pustovitDmytro/atlassian/commit/842e19105926c4fe2f9f23cbc0e086c0825a71d7))
+* Update dependency eslint-plugin-unicorn to v34 (#32) ([535c045](https://github.com/pustovitDmytro/atlassian/commit/535c04587196047597a25183af6c54b4bde14f59)), closes [#32](https://github.com/pustovitDmytro/atlassian/issues/32)
+* Update dependency husky to v7 ([48bdfbb](https://github.com/pustovitDmytro/atlassian/commit/48bdfbb743e0bd4e0bc5fdbbb0d920e8b02ae9ac))
+
+### Upgrade
+
+* Update dependency dayjs to v1.10.6 ([32a6d8a](https://github.com/pustovitDmytro/atlassian/commit/32a6d8a55af9604943e3148aec06ea471bdd6979))
+
 ## [1.8.1](https://github.com/pustovitDmytro/atlassian/compare/v1.8.0...v1.8.1) (2021-06-18)
 
 
