@@ -1,3 +1,10 @@
+## [1.8.3](https://github.com/pustovitDmytro/atlassian/compare/v1.8.2...v1.8.3) (2021-07-14)
+
+
+### Upgrade
+
+* Update dependency myrmidon to v1.5.8 ([ebc9300](https://github.com/pustovitDmytro/atlassian/commit/ebc93002e48ffcf8b324e7e189c7ebf6663cb3b8))
+
 ## [1.8.2](https://github.com/pustovitDmytro/atlassian/compare/v1.8.1...v1.8.2) (2021-07-12)
 
 
