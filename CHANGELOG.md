@@ -1,3 +1,10 @@
+## [1.8.5](https://github.com/pustovitDmytro/atlassian/compare/v1.8.4...v1.8.5) (2021-07-18)
+
+
+### Upgrade
+
+* Update dependency inquirer to v8.1.2 ([1203932](https://github.com/pustovitDmytro/atlassian/commit/12039325041180ff3e4654b76a1131cfb4d18f1e))
+
 ## [1.8.4](https://github.com/pustovitDmytro/atlassian/compare/v1.8.3...v1.8.4) (2021-07-17)
 
 
