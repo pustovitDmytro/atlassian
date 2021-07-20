@@ -1,3 +1,10 @@
+## [1.8.7](https://github.com/pustovitDmytro/atlassian/compare/v1.8.6...v1.8.7) (2021-07-20)
+
+
+### Fix
+
+* show only current assigned tasks on isMine filter ([302ffda](https://github.com/pustovitDmytro/atlassian/commit/302ffda90dd59d06c57539f79939f37b3cbaf4b8))
+
 ## [1.8.6](https://github.com/pustovitDmytro/atlassian/compare/v1.8.5...v1.8.6) (2021-07-19)
 
 
