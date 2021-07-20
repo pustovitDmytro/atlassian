@@ -32,7 +32,7 @@ test('jira ls -dm', async function () {
 
     assert.notExists(first.params.startAt);
     assert.deepOwnInclude(first.params, {
-        jql : 'assignee was currentuser() AND status IN ("1", "2") AND Sprint in openSprints()'
+        jql : 'assignee = currentuser() AND status IN ("1", "2") AND Sprint in openSprints()'
     });
 
     assert.deepOwnInclude(second, {
@@ -41,7 +41,7 @@ test('jira ls -dm', async function () {
     });
 
     assert.deepOwnInclude(second.params, {
-        jql     : 'assignee was currentuser() AND status IN ("1", "2") AND Sprint in openSprints()',
+        jql     : 'assignee = currentuser() AND status IN ("1", "2") AND Sprint in openSprints()',
         startAt : 2
     }, 'second request for paggination');
 

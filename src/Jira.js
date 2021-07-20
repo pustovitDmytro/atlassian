@@ -72,7 +72,7 @@ export default class JIRA extends Api {
     async list({ isMine, wasMine, stages = [], from, to, search, sprint = [ 'open' ] }, includes) {
         const jql = [];
 
-        if (isMine) jql.push('assignee was currentuser()');
+        if (isMine) jql.push('assignee = currentuser()');
         if (wasMine) jql.push('assignee was currentuser()');
         if (from) jql.push(`updatedDate >= ${from.format('YYYY-MM-DD')}`);
         if (to) jql.push(`created <= ${to.format('YYYY-MM-DD')}`);
