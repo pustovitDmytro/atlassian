@@ -13,7 +13,7 @@ jira and confluence command line interface.
 [![Scrutinizer][scrutinizer-badge]][scrutinizer-url]
 
 [![Dependencies][badge-deps]][npm]
-[![Vulnerabilities][badge-vuln]](https://snyk.io/)
+[![Security][snyk-badge]][snyk-url]
 [![Build Status][tests-badge]][tests-url]
 [![Coverage Status][badge-coverage]][url-coverage]
 
@@ -167,6 +167,9 @@ Make the changes to the code and tests. Then commit to your branch. Be sure to f
 [badge-lic]: https://img.shields.io/github/license/pustovitDmytro/atlassian.svg
 [badge-coverage]: https://coveralls.io/repos/github/pustovitDmytro/atlassian/badge.svg?branch=master
 [url-coverage]: https://coveralls.io/github/pustovitDmytro/atlassian?branch=master
+
+[snyk-badge]: https://snyk-widget.herokuapp.com/badge/npm/atlassian/badge.svg
+[snyk-url]: https://snyk.io/advisor/npm-package/atlassian
 
 [tests-badge]: https://img.shields.io/circleci/build/github/pustovitDmytro/atlassian
 [tests-url]: https://app.circleci.com/pipelines/github/pustovitDmytro/atlassian
