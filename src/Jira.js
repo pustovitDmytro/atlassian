@@ -8,44 +8,12 @@ import { v4 as uuid } from 'uuid';
 import { toArray } from 'myrmidon';
 import dayjs from './date';
 import Api from './JiraApi';
+import { workingDays } from './utils';
 
-const WEEKEND_INDEXES = new Set([ 0, 6 ]); // eslint-disable-line no-magic-numbers
 const LOG_FLOAT_PRECISION = 3;
 const MIN_LOGGED_TIME = 0.25;
 const ROUND_LOGGED_TIME = 0.25;
 
-function workingDays({ include = [], exclude = [], to, from } = {}) {
-    const totalDays = dayjs(to).diff(dayjs(from), 'day');
-    const days = [];
-
-    for (let i = 0; i < totalDays; i++) {
-        const day = dayjs(from)
-            .add(i, 'days')
-            .startOf('day');
-
-        let insert = !WEEKEND_INDEXES.has(day.day());
-
-        if (exclude.length > 0 && exclude.some(d => d.isSame(day, 'day'))) {
-            insert = false;
-        }
-
-        if (to && (day > dayjs(to))) {
-            insert = false;
-        }
-
-        if (from && (day < dayjs(from))) {
-            insert = false;
-        }
-
-        if (include.length > 0 && include.some(d => d.isSame(day, 'day'))) {
-            insert = true;
-        }
-
-        if (insert) days.push(day);
-    }
-
-    return days;
-}
 
 function round(value, step = 1) {
     const inv = 1 / step;
