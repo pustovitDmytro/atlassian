@@ -1,9 +1,11 @@
 import path from 'path';
 import { assert } from 'chai';
 import { v4 as uuid } from 'uuid';
+import fs from 'fs-extra';
 import Test from '../Test';
 import { CLITester, getApiCalls, load } from '../utils';
 import { tmpFolder } from '../constants';
+import sample from '../mock/fixtures/jira/export.log.result.json';
 
 const jiraRunner = load('bin/jira').default;
 
@@ -35,6 +37,10 @@ test('jira export with explicit dates', async function () {
     );
 
     assert.include(output.replace(/\\\\/g, '\\'), outFile);
+    assert.deepEqual(
+        await fs.readJSON(outFile),
+        sample
+    );
 });
 
 after(async function () {

@@ -1,8 +1,11 @@
 import { URL } from 'url';
 import { load } from '../utils';
+
 import ISSUES from './fixtures/jira/issues.json';
 import STATUSES from './fixtures/jira/statuses.json';
 import WORKLOGS from './fixtures/jira/worklogs.json';
+import COMMENTS from './fixtures/jira/comments.json';
+
 import ATLASSIAN_API, {
     axiosResponse,
     axiosError
@@ -37,6 +40,8 @@ class JIRA_MOCK_API extends JIRA_API {
         }
 
         if (opts.url.match('/rest/api/3/issue/.*/comment')) {
+            if (opts.url.match('A-3')) return axiosResponse(COMMENTS);
+
             return axiosResponse({ comments: [] });
         }
 

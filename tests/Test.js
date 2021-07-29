@@ -122,7 +122,14 @@ export default class Test {
             'jira'  : {
                 'isUse'     : true,
                 'isDefault' : true,
-                'statuses'  : { 'dev': [ '1', '2' ], 'test': [ '3' ] }
+                'statuses'  : { 'dev': [ '1', '2' ], 'test': [ '3' ] },
+                'gitlab'    : {
+                    'jiraId'  : '1122',
+                    'gitUser' : [
+                        'dmytroPust',
+                        'Dmytro Pustovit'
+                    ]
+                }
             },
             'confluence' : { 'isUse': false },
             'userId'     : defaultUser.accountId,

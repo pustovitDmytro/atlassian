@@ -1,6 +1,60 @@
 [
     {
+        "id": "A-1",
         "key": "A-1",
+        "changelog": {
+            "startAt": 0,
+            "maxResults": 2,
+            "total": 2,
+            "histories": [
+                {
+                    "id": "110325",
+                    "author": {
+                        "self": "http://akebege.hu/hag/rest/api/3/user?accountId=RDTvXl0pc2o",
+                        "accountId": "RDTvXl0pc2o",
+                        "displayName": "Cody Morales",
+                        "active": false,
+                        "timeZone": "Europe/Helsinki",
+                        "accountType": "atlassian"
+                    },
+                    "created": "2021-03-16T16:32:00.479+0200",
+                    "items": [
+                        {
+                            "field": "status",
+                            "fieldtype": "jira",
+                            "fieldId": "status",
+                            "from": "1",
+                            "fromString": "To Do",
+                            "to": "3",
+                            "toString": "In testing"
+                        }
+                    ]
+                },
+                {
+                    "id": "110333",
+                    "author": {
+                        "self": "http://akebege.hu/hag/rest/api/3/user?accountId=RDTvXl0pc2o",
+                        "accountId": "tkSpTNkuvf5HWyzc",
+                        "displayName": "Rachel Freeman",
+                        "active": false,
+                        "timeZone": "Europe/Helsinki",
+                        "accountType": "atlassian"
+                    },
+                    "created": "2021-03-16T16:32:00.479+0200",
+                    "items": [
+                        {
+                            "field": "status",
+                            "fieldtype": "jira",
+                            "fieldId": "status",
+                            "from": "3",
+                            "fromString": "In testing",
+                            "to": "2",
+                            "toString": "In progress"
+                        }
+                    ]
+                }
+            ]
+        },
         "fields": {
             "project": {
                 "name": "Project A"
@@ -9,12 +63,14 @@
                 "accountId": "Q7xGhfn2w"
             },
             "status": {
-                "name": "In progress"
+                "name": "In progress",
+                "id": "1"
             },
             "summary": "brief tie pool present sharp"
         }
     },
     {
+        "id": "A-2",
         "key": "A-2",
         "fields": {
             "project": {
@@ -23,10 +79,15 @@
             "assignee": {
                 "accountId": "Fey9WYekb"
             },
-            "summary": "symbol stock taste combine identity"
+            "summary": "symbol stock taste combine identity",
+            "status": {
+                "name": "In testing",
+                "id": "3"
+            }
         }
     },
     {
+        "id": "A-3",
         "key": "A-3",
         "fields": {
             "project": {
@@ -35,7 +96,12 @@
             "assignee": {
                 "accountId": "jMVaTJEHe6yCHkR8"
             },
-            "summary": "continent safe area fun especially end various love stick down balloon sense come our whispered old line environment trade"
+            "summary": "continent safe area fun especially end various love stick down balloon sense come our whispered old line environment trade",
+            "status": {
+                "description": "The issue is In progress",
+                "name": "In progress",
+                "id": "2"
+            }
         }
     },
     {
@@ -312,28 +378,30 @@
                 "startAt": 0,
                 "maxResults": 20,
                 "total": 7,
-                "worklogs": [{
-                    "author": {
-                        "accountId": "kolnF6LDaFcjyitER9",
-                        "displayName": "Bruce Fleming"
-                    },
-                    "updateAuthor": {
-                        "accountId": "kolnF6LDaFcjyitER9",
-                        "displayName": "Bruce Fleming"
-                    },
-                    "comment": {
-                        "version": 1,
-                        "type": "doc",
-                        "content": []
-                    },
-                    "created": "2021-03-05T18:17:15.138+0200",
-                    "updated": "2021-04-01T17:21:49.782+0300",
-                    "started": "2021-03-05T17:30:00.000+0200",
-                    "timeSpent": "1h 30m",
-                    "timeSpentSeconds": 5400,
-                    "id": "A-4",
-                    "issueId": "A-4"
-                }]
+                "worklogs": [
+                    {
+                        "author": {
+                            "accountId": "kolnF6LDaFcjyitER9",
+                            "displayName": "Bruce Fleming"
+                        },
+                        "updateAuthor": {
+                            "accountId": "kolnF6LDaFcjyitER9",
+                            "displayName": "Bruce Fleming"
+                        },
+                        "comment": {
+                            "version": 1,
+                            "type": "doc",
+                            "content": []
+                        },
+                        "created": "2021-03-05T18:17:15.138+0200",
+                        "updated": "2021-04-01T17:21:49.782+0300",
+                        "started": "2021-03-05T17:30:00.000+0200",
+                        "timeSpent": "1h 30m",
+                        "timeSpentSeconds": 5400,
+                        "id": "A-4",
+                        "issueId": "A-4"
+                    }
+                ]
             }
         }
     }

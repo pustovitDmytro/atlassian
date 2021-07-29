@@ -142,6 +142,7 @@ export default class JIRA extends Api {
             to      : end,
             wasMine : true
         }, [ 'comments', 'worklogs', 'changelog' ]);
+
         const tasks = allModifiedTasks.filter(issue => this.isInDevelopmentForRange(issue, [ start, end ]));
 
         this.logger.verbose({
@@ -249,8 +250,6 @@ export default class JIRA extends Api {
             const norm = Math.max(round(sum * est / estimateSum, ROUND_LOGGED_TIME), MIN_LOGGED_TIME);
 
             shrinks.push(norm / est);
-            // const currentDayTotal = total[next[0]];
-            // const currentDayLeft = currentDayTotal - next[1];
 
             let leftToAdd = norm;
 
