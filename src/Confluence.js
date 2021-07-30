@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs-extra';
 import { pause } from 'myrmidon';
-import Api from './ConfluenceApi';
+import Api from './api/ConfluenceApi';
 
 const CONFLUENCE_LOG_POLLING_INTERVAL = 500;
 

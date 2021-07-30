@@ -1,8 +1,8 @@
 
 import Api from 'base-api-client';
 import API_ERROR from 'base-api-client/lib/Error';
-import { dumpUser } from './utils/dumpUtils';
-import defaultLogger from './logger';
+import { dumpUser } from '../utils/dumpUtils';
+import defaultLogger from '../logger';
 
 export class ATLASSIAN_ERROR extends API_ERROR {
     get message() {

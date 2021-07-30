@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
 
 import { uniqueIdFilter } from 'myrmidon';
+import { dumpStatus, dumpTask, dumpTransition, dumpComment, dumpWorklog } from '../utils/dumpUtils';
+import dayjs from '../date';
 import Api from './AtlassianApi';
-import { dumpStatus, dumpTask, dumpTransition, dumpComment, dumpWorklog } from './utils/dumpUtils';
-import dayjs from './date';
 
 export default class JiraApi extends Api {
     async getStatuses() {

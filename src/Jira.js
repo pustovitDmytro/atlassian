@@ -7,13 +7,12 @@ import ms from 'ms';
 import { v4 as uuid } from 'uuid';
 import { toArray } from 'myrmidon';
 import dayjs from './date';
-import Api from './JiraApi';
+import Api from './api/JiraApi';
 import { workingDays } from './utils';
 
 const LOG_FLOAT_PRECISION = 3;
 const MIN_LOGGED_TIME = 0.25;
 const ROUND_LOGGED_TIME = 0.25;
-
 
 function round(value, step = 1) {
     const inv = 1 / step;

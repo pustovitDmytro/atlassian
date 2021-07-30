@@ -4,7 +4,7 @@ import { apiLogger } from '../logger';
 import { load } from '../utils';
 import user from './fixtures/atlassian/user.json';
 
-const ATLASSIAN_API = load('AtlassianApi').default;
+const ATLASSIAN_API = load('api/AtlassianApi').default;
 
 export function axiosResponse(data) {
     return { data: JSON.parse(JSON.stringify(data)) };

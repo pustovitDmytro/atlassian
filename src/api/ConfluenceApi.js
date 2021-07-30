@@ -1,6 +1,6 @@
 import { htmlToText } from 'html-to-text';
+import { dumpPage, dumpLongTask } from '../utils/dumpUtils';
 import Api, { ATLASSIAN_ERROR } from './AtlassianApi';
-import { dumpPage, dumpLongTask } from './utils/dumpUtils';
 
 export default class ConfluenceApi extends Api {
     async pagesList(space, opts = {}) {

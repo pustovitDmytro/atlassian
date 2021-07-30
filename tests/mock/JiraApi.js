@@ -11,7 +11,7 @@ import ATLASSIAN_API, {
     axiosError
 } from './AtlassianApi';
 
-const JIRA_API = load('JiraApi').default;
+const JIRA_API = load('api/JiraApi').default;
 
 class JIRA_MOCK_API extends JIRA_API {
     async getStatuses() {

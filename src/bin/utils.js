@@ -3,7 +3,7 @@ import path from 'path';
 import os from 'os';
 import inquirer from 'inquirer';
 import fs from 'fs-extra';
-import Api from '../AtlassianApi';
+import Api from '../api/AtlassianApi';
 import cliLogger from './logger';
 
 const homedir = os.homedir();

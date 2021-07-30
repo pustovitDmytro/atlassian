@@ -11,7 +11,7 @@ import ATLASSIAN_API, {
     axiosError
 } from './AtlassianApi';
 
-const CONFLUENCE_API = load('ConfluenceApi').default;
+const CONFLUENCE_API = load('api/ConfluenceApi').default;
 
 class CONFLUENCE_MOCK_API extends CONFLUENCE_API {
     async _axios(opts) {
