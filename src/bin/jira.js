@@ -3,19 +3,14 @@
 
 import yargs from 'yargs/yargs';
 import { isArray } from 'myrmidon';
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-import utc from 'dayjs/plugin/utc';
 import ms from 'ms';
+import dayjs from '../date';
 import JIRA from '../Jira';
 import packageInfo from '../../package.json';
 import { adfToText } from '../utils/adfUtils';
 import { getCLIRunner } from './utils';
 import init from './init';
 import logger from './logger';
-
-dayjs.extend(utc);
-dayjs.extend(customParseFormat);
 
 const isMain = !module.parent;
 

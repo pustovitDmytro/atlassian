@@ -1,7 +1,13 @@
 import { assert } from 'chai';
 import dayjs from 'dayjs';
 import '../Test';
-import {  load } from '../utils';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import utc from 'dayjs/plugin/utc';
+
+import { load } from '../utils';
+
+dayjs.extend(utc);
+dayjs.extend(customParseFormat);
 
 const { workingDays } = load('utils');
 

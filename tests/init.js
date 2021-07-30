@@ -36,7 +36,9 @@ function preventParentScopeModules() {
 }
 
 function loadEnv() {
-    dotenv.config({ path: path.join(__dirname, './test.env') });
+    dotenv.config({
+        path : path.join(__dirname, './test.env')
+    });
 }
 
 clearRequireCache();

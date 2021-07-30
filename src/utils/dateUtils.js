@@ -9,7 +9,7 @@ export function workingDays({ include = [], exclude = [], to, from }) {
     const days = [];
 
     for (let i = 0; i < totalDays; i++) {
-        const day = dayjs(from).add(i, 'days').startOf('day');
+        const day = dayjs.utc(from).add(i, 'days').startOf('day');
 
         let insert = !WEEKEND_INDEXES.has(day.day());
 
