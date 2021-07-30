@@ -1,3 +1,19 @@
+# [1.9.0](https://github.com/pustovitDmytro/atlassian/compare/v1.8.9...v1.9.0) (2021-07-30)
+
+
+### Chore
+
+* adds coverage for exportLog ([88a1d59](https://github.com/pustovitDmytro/atlassian/commit/88a1d59d25c4d27c30b02a05b0a30726c4d3ca90))
+* fixes package tests ([ec9b90c](https://github.com/pustovitDmytro/atlassian/commit/ec9b90cb752412aa5f132272f1015adb29425201))
+
+### Fix
+
+* include last date into log time handler, fixes #19 ([6a8796a](https://github.com/pustovitDmytro/atlassian/commit/6a8796a405ca19d83162b220b5f397bb1eb00791)), closes [#19](https://github.com/pustovitDmytro/atlassian/issues/19)
+
+### New
+
+* allow include be out of range ([8a3d66c](https://github.com/pustovitDmytro/atlassian/commit/8a3d66c134b5bf5d62f8f65e59eef64a4118faf7))
+
 ## [1.8.9](https://github.com/pustovitDmytro/atlassian/compare/v1.8.8...v1.8.9) (2021-07-29)
 
 
