@@ -8,11 +8,12 @@ import dayjs from '../date';
 import JIRA from '../Jira';
 import packageInfo from '../../package.json';
 import { adfToText } from '../utils/adfUtils';
-import { getCLIRunner } from './utils';
+import { getCLIRunner, commonYargsOpts, minTerminalWidth, commonCommandArgs, getYargsFail } from './utils';
 import init from './init';
 import logger from './logger';
 
 const isMain = !module.parent;
+const  onYargsFail = getYargsFail(isMain, logger);
 
 const cliCommand = getCLIRunner({
     isMain,
@@ -106,36 +107,7 @@ function asDate(date) {
     throw new Error(`Invalid date ${date}`);
 }
 
-const commonOpts = y => y
-    .option('verbose', {
-        describe : 'verbose logs',
-        alias    : [ 'v' ],
-        type     : 'boolean'
-    })
-    .option('profile', {
-        alias    : [ 'p' ],
-        describe : 'specify profile name',
-        type     : 'string'
-    });
-
 export default async function run(cmd) {
-    function onYargsFail(message, error, ygs) {
-        const failMessage = message || error;
-
-        ygs.showHelp('error');
-        if (failMessage) {
-            console.log();
-            logger.error(failMessage.toString());
-            logger.verbose(error?.stack);
-        }
-
-        if (!isMain) throw (failMessage);
-        process.exit(1);
-    }
-
-    const minTerminalWidth =  95;
-    const commonCommandArgs = '[--verbose] [--profile=<profile>]';
-
     const Argv = yargs(cmd)
         .usage('Usage: $0 <command> [options]')
         .command({
@@ -146,7 +118,7 @@ export default async function run(cmd) {
         .command({
             command : `list [--dev] [--mine] [--search=<search>] [--sprint=<sprint>] ${commonCommandArgs}`,
             aliases : [ 'ls' ],
-            builder : y => commonOpts(y)
+            builder : y => commonYargsOpts(y)
                 .option('dev', {
                     alias    : [ 'd', 'development' ],
                     describe : 'filter only tasks in development',
@@ -174,7 +146,7 @@ export default async function run(cmd) {
         .command({
             command : `test ${commonCommandArgs} <issueId...>`,
             desc    : 'Send task(s) to testing',
-            builder : y => commonOpts(y)
+            builder : y => commonYargsOpts(y)
                 .option('issueId', {
                     describe : 'id(s) of task',
                     type     : 'array'
@@ -184,7 +156,7 @@ export default async function run(cmd) {
         .command({
             command : `show ${commonCommandArgs} [--comments] <issueId>`,
             desc    : 'Show task description',
-            builder : y => commonOpts(y)
+            builder : y => commonYargsOpts(y)
                 .option('issueId', {
                     describe : 'id of task',
                     type     : 'string'
@@ -198,7 +170,7 @@ export default async function run(cmd) {
         .command({
             command : `export log ${commonCommandArgs} <start> <end> [--file=<file>]`,
             desc    : 'Export tasks for time tracking',
-            builder : y => commonOpts(y)
+            builder : y => commonYargsOpts(y)
                 .option('start', {
                     describe : `issues with updatedDate >= start will be included ${dateSuffix}`,
                     type     : 'date'
@@ -218,7 +190,7 @@ export default async function run(cmd) {
         .command({
             command : `worklog clear <issueId> ${commonCommandArgs}`,
             desc    : 'Clear worklog',
-            builder : y => commonOpts(y)
+            builder : y => commonYargsOpts(y)
                 .positional('<issueId>', {
                     describe : 'Id of the issue',
                     type     : 'string'
@@ -228,7 +200,7 @@ export default async function run(cmd) {
         .command({
             command : `log ${commonCommandArgs} [--issues=<issues>] [--from=<from>] [--to=<to>] [--include=<include>] [--exclude=<exclude>] [--confirm]`,
             desc    : 'Log time in issues',
-            builder : y => commonOpts(y)
+            builder : y => commonYargsOpts(y)
                 .option('issues', {
                     demandOption : true,
                     describe     : 'path to file with issues',

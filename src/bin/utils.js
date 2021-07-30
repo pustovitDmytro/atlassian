@@ -90,3 +90,39 @@ export function getCLIRunner({ isMain, profile }) {
         };
     };
 }
+
+export const commonYargsOpts = y => y
+    .option('verbose', {
+        describe : 'verbose logs',
+        alias    : [ 'v' ],
+        type     : 'boolean'
+    })
+    .option('debug', {
+        describe : 'debug logs',
+        type     : 'boolean'
+    })
+    .option('profile', {
+        alias    : [ 'p' ],
+        describe : 'specify profile name',
+        type     : 'string'
+    });
+
+export const minTerminalWidth =  95;
+export const commonCommandArgs = '[--verbose] [--debug] [--profile=<profile>]';
+
+export function getYargsFail(isMain, logger) {
+    return function onYargsFail(message, error, ygs) {
+        const failMessage = message || error;
+
+        ygs.showHelp('error');
+        if (failMessage) {
+            console.log();
+            logger.error(failMessage.toString());
+            logger.verbose(error?.stack);
+        }
+
+        if (!isMain) throw (failMessage);
+        process.exit(1);
+    };
+}
+

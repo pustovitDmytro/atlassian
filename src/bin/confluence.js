@@ -6,11 +6,12 @@ import yargs from 'yargs/yargs';
 import { v4 as uuid } from 'uuid';
 import Confluence from '../Confluence';
 import packageInfo from '../../package.json';
-import { getCLIRunner } from './utils';
+import { getCLIRunner, commonYargsOpts, minTerminalWidth, commonCommandArgs, getYargsFail } from './utils';
 import init from './init';
 import logger from './logger';
 
 const isMain = !module.parent;
+const  onYargsFail = getYargsFail(isMain, logger);
 
 const cliCommand = getCLIRunner({
     isMain,
@@ -33,40 +34,7 @@ async function exportPage(args, profile) {
     await confluence.exportPage(args.page, fileName);
 }
 
-const commonOpts = y => y
-    .option('verbose', {
-        describe : 'verbose logs',
-        alias    : [ 'v' ],
-        type     : 'boolean'
-    })
-    .option('debug', {
-        describe : 'debug logs',
-        type     : 'boolean'
-    })
-    .option('profile', {
-        alias    : [ 'p' ],
-        describe : 'specify profile name',
-        type     : 'string'
-    });
-
 export default async function run(cmd) {
-    function onYargsFail(message, error, ygs) {
-        const failMessage = message || error;
-
-        ygs.showHelp('error');
-        if (failMessage) {
-            console.log();
-            logger.error(failMessage.toString());
-            logger.verbose(error?.stack);
-        }
-
-        if (!isMain) throw (failMessage);
-        process.exit(1);
-    }
-
-    const minTerminalWidth =  95;
-    const commonCommandArgs = '[--verbose] [--debug] [--profile=<profile>]';
-
     await  yargs(cmd)
         .usage('Usage: $0 <command> [options]')
         .command({
@@ -76,7 +44,7 @@ export default async function run(cmd) {
         })
         .command({
             command : `pages <space> ${commonCommandArgs}`,
-            builder : y => commonOpts(y)
+            builder : y => commonYargsOpts(y)
                 .option('space', {
                     describe : 'Id of confluence space',
                     type     : 'string'
@@ -87,7 +55,7 @@ export default async function run(cmd) {
         })
         .command({
             command : `export <page> [--path=<path>] ${commonCommandArgs}`,
-            builder : y => commonOpts(y)
+            builder : y => commonYargsOpts(y)
                 .option('page', {
                     describe : 'Id of space page',
                     type     : 'string'
