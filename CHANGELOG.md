@@ -1,3 +1,15 @@
+# [1.10.0](https://github.com/pustovitDmytro/atlassian/compare/v1.9.0...v1.10.0) (2021-08-01)
+
+
+### Chore
+
+* (refactor) moves API clients to api folder ([8576e9a](https://github.com/pustovitDmytro/atlassian/commit/8576e9a10c8ca10918de33c10ee6668a4836801a))
+* (refator) reduce bin dublicates ([687ae09](https://github.com/pustovitDmytro/atlassian/commit/687ae09c8295388c64d164847d0165a50e679998))
+
+### New
+
+* adds actions strategy for adding worklog ([84064b4](https://github.com/pustovitDmytro/atlassian/commit/84064b49bfc0bb39a3e76f270b327ec9b7c39001))
+
 # [1.9.0](https://github.com/pustovitDmytro/atlassian/compare/v1.8.9...v1.9.0) (2021-07-30)
 
 
