@@ -1,6 +1,6 @@
 import { assert } from 'chai';
-import Test from '../Test';
-import { CLITester, getApiCalls, load } from '../utils';
+import Test from '../../Test';
+import { CLITester, getApiCalls, load } from '../../utils';
 
 const jiraRunner = load('bin/jira').default;
 

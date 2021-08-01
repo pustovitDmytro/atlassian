@@ -1,6 +1,6 @@
 #!./node_modules/.bin/babel-node
-/* eslint-disable max-lines-per-function */
 
+/* eslint-disable max-lines-per-function */
 import yargs from 'yargs/yargs';
 import { isArray } from 'myrmidon';
 import ms from 'ms';
@@ -198,7 +198,7 @@ export default async function run(cmd) {
             handler : cliCommand(clearWorklog)
         })
         .command({
-            command : `log ${commonCommandArgs} [--issues=<issues>] [--from=<from>] [--to=<to>] [--include=<include>] [--exclude=<exclude>] [--confirm]`,
+            command : `log ${commonCommandArgs} [--issues=<issues>] [--from=<from>] [--to=<to>] [--include=<include>] [--exclude=<exclude>] [--strategy=<strategy>] [--confirm]`,
             desc    : 'Log time in issues',
             builder : y => commonYargsOpts(y)
                 .option('issues', {
@@ -223,6 +223,11 @@ export default async function run(cmd) {
                     demandOption : true,
                     describe     : `end of worklog period ${dateSuffix}`,
                     type         : 'date'
+                })
+                .option('strategy', {
+                    describe : 'use time tracker strategy',
+                    choices  : [ 'id', 'actions' ],
+                    default  : [ 'id' ]
                 })
                 .option('confirm', {
                     describe : 'actually log time',

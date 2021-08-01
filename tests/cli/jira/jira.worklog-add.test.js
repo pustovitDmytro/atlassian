@@ -2,13 +2,12 @@ import path from 'path';
 import { assert } from 'chai';
 import { v4 as uuid } from 'uuid';
 import fs from 'fs-extra';
-import Test from '../Test';
-import { CLITester, getApiCalls, load } from '../utils';
-import { tmpFolder } from '../constants';
-import exportWorkflow from '../mock/fixtures/jira/export.json';
+import Test from '../../Test';
+import { CLITester, getApiCalls, load } from '../../utils';
+import { tmpFolder } from '../../constants';
+import exportWorkflow from '../../mock/fixtures/jira/export.json';
 
 const jiraRunner = load('bin/jira').default;
-
 const factory = new Test();
 
 suite('cli jira add time to worklog');
@@ -40,6 +39,19 @@ test('jira add time to worklog from file', async function () {
     const [ output ] = await Promise.all([
         tester.test(),
         jiraRunner([ 'log',  '--issues', fullOutFile, '--from', '01 03 20', '--to', '10 03 20', '--confirm' ])
+    ]);
+
+    const apiCalls = await getApiCalls('type=requestSent');
+
+    assert.isNotEmpty(apiCalls);
+    assert.include(output, 'hours for 6 Mar 2020');
+});
+
+test('actions strategy dry-run', async function () {
+    const tester = new CLITester([], factory);
+    const [ output ] = await Promise.all([
+        tester.test(),
+        jiraRunner([ 'log',  '--issues', fullOutFile, '--from', '01 03 20', '--to', '10 03 20', '--strategy', 'actions' ])
     ]);
 
     const apiCalls = await getApiCalls('type=requestSent');
