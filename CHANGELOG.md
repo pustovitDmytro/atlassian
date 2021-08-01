@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/pustovitDmytro/atlassian/compare/v1.10.0...v1.11.0) (2021-08-01)
+
+
+### New
+
+* adds issue number to worklog reports ([779f376](https://github.com/pustovitDmytro/atlassian/commit/779f3766c9b7bff2ba157a32236c3e8d5f7b5023))
+
 # [1.10.0](https://github.com/pustovitDmytro/atlassian/compare/v1.9.0...v1.10.0) (2021-08-01)
 
 
