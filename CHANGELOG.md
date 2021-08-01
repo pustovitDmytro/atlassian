@@ -1,3 +1,10 @@
+## [1.11.1](https://github.com/pustovitDmytro/atlassian/compare/v1.11.0...v1.11.1) (2021-08-01)
+
+
+### Fix
+
+* fixes parts sort on node10 ([a0947e5](https://github.com/pustovitDmytro/atlassian/commit/a0947e54c3564fa465d69dcbf88a4e820247a4e5))
+
 # [1.11.0](https://github.com/pustovitDmytro/atlassian/compare/v1.10.0...v1.11.0) (2021-08-01)
 
 
