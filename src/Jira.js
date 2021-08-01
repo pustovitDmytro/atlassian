@@ -302,7 +302,7 @@ export default class JIRA extends Api {
             const task = tasks[taskIndex];
 
             if (confirm) await this.logTime(task.issue, task.day, task.time);
-            this.logger.info('%s/%s: Logged %s hours for %s', +taskIndex + 1, tasks.length, task.time, task.day);
+            this.logger.info('%s/%s: Logged %s hours for %s [%s]', +taskIndex + 1, tasks.length, task.time, task.day, task.issue);
         }
 
         if (!confirm) this.logger.info('Confirm operation to actually log time');
