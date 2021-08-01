@@ -184,7 +184,11 @@ class ActionsStrategy extends BaseStrategy {
 
     _sortParts(parts) {
         return parts.sort((a, b) => {
-            return dayjs(a.point.date).isBefore(b.point.date) ? -1 : 1;
+            if (!dayjs(a.point.date).isSame(b.point.date)) {
+                return dayjs(a.point.date).isBefore(b.point.date) ? -1 : 1;
+            }
+
+            return a.issueId > b.issueId ? 1 : -1;
         });
     }
 

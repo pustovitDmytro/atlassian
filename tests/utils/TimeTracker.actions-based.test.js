@@ -26,7 +26,7 @@ test('ActionsStrategy: splitParts', async function () {
             'B-1' : [ { 'type': 'transition.fromDev', 'date': '2021-07-26T14:30:39+03:00' } ],
             'B-2' : [ { 'type': 'transition.fromDev', 'date': '2021-07-26T10:00:39+03:00' }, { 'type': 'comment.mine', 'date': '2021-07-30T14:00:44.558+0300' }, { 'type': 'commit.mine', 'date': '2021-07-29T14:00:10.207+0300' } ],
             'B-3' : [],
-            'B-4' : [ { 'type': 'commit.mine', 'date': '2021-07-28T12:00:44.558+0300' }, { 'type': 'comment.mine', 'date': '2021-07-30T14:00:44.558+0300' } ],
+            'B-4' : [ { 'type': 'commit.mine', 'date': '2021-07-28T12:00:44.558+0300' }, { 'type': 'comment.mine', 'date': '2021-07-30T15:00:44.558+0300' } ],
             'B-5' : []
         }
     );
