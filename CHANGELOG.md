@@ -1,3 +1,10 @@
+## [1.11.2](https://github.com/pustovitDmytro/atlassian/compare/v1.11.1...v1.11.2) (2021-08-02)
+
+
+### Upgrade
+
+* Update dependency chalk to v4.1.2 ([9b4fbf3](https://github.com/pustovitDmytro/atlassian/commit/9b4fbf3b4673eecf817507cf1844b6dd65f7baa3))
+
 ## [1.11.1](https://github.com/pustovitDmytro/atlassian/compare/v1.11.0...v1.11.1) (2021-08-01)
 
 
