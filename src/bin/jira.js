@@ -101,7 +101,7 @@ function asDate(date) {
     if (!date) return;
     if (isArray(date)) return date.map(d => asDate(d));
     for (const format of FORMATS) {
-        const dated = dayjs.utc(date, format, true);
+        const dated = dayjs(date, format, true);
 
         if (dated.isValid()) return dated;
     }

@@ -12,7 +12,7 @@ before(async function () {
     await factory.setJIRADefault();
 });
 
-test('jira clear worklog for issue', async function () {
+test('clear worklog for issue', async function () {
     const tester = new CLITester([], factory);
     const [ output ] = await Promise.all([
         tester.test(),

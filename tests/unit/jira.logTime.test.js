@@ -22,10 +22,8 @@ test('Set time to 12:00 by local tz', async function () {
     assert.lengthOf(calls, 1);
     const { data } = calls[0];
 
-    assert.deepEqual(data, {
-        timeSpentSeconds : 60 * 60,
-        started          : '2020-02-01T12:0:0.000+0200'
-    });
+    assert.equal(data.timeSpentSeconds, 60 * 60);
+    assert.include(data.started, '2020-02-01T12:0:0.000');
 });
 
 after(async function () {});

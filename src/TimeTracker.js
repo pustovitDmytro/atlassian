@@ -211,7 +211,7 @@ class ActionsStrategy extends BaseStrategy {
                 const unmatched = parts.filter(p => !p.point);
                 const callendarDensity = this._calcDensity(parts);
                 const [ deepestHole ] = callendarDensity.sort(holeSort);
-                const holeDate = dayjs.utc(deepestHole.date, CALENDAR_FORMAT, true);
+                const holeDate = dayjs(deepestHole.date, CALENDAR_FORMAT, true);
 
                 const [ bestPart ] = unmatched.sort((a, b) => {
                     const order = 1;
