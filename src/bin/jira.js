@@ -77,7 +77,9 @@ async function exportLog(args, profile) {
 async function clearWorklog(args, profile) {
     const jira = new JIRA(profile, logger);
 
-    const cleared = await jira.clearWorklog(args.issueId);
+    const cleared = await jira.clearWorklog(args.issueId, {
+        period : [ args.from, args.to ]
+    });
 
     if (cleared.length === 0) logger.warn('No worklogs found');
     for (const i of cleared) {
@@ -188,13 +190,25 @@ export default async function run(cmd) {
             handler : cliCommand(exportLog)
         })
         .command({
-            command : `worklog clear <issueId> ${commonCommandArgs}`,
+            command : `worklog clear <issueId> [--from=<from>] [--to=<to>] ${commonCommandArgs}`,
             desc    : 'Clear worklog',
             builder : y => commonYargsOpts(y)
+                .option('from', {
+                    demandOption : false,
+                    describe     : `start of worklog period ${dateSuffix}`,
+                    type         : 'date'
+                })
+                .option('to', {
+                    demandOption : false,
+                    describe     : `end of worklog period ${dateSuffix}`,
+                    type         : 'date'
+                })
                 .positional('<issueId>', {
                     describe : 'Id of the issue',
                     type     : 'string'
-                }),
+                })
+                .coerce('from', asDate)
+                .coerce('to', asDate),
             handler : cliCommand(clearWorklog)
         })
         .command({
