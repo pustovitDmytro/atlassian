@@ -14,11 +14,11 @@ import ATLASSIAN_API, {
 const JIRA_API = load('api/JiraApi').default;
 
 class JIRA_MOCK_API extends JIRA_API {
-    async getStatuses() {
-        return STATUSES;
-    }
-
     async _axios(opts) {
+        if (opts.url.match('/rest/api/latest/status')) {
+            return axiosResponse(STATUSES);
+        }
+
         if (opts.url.match('/rest/api/3/search')) {
             const { startAt } = opts.params;
 

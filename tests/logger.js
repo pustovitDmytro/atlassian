@@ -42,3 +42,20 @@ export const apiLogger = createLogger({
         })
     ]
 });
+
+export function createUnitLogger(level =  'verbose') {
+    const traces = [];
+    const logger = createLogger({
+        level,
+        levels,
+        format     : format.combine(...JSONFormats),
+        transports : [
+            new arrayTransport({
+                array : traces,
+                json  : true
+            })
+        ]
+    });
+
+    return { logger, traces };
+}

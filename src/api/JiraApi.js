@@ -137,9 +137,10 @@ export default class JiraApi extends Api {
     }
 
     async logTime(issueID, day, time) {
+        const midDay = 12;
         const res = await this.post(`/rest/api/3/issue/${issueID}/worklog`, {
             'timeSpentSeconds' : time * 60 * 60,
-            'started'          : dayjs(day, 'D MMM YYYY').format('YYYY-MM-DD[T]HH:m:s.sssZZ')
+            'started'          : dayjs(day, 'D MMM YYYY').set('hour', midDay).format('YYYY-MM-DD[T]HH:m:s.sssZZ')
         });
 
         return res.data;

@@ -42,7 +42,7 @@ export class CLITester {
     }
 }
 
-export async function getApiCalls(query, { trace = true } = {}) {
+export async function getApiCalls(query, { trace = true, traces = apiTraces } = {}) {
     const ns = getNamespace('__TEST__');
     const queryItems = [];
 
@@ -55,7 +55,7 @@ export async function getApiCalls(query, { trace = true } = {}) {
     }
 
     const q = `[*${queryItems.join('&')}]`;
-    const res = jsonQuery(q, { data: apiTraces });
+    const res = jsonQuery(q, { data: traces });
 
     return res.value;
 }

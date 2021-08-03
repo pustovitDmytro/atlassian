@@ -34,6 +34,10 @@ export default class AtlassianApi extends Api {
     }
 
     initLogger(logger = defaultLogger) {
+        this.setLogger(logger);
+    }
+
+    setLogger(logger) {
         super.initLogger(logger);
         this.logger = logger;
     }
