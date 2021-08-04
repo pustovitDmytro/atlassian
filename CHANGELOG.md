@@ -1,3 +1,10 @@
+## [1.12.1](https://github.com/pustovitDmytro/atlassian/compare/v1.12.0...v1.12.1) (2021-08-04)
+
+
+### Fix
+
+* move babel-plugin-shebang to devDependencies ([e0357eb](https://github.com/pustovitDmytro/atlassian/commit/e0357eb80378d5e0be07243234b90a18c9d003fb))
+
 # [1.12.0](https://github.com/pustovitDmytro/atlassian/compare/v1.11.2...v1.12.0) (2021-08-03)
 
 
