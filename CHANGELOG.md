@@ -1,3 +1,23 @@
+# [1.12.0](https://github.com/pustovitDmytro/atlassian/compare/v1.11.2...v1.12.0) (2021-08-03)
+
+
+### Chore
+
+* Update devDependencies (non-major) ([33211c3](https://github.com/pustovitDmytro/atlassian/commit/33211c31d168fc187eb028f92eaeeff48ccfd085))
+* Update devDependencies (non-major) to v13 ([6894ad9](https://github.com/pustovitDmytro/atlassian/commit/6894ad97aeac91f931506c360822f81c861e2e83))
+
+### Fix
+
+* use local tz ([2b7b6fe](https://github.com/pustovitDmytro/atlassian/commit/2b7b6fe9dc41506555a4f5a7cfdc8341e99a57c7))
+
+### New
+
+* allow clear worklog by range, closes #29 ([c33146a](https://github.com/pustovitDmytro/atlassian/commit/c33146a1826d69042e10777b2b04e403d9b4ddb7)), closes [#29](https://github.com/pustovitDmytro/atlassian/issues/29)
+
+### Update
+
+* logged time will be 12:00 AM by local tz ([e1e963f](https://github.com/pustovitDmytro/atlassian/commit/e1e963f49b62e8729e71536a34718c991b1935f5))
+
 ## [1.11.2](https://github.com/pustovitDmytro/atlassian/compare/v1.11.1...v1.11.2) (2021-08-02)
 
 
