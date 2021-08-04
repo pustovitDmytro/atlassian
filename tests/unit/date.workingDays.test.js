@@ -2,11 +2,9 @@ import { assert } from 'chai';
 import dayjs from 'dayjs';
 import '../Test';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import utc from 'dayjs/plugin/utc';
 
 import { load } from '../utils';
 
-dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 
 const { workingDays } = load('utils');
@@ -17,8 +15,8 @@ before(async function () {});
 
 test('include end date into range', async function () {
     const res = workingDays({
-        from : dayjs.utc('01.01.2021', 'DD.MM.YYYY', true),
-        to   : dayjs.utc('15.01.2021', 'DD.MM.YYYY', true)
+        from : dayjs('01.01.2021', 'DD.MM.YYYY', true),
+        to   : dayjs('15.01.2021', 'DD.MM.YYYY', true)
     });
 
     assert.deepEqual(res.map(d => d.format('DD MMM (ddd)')), [
@@ -40,10 +38,10 @@ test('include end date into range', async function () {
 
 test('custom include/exclude dates', async function () {
     const res = workingDays({
-        from    : dayjs.utc('01.01.2021', 'DD.MM.YYYY', true),
-        to      : dayjs.utc('15.01.2021', 'DD.MM.YYYY', true),
-        include : [ dayjs.utc('09.01.2021', 'DD.MM.YYYY', true) ],
-        exclude : [ dayjs.utc('07.01.2021', 'DD.MM.YYYY', true) ]
+        from    : dayjs('01.01.2021', 'DD.MM.YYYY', true),
+        to      : dayjs('15.01.2021', 'DD.MM.YYYY', true),
+        include : [ dayjs('09.01.2021', 'DD.MM.YYYY', true) ],
+        exclude : [ dayjs('07.01.2021', 'DD.MM.YYYY', true) ]
     });
 
     assert.deepEqual(res.map(d => d.format('DD MMM (ddd)')), [
@@ -66,9 +64,9 @@ test('custom include/exclude dates', async function () {
 
 test('allow include be out of range', async function () {
     const res = workingDays({
-        from    : dayjs.utc('01.01.2021', 'DD.MM.YYYY', true),
-        to      : dayjs.utc('15.01.2021', 'DD.MM.YYYY', true),
-        include : [ dayjs.utc('20.01.2021', 'DD.MM.YYYY', true) ]
+        from    : dayjs('01.01.2021', 'DD.MM.YYYY', true),
+        to      : dayjs('15.01.2021', 'DD.MM.YYYY', true),
+        include : [ dayjs('20.01.2021', 'DD.MM.YYYY', true) ]
     });
 
     assert.deepEqual(res.map(d => d.format('DD MMM (ddd)')), [
