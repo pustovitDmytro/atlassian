@@ -1,5 +1,6 @@
 import { assert } from 'chai';
 import fs from 'fs-extra';
+import { pause } from 'myrmidon';
 import packageInfo from '../../package.json';
 import Test, { configPath, load } from '../Test';
 import { CLITester } from '../utils';
@@ -13,6 +14,46 @@ suite('cli init');
 
 before(async function () {
     await factory.cleanTmpFolder();
+});
+
+test('Negative: paste invalid host', async function () {
+    const tester = new CLITester([
+        { output: 'Enter atlassian host:', input: 'Zachary Martinez' }
+    ], factory);
+
+
+    const [ output ] = await Promise.all([
+        tester.test(),
+        new Promise((res, rej) => {
+            jiraRunner([ 'init' ]).then(res).catch(rej);
+            pause(1000).then(res).catch(rej);
+        })
+    ]);
+
+    assert.include(output, 'not a valid host');
+    assert.include(output, 'Enter atlassian host');
+    assert.notInclude(output, 'Past your email');
+});
+
+test('Negative: skip email', async function () {
+    const tester = new CLITester([
+        { output: 'Enter atlassian host:', input: 'http://ov.bh/tucukol' },
+        { output: 'Past your email:', input: null }
+    ], factory);
+
+
+    const [ output ] = await Promise.all([
+        tester.test(),
+        new Promise((res, rej) => {
+            jiraRunner([ 'init' ]).then(res).catch(rej);
+            pause(1000).then(res).catch(rej);
+        })
+    ]);
+
+    assert.include(output, 'value is required');
+    assert.include(output, 'Enter atlassian host');
+    assert.include(output, 'Past your email');
+    assert.notInclude(output, 'Past your token:');
 });
 
 test('init profile from jira', async function () {

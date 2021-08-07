@@ -41,6 +41,12 @@ function loadEnv() {
     });
 }
 
+process.on('SIGINT', function () {
+    console.log('SIGINT');
+    // eslint-disable-next-line no-process-exit
+    process.exit(0);
+});
+
 clearRequireCache();
 preventParentScopeModules();
 loadEnv();

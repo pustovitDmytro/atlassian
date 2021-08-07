@@ -23,8 +23,6 @@ export class CLITester {
         inspect.restore();
         const out = inspect.output.join('\n');
 
-        // console.log(out);
-
         if (index === this.dialog.length) {
             this.stdin.restore();
 
@@ -36,9 +34,8 @@ export class CLITester {
         this.stdin.send([ item.input, null ]);
         this.factory.logger.log('info', { item, out, service: 'CLITester' });
         assert.match(out, new RegExp(item.output), JSON.stringify(item));
-        await this.test(index + 1);
 
-        return out;
+        return [ out, await this.test(index + 1) ].join('\n');
     }
 }
 

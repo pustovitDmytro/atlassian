@@ -7,7 +7,7 @@ import { configPath, getDefaultProfile, loadConfig,  untilConfirm } from './util
 
 const JSON_PRETTY_OFFSET = 4;
 
-const validate = (required, regexp, msg = 'invalid value') => value => {
+const validate = (required, regexp, msg) => value => {
     if (!value) return 'value is required';
     if (regexp && !regexp.test(value)) return msg;
 
@@ -26,7 +26,7 @@ async function validateCredentials(token, answers) {
     return true;
 }
 
-const CREDENTIALS_QUESTIONS = (context = {}) => [
+const CREDENTIALS_QUESTIONS = (context) => [
     {
         type     : 'input',
         name     : 'host',
@@ -36,7 +36,7 @@ const CREDENTIALS_QUESTIONS = (context = {}) => [
     {
         type     : 'input',
         name     : 'email',
-        validate : validate(true, /^[\w+.-]+@[\dA-Za-z-]+\.[\d.A-Za-z-]+$/, 'not a valid host'),
+        validate : validate(true, /^[\w+.-]+@[\dA-Za-z-]+\.[\d.A-Za-z-]+$/, 'invalid email'),
         message  : 'Past your email:'
     },
     {
