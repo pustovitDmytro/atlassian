@@ -126,11 +126,9 @@ export default class JiraApi extends Api {
         return res.worklogs.map((element) => dumpWorklog(element));
     }
 
-    async getAttachments(issueId) {
-        const res =  await this.get(`/rest/api/3/issue/${issueId}/attachment`);
-
-        return res.comments.map((element) => dumpComment(element));
-    }
+    // async getAttachments(issueId) {
+    //     await this.get(`/rest/api/3/issue/${issueId}/attachment`);
+    // }
 
     async deleteWorklog(issueId, worklogId) {
         await this.delete(`/rest/api/3/issue/${issueId}/worklog/${worklogId}`);
