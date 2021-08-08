@@ -41,10 +41,13 @@ function loadEnv() {
     });
 }
 
-process.on('SIGINT', function () {
-    console.log('SIGINT');
-    // eslint-disable-next-line no-process-exit
-    process.exit(0);
+// 'SIGKILL'
+[ 'SIGTERM', 'SIGINT', 'SIGQUIT' ].forEach(signal => {
+    process.on(signal, function () {
+        console.log(`${signal} catched`);
+        // eslint-disable-next-line no-process-exit
+        setTimeout(() => process.exit(2), 50);
+    });
 });
 
 clearRequireCache();

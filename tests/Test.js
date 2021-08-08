@@ -4,9 +4,12 @@ import './mock/JiraApi';
 import './mock/ConfluenceApi';
 import { createNamespace } from 'cls-hooked';
 import { v4 as uuid } from 'uuid';
+import dayjs from 'dayjs';
 import { tmpFolder, configPath, logsPath } from './constants';
 import { factoryLogger } from './logger';
 import defaultUser from './mock/fixtures/atlassian/user.json';
+
+console.log('Current time:', dayjs().format());
 
 const context = createNamespace('__TEST__');
 
