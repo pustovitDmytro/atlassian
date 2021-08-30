@@ -1,3 +1,18 @@
+## [1.12.2](https://github.com/pustovitDmytro/atlassian/compare/v1.12.1...v1.12.2) (2021-08-30)
+
+
+### Chore
+
+* adds tests for jira.getIssue ([c995c6f](https://github.com/pustovitDmytro/atlassian/commit/c995c6fc80916b9f8e67a0476ddefcadfee13d77))
+* fixes false positives win failitures ([f6e0f65](https://github.com/pustovitDmytro/atlassian/commit/f6e0f6503fe30a08119469e73eebe0d870b61a58))
+* fixes utc in tests ([e05265c](https://github.com/pustovitDmytro/atlassian/commit/e05265c2c747e7053fcc5fe2d1e0b45ec9daa21e))
+* increase coverage ([881f36f](https://github.com/pustovitDmytro/atlassian/commit/881f36f7bf6613109e0547095fedf938ebb43ca2))
+* use UTC in tests ([0c8e3fa](https://github.com/pustovitDmytro/atlassian/commit/0c8e3faf3f946c14291ab84a6bd3102268d7cbcf))
+
+### Upgrade
+
+* Update dependency yargs to v17.1.1 ([4e1c72a](https://github.com/pustovitDmytro/atlassian/commit/4e1c72a508c18d8a6f00605cd442a666c80dd765))
+
 ## [1.12.1](https://github.com/pustovitDmytro/atlassian/compare/v1.12.0...v1.12.1) (2021-08-04)
 
 
