@@ -51,7 +51,7 @@ class JIRA_MOCK_API extends JIRA_API {
 
         if (opts.url.match('/rest/api/3/issue')) {
             const { pathname } = new URL(opts.url);
-            const id = pathname.split('/').reverse().[0];
+            const id = pathname.split('/').reverse()[0];
             const issue = ISSUES.find(i => i.key === id);
 
             if (!issue) {

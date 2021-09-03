@@ -15,7 +15,7 @@ class Node {
 
 class Visitor {
     hasHandler(type) {
-        return this.[type];
+        return this[type];
     }
 
     accum() {}

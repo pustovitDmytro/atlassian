@@ -1,6 +1,7 @@
 /* eslint-disable import/no-commonjs */
 const { Module } = require('module');
 const path = require('path');
+const readline = require('readline');
 const dotenv = require('dotenv');
 
 function clearRequireCache() {
@@ -41,12 +42,24 @@ function loadEnv() {
     });
 }
 
-// 'SIGKILL'
-[ 'SIGTERM', 'SIGINT', 'SIGQUIT' ].forEach(signal => {
-    process.on(signal, function () {
-        console.log(`${signal} catched`);
+if (process.platform === 'win32') {
+    const rl = readline.createInterface({
+        input  : process.stdin,
+        output : process.stdout
+    });
+
+    rl.on('SIGINT', function () {
+        console.log('readline SIGINT catched');
+
+        process.emit('SIGINT');
+    });
+}
+
+[ 'SIGINT', 'exit' ].forEach(signal => {
+    process.on(signal, function (code) {
+        console.log(`${signal} catched, code:`, code);
         // eslint-disable-next-line no-process-exit
-        setTimeout(() => process.exit(2), 50);
+        process.exit(code);
     });
 });
 

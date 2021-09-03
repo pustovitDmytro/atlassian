@@ -33,7 +33,7 @@ environment:
     job_depends_on: Build
     nodejs_version: 16
 
-  #   # MacOS
+    # MacOS
   
   - job_name: macOS Node.js v.10
     job_group: Tests
@@ -59,7 +59,7 @@ environment:
     job_depends_on: Build
     nodejs_version: 16
 
-  #   # Windows
+    # Windows
 
   - job_name: Windows Node.js v.10
     job_group: Tests
