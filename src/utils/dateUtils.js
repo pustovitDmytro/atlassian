@@ -13,7 +13,7 @@ export function workingDays({ include = [], exclude = [], to, from }) {
 
         let insert = !WEEKEND_INDEXES.has(day.day());
 
-        if (exclude.length > 0 && exclude.some(d => d.isSame(day, 'day'))) {
+        if (exclude.some(d => d.isSame(day, 'day'))) {
             insert = false;
         }
 
@@ -21,7 +21,7 @@ export function workingDays({ include = [], exclude = [], to, from }) {
             insert = false;
         }
 
-        if (include.length > 0 && include.some(d => d.isSame(day, 'day'))) {
+        if (include.some(d => d.isSame(day, 'day'))) {
             insert = true;
         }
 
