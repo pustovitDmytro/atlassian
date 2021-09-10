@@ -1,3 +1,31 @@
+# [1.13.0](https://github.com/pustovitDmytro/atlassian/compare/v1.12.2...v1.13.0) (2021-09-10)
+
+
+### Chore
+
+* adds  a security policy ([ed86aba](https://github.com/pustovitDmytro/atlassian/commit/ed86aba2326eab4d7ef6045913a06b8e80b73dce))
+* adds sponsorships ([35ed8e0](https://github.com/pustovitDmytro/atlassian/commit/35ed8e0ddac94bdc52545be1d533be48495c8d60))
+* cover unexpected errors in API client ([c0c62c7](https://github.com/pustovitDmytro/atlassian/commit/c0c62c7ade89aae82cd4aaf703ccf0bc8730488d))
+* fixes audit [devDependencies] ([d08b1fc](https://github.com/pustovitDmytro/atlassian/commit/d08b1fc075b7eef59c59f755e1ee96748824e415))
+* Lock file maintenance ([fae6cd1](https://github.com/pustovitDmytro/atlassian/commit/fae6cd17edbd4d4c37109998cdaf9e87645ea6c3))
+* Lock file maintenance ([47bfacf](https://github.com/pustovitDmytro/atlassian/commit/47bfacf4e2ffe672c96345481ddfa6811d4d4d69))
+* Lock file maintenance ([19c2389](https://github.com/pustovitDmytro/atlassian/commit/19c23891056afb813e4dde92e7f40f0905896bc9))
+* Lock file maintenance ([2b00aec](https://github.com/pustovitDmytro/atlassian/commit/2b00aec84097bd21c51a43ab785225798753dbae))
+* Lock file maintenance ([dea06c9](https://github.com/pustovitDmytro/atlassian/commit/dea06c9d3e2dd4448e997ee081425b1a765fae87))
+* Lock file maintenance ([e0043d8](https://github.com/pustovitDmytro/atlassian/commit/e0043d89de5576939e701f567ab1a871c2c8a057))
+* Update devDependencies (non-major) ([51200bf](https://github.com/pustovitDmytro/atlassian/commit/51200bf4f3ac07c957f6861fd819319a28710689))
+* Update devDependencies (non-major) ([0c9fb2b](https://github.com/pustovitDmytro/atlassian/commit/0c9fb2bb0030a0ac30f76327bddd61c5ddf404a4))
+* Update devDependencies (non-major) (#48) ([b3f6184](https://github.com/pustovitDmytro/atlassian/commit/b3f6184966d64e7a20a5176ddca6c63d1e275520)), closes [#48](https://github.com/pustovitDmytro/atlassian/issues/48)
+* Update devDependencies (non-major) (major) (#49) ([8168312](https://github.com/pustovitDmytro/atlassian/commit/81683126d487655b0df4411f2012c6b005e0262b)), closes [#49](https://github.com/pustovitDmytro/atlassian/issues/49)
+
+### New
+
+* adds ls alias to confluence ([28208df](https://github.com/pustovitDmytro/atlassian/commit/28208df84a264156c5da4eaed13fe3fb3e0a03c0))
+
+### Upgrade
+
+* package.json & package-lock.json to reduce vulnerabilities [base-api-client] ([20200cc](https://github.com/pustovitDmytro/atlassian/commit/20200cce8c91b4d9730cd83874c244ea09ac277e))
+
 ## [1.12.2](https://github.com/pustovitDmytro/atlassian/compare/v1.12.1...v1.12.2) (2021-08-30)
 
 
