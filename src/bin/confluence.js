@@ -44,6 +44,7 @@ export default async function run(cmd) {
         })
         .command({
             command : `pages <space> ${commonCommandArgs}`,
+            aliases : [ 'ls', 'list' ],
             builder : y => commonYargsOpts(y)
                 .option('space', {
                     describe : 'Id of confluence space',
