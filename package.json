@@ -94,7 +94,7 @@
     "winston-array-transport": "^1.1.5"
   },
   "dependencies": {
-    "base-api-client": "1.5.2",
+    "base-api-client": "1.5.3",
     "chalk": "4.1.2",
     "dayjs": "1.10.6",
     "fs-extra": "10.0.0",
