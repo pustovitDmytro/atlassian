@@ -54,6 +54,10 @@ class JIRA_MOCK_API extends JIRA_API {
             const id = pathname.split('/').reverse()[0];
             const issue = ISSUES.find(i => i.key === id);
 
+            if (id === 'unexpected') {
+                throw new Error('TypeError: Cannot set property key of undefined');
+            }
+
             if (!issue) {
                 throw axiosError(opts, {
                     message : 'Request failed with status code 404'

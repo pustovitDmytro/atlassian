@@ -11,6 +11,18 @@ suite('JIRA: getIssue');
 
 before(async function () {});
 
+test('Negative: unexpected (non-http) error in API', async function () {
+    const jira = new JIRA(factory.jira_default);
+
+    jira.setLogger(logger);
+
+    await jira.getIssue('unexpected')
+        .then(() => assert.fail('request must fail'))
+        .catch(error => {
+            assert.equal(error.toString(), 'Error: TypeError: Cannot set property key of undefined');
+        });
+});
+
 test('getIssue without includes', async function () {
     const jira = new JIRA(factory.jira_default);
 
