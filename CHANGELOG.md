@@ -1,3 +1,10 @@
+## [1.13.1](https://github.com/pustovitDmytro/atlassian/compare/v1.13.0...v1.13.1) (2021-09-13)
+
+
+### Upgrade
+
+* Update dependency dayjs to v1.10.7 ([a1dfb23](https://github.com/pustovitDmytro/atlassian/commit/a1dfb23ae19be29f25e22df9e8af821bcfac808d))
+
 # [1.13.0](https://github.com/pustovitDmytro/atlassian/compare/v1.12.2...v1.13.0) (2021-09-10)
 
 
