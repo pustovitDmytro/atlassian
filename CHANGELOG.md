@@ -1,3 +1,18 @@
+## [1.13.2](https://github.com/pustovitDmytro/atlassian/compare/v1.13.1...v1.13.2) (2021-09-29)
+
+
+### Chore
+
+* Lock file maintenance ([6db3b8d](https://github.com/pustovitDmytro/atlassian/commit/6db3b8df6b857f75b4633fa1bac8927d8a88d81e))
+* Lock file maintenance ([4008817](https://github.com/pustovitDmytro/atlassian/commit/400881733f738c65931099b815e861c7b7f6545e))
+* Lock file maintenance ([9d39e4f](https://github.com/pustovitDmytro/atlassian/commit/9d39e4f71c23699d63430be3c9b0e9d799d2670f))
+* Lock file maintenance ([75026aa](https://github.com/pustovitDmytro/atlassian/commit/75026aa1776a0f976f084fbab3044ff998075651))
+
+### Upgrade
+
+* Update dependency inquirer to v8.1.5 ([10537d5](https://github.com/pustovitDmytro/atlassian/commit/10537d54d197f6f2a243f9061e89433b9981ad1d))
+* Update dependency yargs to v17.2.1 ([eef60a4](https://github.com/pustovitDmytro/atlassian/commit/eef60a44bdbbae0d4b4ba86f3625c8d4a2d45753))
+
 ## [1.13.1](https://github.com/pustovitDmytro/atlassian/compare/v1.13.0...v1.13.1) (2021-09-13)
 
 
