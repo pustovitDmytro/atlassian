@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 import { uniqueIdFilter } from 'myrmidon';
-import { dumpStatus, dumpTask, dumpTransition, dumpComment, dumpWorklog } from '../utils/dumpUtils';
+import { dumpStatus, dumpTask, dumpTransition, dumpComment, dumpWorklog, dumpSprint } from '../utils/dumpUtils';
 import dayjs from '../date';
 import Api from './AtlassianApi';
 
@@ -10,6 +10,34 @@ export default class JiraApi extends Api {
         const res = await this.get('/rest/api/latest/status/');
 
         return res.map(s => dumpStatus(s));
+    }
+
+    async getAllSprints() {
+        const boards = await this.get('/rest/agile/1.0/board');
+        const sprints = [];
+
+        await Promise.all(boards.values.map(async board => {
+            sprints.push(...await this.getSprints(board));
+        }));
+
+        return sprints;
+    }
+
+    async getSprints(board, { startAt = 0, maxResults = 50, ...params } = {}) {
+        const { isLast, values } = await this.get(`/rest/agile/1.0/board/${board.id}/sprint`, { startAt, maxResults, ...params });
+        const nextStart = startAt + values.length;
+
+        if (!isLast) {
+            const next = await this.getSprints(board, {
+                ...params,
+                startAt : nextStart
+            });
+
+            return [ ...values.map(v => dumpSprint(v)), ...next ]
+                .filter((element, index, array) => uniqueIdFilter(element, index, array));
+        }
+
+        return values.map(v => dumpSprint(v));
     }
 
     async getIssues(params, includes = []) {

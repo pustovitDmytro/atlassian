@@ -63,6 +63,21 @@ export function dumpUser(user) {
     };
 }
 
+export function dumpSprint(s) {
+    return {
+        id    : s.id,
+        state : s.state, // closed, future, active
+        name  : s.name,
+        goal  : s.goal,
+
+        startDate    : s.startDate,
+        endDate      : s.endDate,
+        completeDate : s.completeDate
+
+    };
+}
+
+
 export function dumpStatus(s) {
     return {
         id   : s.id,

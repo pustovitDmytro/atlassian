@@ -45,6 +45,10 @@ export default class JIRA extends Api {
         }
 
         if (!sprint.includes('all') && sprint.includes('open')) jql.push('Sprint in openSprints()');
+        const sprintIds = sprint.filter(s => ![ 'open', 'all' ].includes(s));
+
+        if (sprintIds.length > 0) jql.push(`Sprint IN (${sprintIds.join(', ')})`);
+
         if (search) jql.push(`summary ~ "${search}"`);
         if (id) jql.push(`id IN (${formatJQLList(id)})`);
 
@@ -128,11 +132,26 @@ export default class JIRA extends Api {
             .map(d => format ? d.format(format) : d);
     }
 
+    async getSprintsForPeriod(start, end) {
+        const sprints = await this.getAllSprints();
+
+        return sprints.filter(s => {
+            if (s.state === 'active') return true;
+            if (s.state === 'closed') {
+                return dayjs(s.completeDate).isBetween(start, end);
+            }
+
+            return false;
+        });
+    }
+
     async exportLog([ start, end ], file = path.join(os.tmpdir(), `${uuid()}.json`)) {
+        const sprints = await this.getSprintsForPeriod(start, end);
         const allModifiedTasks = await this.list({
             from    : start,
             to      : end,
-            wasMine : true
+            wasMine : true,
+            sprint  : sprints.map(s => s.id)
         }, [ 'comments', 'worklogs', 'changelog' ]);
 
         const tasks = allModifiedTasks.filter(issue => this.isInDevelopmentForRange(issue, [ start, end ]));
