@@ -1,3 +1,44 @@
+# [1.14.0](https://github.com/pustovitDmytro/atlassian/compare/v1.13.2...v1.14.0) (2022-01-22)
+
+
+### Chore
+
+* (ci) fix gitleaks version ([badd1c1](https://github.com/pustovitDmytro/atlassian/commit/badd1c1f473e4b3b3cac41996ce3b2212281b131))
+* adds circle-ci conditions ([5a40980](https://github.com/pustovitDmytro/atlassian/commit/5a4098019c0450476f15cee293424d0ddcfb298c))
+* adds telegra.ph release notes ([aa811a5](https://github.com/pustovitDmytro/atlassian/commit/aa811a517e60cfdf194191a4f7629773e3b4ccc8))
+* adds whitesorce bolt bot ([0888eee](https://github.com/pustovitDmytro/atlassian/commit/0888eee49d490c03a2d773287f1270e8a617d8ca))
+* calc fossa results in cirrus ([b2b48c1](https://github.com/pustovitDmytro/atlassian/commit/b2b48c149377cdfc6395e35b44d523ad73c370f7))
+* change renovate schedule ([b983eab](https://github.com/pustovitDmytro/atlassian/commit/b983eab7c9bf231bcd38b95d74adbd2e0b519d7c))
+* drop semantic-release preinstalled plugins ([69b1950](https://github.com/pustovitDmytro/atlassian/commit/69b19507f23c5ca54a97d596ac3c35329d9945d8))
+* fixes audit ([14597ff](https://github.com/pustovitDmytro/atlassian/commit/14597ffa2ac256fdd24954569623ae9cf96e3bce))
+* fixes later schedule ([a0cfb5c](https://github.com/pustovitDmytro/atlassian/commit/a0cfb5cbb1ca216b4a58bb8c644dc20359ae21b3))
+* fixes some npm audit vulnerabilities ([9330c38](https://github.com/pustovitDmytro/atlassian/commit/9330c3847084d753e1c1969bc96f109c67e7e847))
+* fixes some npm audit vulnerabilities ([f7a14d5](https://github.com/pustovitDmytro/atlassian/commit/f7a14d5d00fb5aa6f2e5a02069958114562ba185))
+* fixes tests ([5bc09b2](https://github.com/pustovitDmytro/atlassian/commit/5bc09b2a5dd907938ce824d427e35c48ee6fb4c5))
+* integrate lalaps ([dd4f238](https://github.com/pustovitDmytro/atlassian/commit/dd4f2389b10a309482770bd12e73191ef6b89f6f))
+* Lock file maintenance ([29fe760](https://github.com/pustovitDmytro/atlassian/commit/29fe76014232a02ab882c7b0f64c87138cc1999a))
+* Lock file maintenance ([9892cc5](https://github.com/pustovitDmytro/atlassian/commit/9892cc51c4e0d99e41ce06568482891d30c78e70))
+* Lock file maintenance ([98e62b3](https://github.com/pustovitDmytro/atlassian/commit/98e62b366b572d5154a2b409bda203c4ffa7d62e))
+* Lock file maintenance ([7af4484](https://github.com/pustovitDmytro/atlassian/commit/7af448441cafbebb04557cf657a21e7e9faab355))
+* Lock file maintenance ([1ffc991](https://github.com/pustovitDmytro/atlassian/commit/1ffc991529c6f05ea965e9217c215fad4fab2e59))
+* replace appveyor to actions ([13aff75](https://github.com/pustovitDmytro/atlassian/commit/13aff75ca141f20997a700b138db61836cff06b5))
+* test-security in separete ci job ([a4bd846](https://github.com/pustovitDmytro/atlassian/commit/a4bd846eefbe854e0b2a83adc80d2b4ab3aeedd5))
+* test-security in separete ci job ([9559dbc](https://github.com/pustovitDmytro/atlassian/commit/9559dbc6afc7c3a3b269d18fea63018dbe8fb79c))
+* update deps badge ([0836169](https://github.com/pustovitDmytro/atlassian/commit/0836169878ed6749127174f56cde02b91fdd69cb))
+* Update devDependencies (non-major) ([609151a](https://github.com/pustovitDmytro/atlassian/commit/609151afd6bc58ff56003e33d85160cff9635b27))
+* Update devDependencies (non-major) ([2fd0328](https://github.com/pustovitDmytro/atlassian/commit/2fd0328ad97f44a4efe6d417fad5c05414bb5178))
+* Update devDependencies (non-major) ([c532c19](https://github.com/pustovitDmytro/atlassian/commit/c532c1930b9cdf46a9d3feb494d3e1592e9d0d37))
+* Update devDependencies (non-major) ([5b1a6c3](https://github.com/pustovitDmytro/atlassian/commit/5b1a6c36373cd90d68dbb19cea6b59b3985f1468))
+* upgrade semantic-release to v.19 [security] ([0888454](https://github.com/pustovitDmytro/atlassian/commit/08884548499894d6a5298a1be3d107defce5c419))
+
+### Docs
+
+* update year in license ([e2dec02](https://github.com/pustovitDmytro/atlassian/commit/e2dec024ae5885cd6c4a41d68b3a2ad910a2c7ea))
+
+### New
+
+* filter sprints on export log. #65 ([6bfcbbb](https://github.com/pustovitDmytro/atlassian/commit/6bfcbbbdd8eea571c08a8c17ce86acce424d6a18)), closes [#65](https://github.com/pustovitDmytro/atlassian/issues/65)
+
 ## [1.13.2](https://github.com/pustovitDmytro/atlassian/compare/v1.13.1...v1.13.2) (2021-09-29)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "atlassian",
-  "version": "1.13.2",
+  "version": "1.14.0",
   "description": "atlassian command line interface",
   "main": "./lib",
   "scripts": {
