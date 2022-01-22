@@ -33,7 +33,7 @@ test('jira export with explicit dates', async function () {
     assert.exists(searchCall);
     assert.equal(
         searchCall.params.jql,
-        'assignee was currentuser() AND updatedDate >= 1900-01-01 AND created <= 2100-01-01 AND Sprint in openSprints()'
+        'assignee was currentuser() AND updatedDate >= 1900-01-01 AND created <= 2100-01-01 AND Sprint IN (s1, s2, s3)'
     );
 
     assert.include(output.replace(/\\\\/g, '\\'), outFile);

@@ -5,6 +5,7 @@ import ISSUES from './fixtures/jira/issues.json';
 import STATUSES from './fixtures/jira/statuses.json';
 import WORKLOGS from './fixtures/jira/worklogs.json';
 import COMMENTS from './fixtures/jira/comments.json';
+import SPRINTS from './fixtures/jira/sprints.json';
 
 import ATLASSIAN_API, {
     axiosResponse,
@@ -14,9 +15,24 @@ import ATLASSIAN_API, {
 const JIRA_API = load('api/JiraApi').default;
 
 class JIRA_MOCK_API extends JIRA_API {
+    // eslint-disable-next-line sonarjs/cognitive-complexity
     async _axios(opts) {
         if (opts.url.match('/rest/api/latest/status')) {
             return axiosResponse(STATUSES);
+        }
+
+        if (opts.url.match('/rest/agile/1.0/board/b1/sprint')) {
+            const { startAt } = opts.params;
+
+            if (startAt) {
+                return axiosResponse({ values: SPRINTS.slice(1), isLast: true });
+            }
+
+            return axiosResponse({ values: SPRINTS.slice(0, 1), isLast: false });
+        }
+
+        if (opts.url.match('/rest/agile/1.0/board')) {
+            return axiosResponse({ values: [ { id: 'b1' } ] });
         }
 
         if (opts.url.match('/rest/api/3/search')) {
