@@ -28,7 +28,7 @@ jira and confluence command line interface.
   - [Contribute](#contribute)
 
 ## Requirements
-[![Platform Status][appveyor-badge]][appveyor-url]
+[![Platform Status][node-ver-test-badge]][node-ver-test-url]
 
 To use library you need to have [node](https://nodejs.org) and [npm](https://www.npmjs.com) installed in your machine:
 
@@ -37,7 +37,8 @@ To use library you need to have [node](https://nodejs.org) and [npm](https://www
 
 **Note:** if you received yargs error ```"yargs parser supports a minimum Node.js version of x"```, try to set evironment variable ```YARGS_MIN_NODE_VERSION=10```.
 
-Package is [continuously tested][appveyor-url] on darwin, linux, win32 platforms. All active and maintenance [LTS](https://nodejs.org/en/about/releases/) node releases are supported.
+Package is [continuously tested][node-ver-test-url] on darwin, linux and win32 platforms. All active and maintenance [LTS](https://nodejs.org/en/about/releases/) node releases are supported.
+
 ## Installation
 
 To install the library run the following command
@@ -161,7 +162,7 @@ Make the changes to the code and tests. Then commit to your branch. Be sure to f
 [npm]: https://www.npmjs.com/package/atlassian
 [github]: https://github.com/pustovitDmytro/atlassian
 [coveralls]: https://coveralls.io/github/pustovitDmytro/atlassian?branch=master
-[badge-deps]: https://img.shields.io/david/pustovitDmytro/atlassian.svg
+[badge-deps]: https://img.shields.io/librariesio/release/npm/atlassian.svg
 [badge-vuln]: https://img.shields.io/snyk/vulnerabilities/npm/atlassian.svg?style=popout
 [badge-vers]: https://img.shields.io/npm/v/atlassian.svg
 [badge-lic]: https://img.shields.io/github/license/pustovitDmytro/atlassian.svg
@@ -198,8 +199,8 @@ Make the changes to the code and tests. Then commit to your branch. Be sure to f
 [npm-size-badge]: https://img.shields.io/bundlephobia/min/atlassian
 [npm-size-url]: https://bundlephobia.com/result?p=atlassian
 
-[appveyor-badge]: https://ci.appveyor.com/api/projects/status/ux42y068m7c2yl2p/branch/master?svg=true
-[appveyor-url]: https://ci.appveyor.com/project/pustovitDmytro/atlassian/branch/master
+[node-ver-test-badge]: https://github.com/pustovitDmytro/atlassian/actions/workflows/npt.yml/badge.svg?branch=master
+[node-ver-test-url]: https://github.com/pustovitDmytro/atlassian/actions?query=workflow%3A%22Node.js+versions%22
 
 [fossa-badge]: https://app.fossa.com/api/projects/custom%2B24828%2Fatlassian.svg?type=shield
 [fossa-url]: https://app.fossa.com/projects/custom%2B24828%2Fatlassian?ref=badge_shield
