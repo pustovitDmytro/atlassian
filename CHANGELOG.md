@@ -1,3 +1,11 @@
+## [1.14.3](https://github.com/pustovitDmytro/atlassian/compare/v1.14.2...v1.14.3) (2022-01-24)
+
+
+### Upgrade
+
+* Update dependency winston to v3.4.0 (#71) ([7b9c610](https://github.com/pustovitDmytro/atlassian/commit/7b9c61031e14eeb9d6e052cd44a4c42f728da5a7)), closes [#71](https://github.com/pustovitDmytro/atlassian/issues/71)
+* Update dependency yargs to v17.3.1 (#72) ([039c634](https://github.com/pustovitDmytro/atlassian/commit/039c63409cd86d6997eab8549614bae08c092c54)), closes [#72](https://github.com/pustovitDmytro/atlassian/issues/72)
+
 ## [1.14.2](https://github.com/pustovitDmytro/atlassian/compare/v1.14.1...v1.14.2) (2022-01-24)
 
 
