@@ -1,3 +1,15 @@
+## [1.14.4](https://github.com/pustovitDmytro/atlassian/compare/v1.14.3...v1.14.4) (2022-01-31)
+
+
+### Chore
+
+* fixes some npm audit vulnerabilities (#73) ([a861a22](https://github.com/pustovitDmytro/atlassian/commit/a861a22c0961d666363730ba4173a0d2359d7141)), closes [#73](https://github.com/pustovitDmytro/atlassian/issues/73)
+* fixes some npm audit vulnerabilities (#79) ([447b986](https://github.com/pustovitDmytro/atlassian/commit/447b98641473272323d9ec8f37d811ccb85e3c47)), closes [#79](https://github.com/pustovitDmytro/atlassian/issues/79)
+
+### Upgrade
+
+* Update pustovitDmytro's packages (#76) ([168dda9](https://github.com/pustovitDmytro/atlassian/commit/168dda9a8312322bdd2df2424ea1cd2c777fb7e3)), closes [#76](https://github.com/pustovitDmytro/atlassian/issues/76)
+
 ## [1.14.3](https://github.com/pustovitDmytro/atlassian/compare/v1.14.2...v1.14.3) (2022-01-24)
 
 
