@@ -1,3 +1,10 @@
+## [1.14.6](https://github.com/pustovitDmytro/atlassian/compare/v1.14.5...v1.14.6) (2022-02-04)
+
+
+### Upgrade
+
+* Update dependency winston to v3.5.1 (#82) ([4808990](https://github.com/pustovitDmytro/atlassian/commit/48089905a499ba1342f2d596b412649823a7dd6b)), closes [#82](https://github.com/pustovitDmytro/atlassian/issues/82)
+
 ## [1.14.5](https://github.com/pustovitDmytro/atlassian/compare/v1.14.4...v1.14.5) (2022-01-31)
 
 
