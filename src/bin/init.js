@@ -30,7 +30,7 @@ const CREDENTIALS_QUESTIONS = (context) => [
     {
         type     : 'input',
         name     : 'host',
-        validate : validate(true, /https?:\/\/(www\.)?[\w#%+.:=@\\~-]{1,256}\.[\d()A-Za-z]{1,6}\b([\w#%&()+./:=?@\\~-]*)/, 'not a valid host'),
+        validate : validate(true, /https?:\/\/(?:www\.)?[\w#%+.:=@\\~-]{1,256}\.[\d()A-Za-z]{1,6}\b[\w#%&()+./:=?@\\~-]*/, 'not a valid host'),
         message  : 'Enter atlassian host:'
     },
     {
