@@ -1,3 +1,27 @@
+# [1.15.0](https://github.com/pustovitDmytro/atlassian/compare/v1.14.6...v1.15.0) (2022-10-11)
+
+
+### Chore
+
+* Lock file maintenance (#61) ([6e91244](https://github.com/pustovitDmytro/atlassian/commit/6e91244ba6f5baf6b4c1938b69007231f6c9f9a1)), closes [#61](https://github.com/pustovitDmytro/atlassian/issues/61)
+* Update devDependencies (non-major) (#66) ([120d8fa](https://github.com/pustovitDmytro/atlassian/commit/120d8fac4b6ad7d1aae41a6ab3aa31a55aafa058)), closes [#66](https://github.com/pustovitDmytro/atlassian/issues/66)
+
+### Docs
+
+* help Ukraine 🇺🇦 ([47d86ba](https://github.com/pustovitDmytro/atlassian/commit/47d86ba955edb4235c129b052cb7700ff010c694))
+
+### Fix
+
+* fixes audit advisories ([8872591](https://github.com/pustovitDmytro/atlassian/commit/8872591a4c29637100986345d4034c33158f6441))
+
+### New
+
+* adds cli for statuses ([a9b492b](https://github.com/pustovitDmytro/atlassian/commit/a9b492bbdbcf1295abd8dc397e187df7dccb74ef))
+
+### Upgrade
+
+* Update dependency winston to v3.6.0 (#87) ([dd0a7d4](https://github.com/pustovitDmytro/atlassian/commit/dd0a7d4da9a8000bf0c587c216284c759a38b136)), closes [#87](https://github.com/pustovitDmytro/atlassian/issues/87)
+
 ## [1.14.6](https://github.com/pustovitDmytro/atlassian/compare/v1.14.5...v1.14.6) (2022-02-04)
 
 
