@@ -1,5 +1,5 @@
 [
-    { "id": "1", "name": "Reopen" },
-    { "id": "2", "name": "In progress" },
-    { "id": "3", "name": "In testing" }
+    { "id": "1", "name": "Reopen", "statusCategory": {"name": "category"} },
+    { "id": "2", "name": "In progress", "statusCategory": {"name": "category"} },
+    { "id": "3", "name": "In testing", "statusCategory": {"name": "category"} }
 ]

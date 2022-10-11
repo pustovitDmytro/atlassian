@@ -87,6 +87,16 @@ async function clearWorklog(args, profile) {
     }
 }
 
+async function getStatuses(args, profile) {
+    const jira = new JIRA(profile, logger);
+
+    const statuses = await jira.loadStatuses();
+
+    for (const stat of statuses) {
+        logger.info(`%s: ${stat.name} (${stat.category})`, stat.id);
+    }
+}
+
 async function logIssues(args, profile) {
     const jira = new JIRA(profile, logger);
 
@@ -253,6 +263,11 @@ export default async function run(cmd) {
                 .coerce('include', asDate)
                 .coerce('exclude', asDate),
             handler : cliCommand(logIssues)
+        })
+        .command({
+            command : `statuses ${commonCommandArgs}`,
+            desc    : 'List jira configuration statuses',
+            handler : cliCommand(getStatuses)
         })
         .help('h')
         .alias('h', 'help')

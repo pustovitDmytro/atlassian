@@ -80,8 +80,10 @@ export function dumpSprint(s) {
 
 export function dumpStatus(s) {
     return {
-        id   : s.id,
-        name : s.name
+        id       : s.id,
+        name     : s.name,
+        // eslint-disable-next-line censor/no-swear
+        category : s.statusCategory.name
     };
 }
 

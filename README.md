@@ -126,6 +126,16 @@ Options:
   -v, --verbose  verbose logs                                                         [boolean]
   -p, --profile  specify profile name                                                  [string]
 ```
+### Print jira statuses
+```
+jira.js statuses [--verbose] [--profile=<profile>]
+
+List jira configuration statuses
+
+Options:
+  -h, --help     Show help                                                            [boolean]
+      --version  Show version number                                                  [boolean]
+```
 
 ## Confluence cli
 
