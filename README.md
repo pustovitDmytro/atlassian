@@ -8,8 +8,6 @@ jira and confluence command line interface.
 [![CodeFactor][codefactor-badge]][codefactor-url]
 [![SonarCloud][sonarcloud-badge]][sonarcloud-url]
 [![Codacy][codacy-badge]][codacy-url]
-[![Total alerts][lgtm-alerts-badge]][lgtm-alerts-url]
-[![Language grade][lgtm-lg-badge]][lgtm-lg-url]
 [![Scrutinizer][scrutinizer-badge]][scrutinizer-url]
 
 [![Dependencies][badge-deps]][npm]
@@ -21,13 +19,12 @@ jira and confluence command line interface.
 [![FOSSA][fossa-badge]][fossa-url]
 [![License][badge-lic]][github]
 
-# 🇺🇦 Help Ukraine
+## 🇺🇦 Help Ukraine
 I woke up on my 26th birthday at 5 am from the blows of russian missiles. They attacked the city of Kyiv, where I live, as well as the cities in which my family and friends live. Now my country is a war zone. 
 
-We fight for democratic values, for freedom, for our future! 
-I am stopping any support of my packages by the time until all russians leave my country on trucks or in boxes. 
+We fight for democratic values, freedom, for our future! Once again Ukrainians have to stand against evil, terror, against genocide. The outcome of this war will determine what path human history is taking from now on.
 
-💛💙 Help Ukraine! We need your support! There are dozen ways to help us, just do it!
+💛💙  Help Ukraine! We need your support! There are [dozen ways][ukr-link] to help us, just do it!
 
 ## Table of Contents
   - [Requirements](#requirements)
@@ -201,12 +198,6 @@ Make the changes to the code and tests. Then commit to your branch. Be sure to f
 [scrutinizer-badge]: https://scrutinizer-ci.com/g/pustovitDmytro/atlassian/badges/quality-score.png?b=master
 [scrutinizer-url]: https://scrutinizer-ci.com/g/pustovitDmytro/atlassian/?branch=master
 
-[lgtm-lg-badge]: https://img.shields.io/lgtm/grade/javascript/g/pustovitDmytro/atlassian.svg?logo=lgtm&logoWidth=18
-[lgtm-lg-url]: https://lgtm.com/projects/g/pustovitDmytro/atlassian/context:javascript
-
-[lgtm-alerts-badge]: https://img.shields.io/lgtm/alerts/g/pustovitDmytro/atlassian.svg?logo=lgtm&logoWidth=18
-[lgtm-alerts-url]: https://lgtm.com/projects/g/pustovitDmytro/atlassian/alerts/
-
 [codacy-badge]: https://app.codacy.com/project/badge/Grade/8667aa23afaa4725854f098c4b5e8890
 [codacy-url]: https://www.codacy.com/gh/pustovitDmytro/atlassian/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pustovitDmytro/atlassian&amp;utm_campaign=Badge_Grade
 
@@ -223,3 +214,5 @@ Make the changes to the code and tests. Then commit to your branch. Be sure to f
 [fossa-badge]: https://app.fossa.com/api/projects/custom%2B24828%2Fatlassian.svg?type=shield
 [fossa-url]: https://app.fossa.com/projects/custom%2B24828%2Fatlassian?ref=badge_shield
 
+[ukr-badge]: https://img.shields.io/badge/made_in-ukraine-ffd700.svg?labelColor=0057b7
+[ukr-link]: https://war.ukraine.ua
