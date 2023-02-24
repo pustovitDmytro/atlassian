@@ -1,3 +1,4 @@
+![Logo](.docs/logo_250.png "atlassian")
 # atlassian
 jira and confluence command line interface.
 
@@ -56,12 +57,23 @@ To install the library run the following command
 
 ## Jira cli
 
+### Init
+```
+jira init
+
+Add attlasian profile
+
+Options:
+  -h, --help     Show help                                             [boolean]
+      --version  Show version number                                   [boolean]
+```
+
 ### List Tasks
 
 Generally, ```jira list``` command can help to list all tasks
 
 ```
-jira.js list [--dev] [--mine] [--search=<search>] [--sprint=<sprint>] [--verbose]
+jira list [--dev] [--mine] [--search=<search>] [--sprint=<sprint>] [--verbose]
 [--profile=<profile>]
 
 List Tasks
@@ -95,7 +107,7 @@ Some common examples:
 ### Send issue(s) to testing
 
 ```
-jira.js test [--verbose] [--profile=<profile>] <issueId...>
+jira test [--verbose] [--profile=<profile>] <issueId...>
 
 Send task to testing
 
@@ -110,7 +122,7 @@ Options:
 ### Clear worklog
 
 ```
-jira.js worklog clear <issueId> [--verbose] [--profile=<profile>]
+jira worklog clear <issueId> [--verbose] [--profile=<profile>]
 
 Clear worklog
 
@@ -125,7 +137,7 @@ Options:
 ```
 ### Print jira statuses
 ```
-jira.js statuses [--verbose] [--profile=<profile>]
+jira statuses [--verbose] [--profile=<profile>]
 
 List jira configuration statuses
 
@@ -136,9 +148,20 @@ Options:
 
 ## Confluence cli
 
+### Init
+```
+confluence init
+
+Add attlasian profile
+
+Options:
+  -h, --help     Show help                                             [boolean]
+      --version  Show version number                                   [boolean]
+```
+
 ### Get list of pages
 ```
-confluence.js pages <space> [--profile=<profile>] [--verbose]
+confluence pages <space> [--profile=<profile>] [--verbose]
 
 List Pages
 
@@ -155,7 +178,7 @@ Options:
 To export specific page as pdf firstly [obtain pageId](#get-list-of-pages). Then use pageId as argument for next command:
 
 ```
-confluence.js export <page> [--path=<path>] [--verbose] [--debug] [--profile=<profile>]
+confluence export <page> [--path=<path>] [--verbose] [--debug] [--profile=<profile>]
 
 Export Page as pdf
 
